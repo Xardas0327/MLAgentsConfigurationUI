@@ -7,16 +7,17 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     public class SelfPlay
     {
         public int saveSteps = 20000;
-        //default is 5 * save_steps
         public int teamChange;
         public int swapSteps = 10000;
         public float playAgainstLatestModelRatio = 0.5f;
         public int window = 10;
         public float initialElo = 1200f;
 
+        int DefaultTeamChange { get { return 5 * saveSteps; } }
+
         public SelfPlay() 
         {
-            teamChange = 5 * saveSteps;
+            teamChange = DefaultTeamChange;
         }
 
         public SelfPlay(YamlObject yaml)
@@ -57,7 +58,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             }
 
             if (!wasTeamChange)
-                teamChange = 5 * saveSteps;
+                teamChange = DefaultTeamChange;
         }
     }
 }
