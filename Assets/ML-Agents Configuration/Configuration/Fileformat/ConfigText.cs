@@ -45,6 +45,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string visEncodeTypeText = "vis_encode_type";
         public const string conditioningTypeText = "conditioning_type";
 
+        public const string memoryText = "memory";
+        public const string memorySizeText = "memory_size";
+        public const string sequenceLengthText = "sequence_length";
+
         //Reward Signals
         public const string rewardSignalsText = "reward_signals";
 

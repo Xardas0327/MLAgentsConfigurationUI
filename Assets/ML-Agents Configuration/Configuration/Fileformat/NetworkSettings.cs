@@ -13,6 +13,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public bool normalize = false;
         public VisEncodeType visEncodeType = VisEncodeType.simple;
         public ConditioningType conditioningType = ConditioningType.hyper;
+        public Memory memory = null;
+
         public NetworkSettings() { }
 
         public NetworkSettings(YamlObject yaml)
@@ -59,6 +61,18 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                         case ConfigText.conditioningTypeText:
                             if (value == "none")
                                 conditioningType = ConditioningType.none;
+                            break;
+                    }
+                    continue;
+                }
+
+                var yamlObject = element as YamlObject;
+                if (yamlObject != null)
+                {
+                    switch (yamlObject.name)
+                    {
+                        case ConfigText.memoryText:
+                            memory = new Memory(yamlObject);
                             break;
                     }
                 }
