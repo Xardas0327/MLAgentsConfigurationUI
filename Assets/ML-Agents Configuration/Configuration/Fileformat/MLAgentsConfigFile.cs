@@ -21,6 +21,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public NetworkSettings networkSettings = new();
         public RewardSignals rewardSignals = new();
         public BehavioralCloning behavioralCloning = null;
+        public SelfPlay selfPlay = null;
 
         public MLAgentsConfigFile() { }
 
@@ -93,6 +94,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             break;
                         case ConfigText.behavioralCloningText:
                             behavioralCloningYamlObject = yamlObject;
+                            break;
+                        case ConfigText.selfPlayText:
+                            selfPlay = new SelfPlay(yamlObject);
                             break;
                     }
                 }

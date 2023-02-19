@@ -70,5 +70,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string stepsText = "steps";
         public const string samplesPerUpdateText = "samples_per_update";
 
+        //Self play
+        public const string selfPlayText = "self_play";
+
+        public const string saveStepsText = "save_steps";
+        public const string teamChangeText = "team_change";
+        public const string swapStepsText = "swap_steps";
+        public const string playAgainstLatestModelRatioText = "play_against_latest_model_ratio";
+        public const string windowText = "window";
+        public const string initialEloText = "initial_elo";
     }
 }
