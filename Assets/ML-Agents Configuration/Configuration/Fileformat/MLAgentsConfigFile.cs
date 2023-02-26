@@ -32,21 +32,41 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 || yamlFile.elements.Count < 1 || !(yamlFile.elements[0] is YamlObject))
                 throw new System.Exception("The yaml file is not a MLAgents config file.");
 
-            //TODO: this one is temp only
-            yamlFile = yamlFile.elements[0] as YamlObject;
-            if(yamlFile.name != ConfigText.behaviorsText)
-                throw new System.Exception($"The {ConfigText.behaviorsText} is not right.");
-
-            yamlFile = yamlFile.elements[0] as YamlObject;
-            name = yamlFile.name;
-            //Firstly the YamlValue only
             foreach (var element in yamlFile.elements)
             {
+                var yamlObject = element as YamlObject;
+                if (yamlObject != null)
+                {
+                    switch (yamlObject.name)
+                    {
+                        case ConfigText.behaviorsText:
+                            LoadBehaviors(yamlObject);
+                            break;
+                        case ConfigText.environmentParametersText:
+                            LoadEnvParameters(yamlObject);
+                            break;
+                    }
+                }
+            }
+
+            
+        }
+
+        protected void LoadBehaviors(YamlObject yaml)
+        {
+            if (yaml.name != ConfigText.behaviorsText || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.behaviorsText} is not right.");
+
+            yaml = yaml.elements[0] as YamlObject;
+            name = yaml.name;
+            //Firstly the YamlValue only
+            foreach (var element in yaml.elements)
+            {
                 var yamlValue = element as YamlValue;
-                if(yamlValue != null)
+                if (yamlValue != null)
                 {
                     string value = yamlValue.value.ToLower();
-                    switch(yamlValue.name)
+                    switch (yamlValue.name)
                     {
                         case ConfigText.trainerTypeText:
                             if (value == "ppo")
@@ -81,7 +101,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             //Secondly YamlObject, because know we have to know the TrainerType
             YamlObject behavioralCloningYamlObject = null;
-            foreach (var element in yamlFile.elements)
+            foreach (var element in yaml.elements)
             {
                 var yamlObject = element as YamlObject;
                 if (yamlObject != null)
@@ -113,6 +133,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     behavioralCloningYamlObject,
                     hyperparameters.batchSize,
                     hyperparameters.numEpoch);
+        }
+
+        protected void LoadEnvParameters(YamlObject yaml)
+        {
+
         }
     }
 }

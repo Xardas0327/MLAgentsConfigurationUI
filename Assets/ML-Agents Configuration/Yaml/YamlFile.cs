@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -16,6 +17,9 @@ namespace Xardas.MLAgents.Yaml
             foreach (var line in lines)
             {
                 var element = ConvertToElement(line);
+                if(element == null)
+                    continue;
+
                 var deep = GetDeep(line);
 
                 while(deep <= currentParent.deep)
@@ -79,9 +83,18 @@ namespace Xardas.MLAgents.Yaml
 
         private static YamlElement ConvertToElement(string text)
         {
-            //TODO: remove comments
+            if (string.IsNullOrEmpty(text))
+                return null;
+
+            var hashTagIndex = text.IndexOf("#");
+            text = hashTagIndex > -1 ? text.Substring(0, hashTagIndex).Trim() : text.Trim();
+
+            //now it can be empty, if it was a comment
+            if (string.IsNullOrEmpty(text))
+                return null;
+
             YamlElement element = null;
-            var parts = text.Trim().Split(':');
+            var parts = text.Split(':');
             if(parts.Length == 1 || (parts.Length > 1 && string.IsNullOrEmpty(parts[1])))
             {
                 element = new YamlObject()

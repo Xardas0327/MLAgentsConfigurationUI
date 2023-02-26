@@ -11,6 +11,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string keepCheckpointsText = "keep_checkpoints";
         public const string checkpointIntervalText = "checkpoint_interval";
         public const string threadedText = "threaded";
+        public const string environmentParametersText = "environment_parameters";
 
         //Hyperparameters
         public const string hyperparametersText = "hyperparameters";

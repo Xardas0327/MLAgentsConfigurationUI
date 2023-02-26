@@ -25,7 +25,7 @@ namespace Xardas.MLAgents.Configuration
 
         private void OnGUI()
         {
-            filesInTheFolder = GetFiles();
+            LoadFileNames();
 
             GUILayout.Space(10);
 
@@ -63,7 +63,18 @@ namespace Xardas.MLAgents.Configuration
                 Save();
         }
 
-        private string[] GetFiles()
+        private void LoadFileNames()
+        {
+            var fileNames = GetFileNames();
+            if(filesInTheFolder == null || filesInTheFolder.Length != fileNames.Length)
+            {
+                selectedFileIndex = 0;
+                CreateNewFile();
+            }
+            filesInTheFolder = fileNames;
+        }
+
+        private string[] GetFileNames()
         {
             if (string.IsNullOrEmpty(ConfigurationSettings.Instance.YamlFolderPath))
             {
@@ -88,7 +99,9 @@ namespace Xardas.MLAgents.Configuration
 
         private void LoadFile()
         {
-            //TODO: Fix when item is not selected
+            if (selectedFileIndex >= filesInTheFolder.Length || selectedFileIndex == 0)
+                return;
+
             loadedFileName = filesInTheFolder[selectedFileIndex];
             if (loadedFileName.EndsWith(fileExtension))
                 loadedFileName = loadedFileName.Substring(0, loadedFileName.Length - fileExtension.Length);
