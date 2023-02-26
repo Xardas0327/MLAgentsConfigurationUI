@@ -28,9 +28,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public MLAgentsConfigFile(YamlElement yaml)
         {
             YamlObject yamlFile = yaml as YamlObject;
-            if (yamlFile == null || yamlFile.name != ConfigText.behaviorsText
+            if (yamlFile == null
                 || yamlFile.elements.Count < 1 || !(yamlFile.elements[0] is YamlObject))
                 throw new System.Exception("The yaml file is not a MLAgents config file.");
+
+            //DOTO: this one is temp only
+            yamlFile = yamlFile.elements[0] as YamlObject;
+            if(yamlFile.name != ConfigText.behaviorsText)
+                throw new System.Exception($"The {ConfigText.behaviorsText} is not right.");
 
             yamlFile = yamlFile.elements[0] as YamlObject;
             name = yamlFile.name;

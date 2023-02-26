@@ -88,6 +88,7 @@ namespace Xardas.MLAgents.Configuration
 
         private void LoadFile()
         {
+            //DOTO: Fix when item is not selected
             loadedFileName = filesInTheFolder[selectedFileIndex];
             if (loadedFileName.EndsWith(fileExtension))
                 loadedFileName = loadedFileName.Substring(0, loadedFileName.Length - fileExtension.Length);
