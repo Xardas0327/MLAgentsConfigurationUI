@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xardas.MLAgents.Configuration.Fileformat.EnvParameters;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
@@ -22,6 +25,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public RewardSignals rewardSignals = new();
         public BehavioralCloning behavioralCloning = null;
         public SelfPlay selfPlay = null;
+        public List<EnvParam> parameters = new();
 
         public MLAgentsConfigFile() { }
 
@@ -137,7 +141,34 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         protected void LoadEnvParameters(YamlObject yaml)
         {
+            if (yaml.name != ConfigText.environmentParametersText || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.environmentParametersText} is not right.");
 
+            foreach (var element in yaml.elements)
+            {
+                var yamlValue = element as YamlValue;
+                if (yamlValue != null)
+                {
+                    parameters.Add(new SimpleValue()
+                    {
+                        name = yamlValue.name,
+                        value = yamlValue.value
+                    });
+
+                    continue;
+                }
+
+                var yamlObject = element as YamlObject;
+                if (yamlObject != null)
+                {
+                    if(yamlObject.elements.Find(x => x.name == ConfigText.samplerTypeText) != null)
+                    {
+                        var sampler = SampleFactory.GetSampler(yamlObject);
+                        if (sampler != null)
+                            parameters.Add(sampler);
+                    }
+                }
+            }
         }
     }
 }

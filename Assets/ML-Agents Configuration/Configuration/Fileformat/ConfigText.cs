@@ -80,5 +80,16 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string playAgainstLatestModelRatioText = "play_against_latest_model_ratio";
         public const string windowText = "window";
         public const string initialEloText = "initial_elo";
+
+        //Environment Parameters
+
+        //Sampler
+        public const string samplerTypeText = "sampler_type";
+        public const string samplerParametersText = "sampler_parameters";
+        public const string minValueText = "min_value";
+        public const string maxValueText = "max_value";
+        public const string meanText = "mean";
+        public const string stDevText = "st_dev";
+        public const string intervalsText = "intervals";
     }
 }
