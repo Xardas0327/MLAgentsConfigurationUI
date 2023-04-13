@@ -91,5 +91,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string meanText = "mean";
         public const string stDevText = "st_dev";
         public const string intervalsText = "intervals";
+        public const string curriculumText = "curriculum";
+        public const string nameText = "name";
+        public const string valueText = "value";
+        public const string completionCriteriaText = "completion_criteria";
+        public const string measureText = "measure";
+        public const string behaviorText = "behavior";
+        public const string signalSmoothingText = "signal_smoothing";
+        public const string minLessonLengthText = "min_lesson_length";
+        public const string thresholdText = "threshold";
     }
 }

@@ -167,6 +167,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                         if (sampler != null)
                             parameters.Add(sampler);
                     }
+
+                    if(yamlObject.elements.Find(x => x.name == ConfigText.curriculumText) != null)
+                    {
+                        parameters.Add(new Curriculum(yamlObject));
+                    }
                 }
             }
         }

@@ -1,7 +1,5 @@
-using Google.Protobuf.WellKnownTypes;
 using System.Globalization;
 using System.Linq;
-using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
