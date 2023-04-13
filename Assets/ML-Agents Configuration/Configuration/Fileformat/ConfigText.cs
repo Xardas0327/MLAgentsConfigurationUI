@@ -11,6 +11,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string keepCheckpointsText = "keep_checkpoints";
         public const string checkpointIntervalText = "checkpoint_interval";
         public const string threadedText = "threaded";
+        public const string environmentParametersText = "environment_parameters";
 
         //Hyperparameters
         public const string hyperparametersText = "hyperparameters";
@@ -79,5 +80,25 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string playAgainstLatestModelRatioText = "play_against_latest_model_ratio";
         public const string windowText = "window";
         public const string initialEloText = "initial_elo";
+
+        //Environment Parameters
+
+        //Sampler
+        public const string samplerTypeText = "sampler_type";
+        public const string samplerParametersText = "sampler_parameters";
+        public const string minValueText = "min_value";
+        public const string maxValueText = "max_value";
+        public const string meanText = "mean";
+        public const string stDevText = "st_dev";
+        public const string intervalsText = "intervals";
+        public const string curriculumText = "curriculum";
+        public const string nameText = "name";
+        public const string valueText = "value";
+        public const string completionCriteriaText = "completion_criteria";
+        public const string measureText = "measure";
+        public const string behaviorText = "behavior";
+        public const string signalSmoothingText = "signal_smoothing";
+        public const string minLessonLengthText = "min_lesson_length";
+        public const string thresholdText = "threshold";
     }
 }
