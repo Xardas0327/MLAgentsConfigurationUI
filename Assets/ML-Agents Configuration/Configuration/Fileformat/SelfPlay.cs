@@ -60,5 +60,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             if (!wasTeamChange)
                 teamChange = DefaultTeamChange;
         }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.selfPlayText;
+
+
+            return yaml;
+        }
     }
 }

@@ -152,5 +152,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             if (wasStepsPerUpdate && !wasRewardSignalNumUpdate)
                 rewardSignalNumUpdate = stepsPerUpdate;
         }
+
+        public YamlObject ToYaml(TrainerType trainerType)
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.hyperparametersText;
+
+
+            return yaml;
+        }
     }
 }

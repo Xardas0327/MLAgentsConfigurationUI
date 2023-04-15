@@ -53,7 +53,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 }
             }
 
-            
+
         }
 
         protected void LoadBehaviors(YamlObject yaml)
@@ -161,19 +161,120 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 var yamlObject = element as YamlObject;
                 if (yamlObject != null)
                 {
-                    if(yamlObject.elements.Find(x => x.name == ConfigText.samplerTypeText) != null)
+                    if (yamlObject.elements.Find(x => x.name == ConfigText.samplerTypeText) != null)
                     {
                         var sampler = SampleFactory.GetSampler(yamlObject);
                         if (sampler != null)
                             parameters.Add(sampler);
                     }
 
-                    if(yamlObject.elements.Find(x => x.name == ConfigText.curriculumText) != null)
+                    if (yamlObject.elements.Find(x => x.name == ConfigText.curriculumText) != null)
                     {
                         parameters.Add(new Curriculum(yamlObject));
                     }
                 }
             }
+        }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+
+            var behaviorsYaml = ConvertBehaviorsToYaml();
+            behaviorsYaml.parent = yaml;
+            yaml.elements.Add(behaviorsYaml);
+
+            if(parameters.Count > 0)
+            {
+                var envParametersYaml = ConvertEnvParametersToYaml();
+                envParametersYaml.parent = yaml;
+                yaml.elements.Add(envParametersYaml);
+            }
+
+            return yaml;
+        }
+
+        protected YamlObject ConvertBehaviorsToYaml()
+        {
+            var behaviors = new YamlObject();
+            behaviors.name = ConfigText.behaviorsText;
+
+            var mlName = new YamlObject();
+            mlName.name = name;
+            mlName.parent = behaviors;
+            behaviors.elements.Add(mlName);
+
+            var tt = new YamlValue();
+            tt.name = ConfigText.trainerTypeText;
+            tt.value = trainerType.ToString();
+            mlName.elements.Add(tt);
+
+            var sf = new YamlValue();
+            sf.name = ConfigText.summaryFreqText;
+            sf.value = summaryFreq.ToString();
+            mlName.elements.Add(sf);
+
+            var th = new YamlValue();
+            th.name = ConfigText.timeHorizonText;
+            th.value = timeHorizon.ToString();
+            mlName.elements.Add(th);
+
+            var ms = new YamlValue();
+            ms.name = ConfigText.maxStepsText;
+            ms.value = maxSteps.ToString();
+            mlName.elements.Add(ms);
+
+            var kch = new YamlValue();
+            kch.name = ConfigText.keepCheckpointsText;
+            kch.value = keepCheckpoints.ToString();
+            mlName.elements.Add(kch);
+
+            var chi = new YamlValue();
+            chi.name = ConfigText.checkpointIntervalText;
+            chi.value = checkpointInterval.ToString();
+            mlName.elements.Add(chi);
+
+            var t = new YamlValue();
+            t.name = ConfigText.threadedText;
+            t.value = threaded ? "true" : "false";
+            mlName.elements.Add(t);
+
+            var hp = hyperparameters.ToYaml(trainerType);
+            hp.parent = mlName;
+            mlName.elements.Add(hp);
+
+            var ns = networkSettings.ToYaml();
+            ns.parent = mlName;
+            mlName.elements.Add(ns);
+
+            var rs = rewardSignals.ToYaml();
+            rs.parent = mlName;
+            mlName.elements.Add(rs);
+
+            if(behavioralCloning != null)
+            {
+                var bc = behavioralCloning.ToYaml();
+                bc.parent = mlName;
+                mlName.elements.Add(bc);
+            }
+
+            if (selfPlay != null)
+            {
+                var sp = selfPlay.ToYaml();
+                sp.parent = mlName;
+                mlName.elements.Add(sp);
+            }
+
+            return behaviors;
+        }
+
+        protected YamlObject ConvertEnvParametersToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.environmentParametersText;
+
+
+            return yaml;
         }
     }
 }

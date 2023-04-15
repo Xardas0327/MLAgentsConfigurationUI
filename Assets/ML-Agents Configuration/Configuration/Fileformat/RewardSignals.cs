@@ -40,5 +40,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 }
             }
         }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.rewardSignalsText;
+
+
+            return yaml;
+        }
     }
 }
