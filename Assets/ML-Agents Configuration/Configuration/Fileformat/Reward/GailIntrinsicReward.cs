@@ -47,5 +47,20 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
                 }
             }
         }
+        public override YamlObject ToYaml()
+        {
+            var yaml = base.ToYaml();
+            yaml.name = ConfigText.gailRewardText;
+
+            yaml.elements.Add(new YamlValue(ConfigText.learningRateText, learningRate));
+
+            yaml.elements.Add(new YamlValue(ConfigText.demoPathText, demoPath));
+
+            yaml.elements.Add(new YamlValue(ConfigText.useActionsText, useActions));
+
+            yaml.elements.Add(new YamlValue(ConfigText.useVailText, useVail));
+
+            return yaml;
+        }
     }
 }

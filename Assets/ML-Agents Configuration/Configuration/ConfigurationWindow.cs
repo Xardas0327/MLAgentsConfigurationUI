@@ -14,9 +14,9 @@ namespace Xardas.MLAgents.Configuration
         int selectedFileIndex = 0;
         string fileName;
         bool isLoaded = false;
-        bool isEditableFileName = true;
+        bool isEditableFileName = false;
 
-        MLAgentsConfigFile configFile;
+        MLAgentsConfigFile configFile = null;
 
         [MenuItem("Window/ML-Agents/Configuration")]
         public static void ShowWindow()

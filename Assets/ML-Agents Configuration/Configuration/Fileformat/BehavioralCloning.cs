@@ -8,7 +8,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     {
         public string demoPath;
         public float strength = 1f;
-        public int step = 0;
+        public int steps = 0;
         public int batchSize;
         public int numEpoch;
         public int samplesPerUpdate = 0;
@@ -42,7 +42,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out strength);
                             break;
                         case ConfigText.stepsText:
-                            Int32.TryParse(value, out step);
+                            Int32.TryParse(value, out steps);
                             break;
                         case ConfigText.batchSizeText:
                             Int32.TryParse(value, out batchSize);
@@ -66,6 +66,17 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.behavioralCloningText;
 
+            yaml.elements.Add(new YamlValue(ConfigText.demoPathText, demoPath));
+
+            yaml.elements.Add(new YamlValue(ConfigText.strengthText, strength));
+
+            yaml.elements.Add(new YamlValue(ConfigText.stepsText, steps));
+
+            yaml.elements.Add(new YamlValue(ConfigText.batchSizeText, batchSize));
+
+            yaml.elements.Add(new YamlValue(ConfigText.numEpochText, numEpoch));
+
+            yaml.elements.Add(new YamlValue(ConfigText.samplesPerUpdateText, samplesPerUpdate));
 
             return yaml;
         }

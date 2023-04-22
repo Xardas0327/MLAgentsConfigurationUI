@@ -14,5 +14,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
             // it is same like CuriosityIntrinsicReward
             Init(yaml);
         }
+        public override YamlObject ToYaml()
+        {
+            var yaml = base.ToYaml();
+            yaml.name = ConfigText.rndRewardText;
+
+            return yaml;
+        }
     }
 }

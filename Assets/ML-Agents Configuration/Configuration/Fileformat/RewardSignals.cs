@@ -10,7 +10,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public GailIntrinsicReward gail = null;
         public RndIntrinsicReward rnd = null;
 
-        public RewardSignals() { }
+        public RewardSignals() 
+        {
+            extrinsic = new ExtrinsicReward();
+        }
 
         public RewardSignals(YamlObject yaml)
         {
@@ -45,6 +48,34 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         {
             var yaml = new YamlObject();
             yaml.name = ConfigText.rewardSignalsText;
+
+            if(extrinsic != null)
+            {
+                var e = extrinsic.ToYaml();
+                e.parent = yaml;
+                yaml.elements.Add(e);
+            }
+
+            if (curiosity != null)
+            {
+                var c = curiosity.ToYaml();
+                c.parent = yaml;
+                yaml.elements.Add(c);
+            }
+
+            if (gail != null)
+            {
+                var g = gail.ToYaml();
+                g.parent = yaml;
+                yaml.elements.Add(g);
+            }
+
+            if (rnd != null)
+            {
+                var r = rnd.ToYaml();
+                r.parent = yaml;
+                yaml.elements.Add(r);
+            }
 
 
             return yaml;
