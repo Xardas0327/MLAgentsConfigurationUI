@@ -207,17 +207,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             behaviors.elements.Add(mlName);
 
             mlName.elements.Add(new YamlValue(ConfigText.trainerTypeText, trainerType));
-
             mlName.elements.Add(new YamlValue(ConfigText.summaryFreqText, summaryFreq));
-
             mlName.elements.Add(new YamlValue(ConfigText.timeHorizonText, timeHorizon));
-
             mlName.elements.Add(new YamlValue(ConfigText.maxStepsText, maxSteps));
-
             mlName.elements.Add(new YamlValue(ConfigText.keepCheckpointsText, keepCheckpoints));
-
             mlName.elements.Add(new YamlValue(ConfigText.checkpointIntervalText, checkpointInterval));
-
             mlName.elements.Add(new YamlValue(ConfigText.threadedText, threaded));
 
             var hp = hyperparameters.ToYaml(trainerType);
@@ -254,6 +248,16 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.environmentParametersText;
 
+            foreach(var item in parameters)
+            {
+                var yamlElement = item.ToYaml();
+                var yamlObject = yamlElement as YamlObject;
+
+                if(yamlObject != null)
+                    yamlObject.parent = yaml;
+
+                yaml.elements.Add(yamlElement);
+            }
 
             return yaml;
         }

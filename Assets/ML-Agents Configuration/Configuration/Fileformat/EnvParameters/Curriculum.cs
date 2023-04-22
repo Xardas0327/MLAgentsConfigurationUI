@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
@@ -29,6 +28,23 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                     items.Add(new CurriculumItem(yamlObject));
                 }
             }
+        }
+
+        public override YamlElement ToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = name;
+
+            var curriculum = new YamlObject();
+            curriculum.name = name;
+            curriculum.parent = yaml;
+            curriculum.type = YamlObjectType.List;
+            yaml.elements.Add(curriculum);
+
+            foreach (var item in items)
+                curriculum.elements.Add(item.ToYaml());
+
+            return yaml;
         }
     }
 }

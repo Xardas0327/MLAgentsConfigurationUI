@@ -2,7 +2,6 @@ using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Globalization;
-using System.Threading;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
@@ -56,6 +55,20 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                     }
                 }
             }
+        }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.completionCriteriaText;
+
+            yaml.elements.Add(new YamlValue(ConfigText.measureText, measure));
+            yaml.elements.Add(new YamlValue(ConfigText.behaviorText, behavior));
+            yaml.elements.Add(new YamlValue(ConfigText.signalSmoothingText, signalSmoothing));
+            yaml.elements.Add(new YamlValue(ConfigText.minLessonLengthText, minLessonLength));
+            yaml.elements.Add(new YamlValue(ConfigText.thresholdText, threshold));
+
+            return yaml;
         }
     }
 }
