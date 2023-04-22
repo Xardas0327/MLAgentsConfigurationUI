@@ -67,15 +67,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.name = ConfigText.behavioralCloningText;
 
             yaml.elements.Add(new YamlValue(ConfigText.demoPathText, demoPath));
-
             yaml.elements.Add(new YamlValue(ConfigText.strengthText, strength));
-
             yaml.elements.Add(new YamlValue(ConfigText.stepsText, steps));
-
             yaml.elements.Add(new YamlValue(ConfigText.batchSizeText, batchSize));
-
             yaml.elements.Add(new YamlValue(ConfigText.numEpochText, numEpoch));
-
             yaml.elements.Add(new YamlValue(ConfigText.samplesPerUpdateText, samplesPerUpdate));
 
             return yaml;

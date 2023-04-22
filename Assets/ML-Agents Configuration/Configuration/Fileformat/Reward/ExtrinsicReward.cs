@@ -45,7 +45,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
             yaml.name = ConfigText.extrinsicRewardText;
 
             yaml.elements.Add(new YamlValue(ConfigText.strengthText, strength));
-
             yaml.elements.Add(new YamlValue(ConfigText.gammaText, gamma));
 
             return yaml;

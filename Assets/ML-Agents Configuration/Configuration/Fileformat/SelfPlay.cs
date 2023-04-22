@@ -66,6 +66,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.selfPlayText;
 
+            yaml.elements.Add(new YamlValue(ConfigText.saveStepsText, saveSteps));
+            yaml.elements.Add(new YamlValue(ConfigText.teamChangeText, teamChange));
+            yaml.elements.Add(new YamlValue(ConfigText.swapStepsText, swapSteps));
+            yaml.elements.Add(new YamlValue(ConfigText.playAgainstLatestModelRatioText, playAgainstLatestModelRatio));
+            yaml.elements.Add(new YamlValue(ConfigText.windowText, window));
+            yaml.elements.Add(new YamlValue(ConfigText.initialEloText, initialElo));
 
             return yaml;
         }

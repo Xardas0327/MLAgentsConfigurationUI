@@ -6,6 +6,8 @@ namespace Xardas.MLAgents.Yaml
 {
     public static class YamlFile
     {
+        public const string ArrayItemName = "ArrayItem";
+
         public static YamlElement ConvertFileToObject(string filePath)
         {
             var root = new YamlObject();
@@ -39,7 +41,7 @@ namespace Xardas.MLAgents.Yaml
                         currentParent.type = YamlObjectType.List;
 
                         var arrayItem = new YamlObject();
-                        arrayItem.name = "ArrayItem";
+                        arrayItem.name = ArrayItemName;
                         arrayItem.deep = deep;
                         arrayItem.parent = currentParent;
                         currentParent.elements.Add(arrayItem);
