@@ -199,45 +199,26 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var behaviors = new YamlObject();
             behaviors.name = ConfigText.behaviorsText;
 
-            var mlName = new YamlObject();
-            mlName.name = name;
-            mlName.parent = behaviors;
+            var mlName = new YamlObject()
+            {
+                name = name,
+                parent = behaviors
+            };
             behaviors.elements.Add(mlName);
 
-            var tt = new YamlValue();
-            tt.name = ConfigText.trainerTypeText;
-            tt.value = trainerType.ToString();
-            mlName.elements.Add(tt);
+            mlName.elements.Add(new YamlValue(ConfigText.trainerTypeText, trainerType));
 
-            var sf = new YamlValue();
-            sf.name = ConfigText.summaryFreqText;
-            sf.value = summaryFreq.ToString();
-            mlName.elements.Add(sf);
+            mlName.elements.Add(new YamlValue(ConfigText.summaryFreqText, summaryFreq));
 
-            var th = new YamlValue();
-            th.name = ConfigText.timeHorizonText;
-            th.value = timeHorizon.ToString();
-            mlName.elements.Add(th);
+            mlName.elements.Add(new YamlValue(ConfigText.timeHorizonText, timeHorizon));
 
-            var ms = new YamlValue();
-            ms.name = ConfigText.maxStepsText;
-            ms.value = maxSteps.ToString();
-            mlName.elements.Add(ms);
+            mlName.elements.Add(new YamlValue(ConfigText.maxStepsText, maxSteps));
 
-            var kch = new YamlValue();
-            kch.name = ConfigText.keepCheckpointsText;
-            kch.value = keepCheckpoints.ToString();
-            mlName.elements.Add(kch);
+            mlName.elements.Add(new YamlValue(ConfigText.keepCheckpointsText, keepCheckpoints));
 
-            var chi = new YamlValue();
-            chi.name = ConfigText.checkpointIntervalText;
-            chi.value = checkpointInterval.ToString();
-            mlName.elements.Add(chi);
+            mlName.elements.Add(new YamlValue(ConfigText.checkpointIntervalText, checkpointInterval));
 
-            var t = new YamlValue();
-            t.name = ConfigText.threadedText;
-            t.value = threaded ? "true" : "false";
-            mlName.elements.Add(t);
+            mlName.elements.Add(new YamlValue(ConfigText.threadedText, threaded));
 
             var hp = hyperparameters.ToYaml(trainerType);
             hp.parent = mlName;

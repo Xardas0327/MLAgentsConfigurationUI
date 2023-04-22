@@ -84,7 +84,22 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.networkSettingsText;
 
+            yaml.elements.Add(new YamlValue(ConfigText.hiddenUnitsText, hiddenUnits));
 
+            yaml.elements.Add(new YamlValue(ConfigText.numLayersText, numLayers));
+
+            yaml.elements.Add(new YamlValue(ConfigText.normalizeText, normalize));
+
+            yaml.elements.Add(new YamlValue(ConfigText.visEncodeTypeText, visEncodeType));
+
+            yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, conditioningType));
+
+            if(memory != null)
+            {
+                var m = memory.ToYaml();
+                m.parent = yaml;
+                yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, m));
+            }
             return yaml;
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Threading;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
@@ -158,6 +159,46 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.hyperparametersText;
 
+            yaml.elements.Add(new YamlValue(ConfigText.learningRateText, learningRate));
+
+            yaml.elements.Add(new YamlValue(ConfigText.batchSizeText, batchSize));
+
+            yaml.elements.Add(new YamlValue(ConfigText.bufferSizeText, bufferSize));
+
+            yaml.elements.Add(new YamlValue(ConfigText.learningRateScheduleText, learningRateSchedule));
+
+            switch(trainerType)
+            {
+                case TrainerType.ppo:
+                case TrainerType.poca:
+                    yaml.elements.Add(new YamlValue(ConfigText.betaText, beta));
+
+                    yaml.elements.Add(new YamlValue(ConfigText.epsilonText, epsilon));
+
+                    if(learningRateSchedule != betaSchedule)
+                        yaml.elements.Add(new YamlValue(ConfigText.betaScheduleText, betaSchedule));
+
+                    if (learningRateSchedule != epsilonSchedule)
+                        yaml.elements.Add(new YamlValue(ConfigText.epsilonScheduleText, epsilonSchedule));
+
+                    yaml.elements.Add(new YamlValue(ConfigText.lambdText, lambd));
+
+                    yaml.elements.Add(new YamlValue(ConfigText.numEpochText, numEpoch));
+                    break;
+                case TrainerType.sac:
+                    yaml.elements.Add(new YamlValue(ConfigText.bufferInitStepsText, bufferInitSteps));
+
+                    yaml.elements.Add(new YamlValue(ConfigText.initEntcoefText, initEntcoef));
+
+                    yaml.elements.Add(new YamlValue(ConfigText.saveReplayBufferText, saveReplayBuffer));
+
+                    yaml.elements.Add(new YamlValue(ConfigText.tauText, tau));
+
+                    yaml.elements.Add(new YamlValue(ConfigText.stepsPerUpdateText, stepsPerUpdate));
+
+                    yaml.elements.Add(new YamlValue(ConfigText.rewardSignalNumUpdateText, rewardSignalNumUpdate));
+                    break;
+            }
 
             return yaml;
         }

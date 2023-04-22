@@ -33,5 +33,17 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 }
             }
         }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.memoryText;
+
+            yaml.elements.Add(new YamlValue(ConfigText.memorySizeText, memorySize));
+
+            yaml.elements.Add(new YamlValue(ConfigText.sequenceLengthText, sequenceLength));
+
+            return yaml;
+        }
     }
 }

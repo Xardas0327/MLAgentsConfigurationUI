@@ -20,5 +20,23 @@ namespace Xardas.MLAgents.Yaml
     public class YamlValue : YamlElement
     {
         public string value;
+
+        public YamlValue() { }
+        public YamlValue(string name, string value)
+        {
+            this.name = name;
+            this.value = value;
+        }
+        public YamlValue(string name, bool value)
+        {
+            this.name = name;
+            this.value = value ? "true" : "false";
+        }
+
+        public YamlValue(string name, object value) 
+        {
+            this.name = name;
+            this.value = value.ToString();
+        }
     }
 }
