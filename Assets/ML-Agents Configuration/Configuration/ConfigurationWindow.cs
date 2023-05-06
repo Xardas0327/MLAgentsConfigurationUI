@@ -4,6 +4,7 @@ using UnityEngine;
 using Xardas.MLAgents.Yaml;
 using Xardas.MLAgents.Configuration.Fileformat;
 using System.Linq;
+using UnityEngine.UIElements;
 
 namespace Xardas.MLAgents.Configuration
 {
@@ -136,6 +137,7 @@ namespace Xardas.MLAgents.Configuration
 
             var yaml = YamlFile.ConvertFileToObject(filePath);
             configFile = new MLAgentsConfigFile(yaml);
+            Debug.Log("File is loaded");
         }
 
         private void CreateNewFile()
@@ -167,17 +169,24 @@ namespace Xardas.MLAgents.Configuration
                 + Path.DirectorySeparatorChar + fullFileName;
 
             YamlFile.SaveObjectToFile(yaml, filePath);
+            Debug.Log("File is saved.");
         }
 
         private void Delete()
         {
-            string filePath = ConfigurationSettings.Instance.YamlFolderPath
-                + Path.DirectorySeparatorChar + fileName + fileExtension;
-
-            if (File.Exists(filePath))
+            var fullFileName = fileName + fileExtension;
+            if(EditorUtility.DisplayDialog("Delete config file",
+                $"Are you sure you want to delete the {fullFileName} config file?", "Yes", "No"))
             {
-                File.Delete(filePath);
-                CreateNewFile();
+                string filePath = ConfigurationSettings.Instance.YamlFolderPath
+                    + Path.DirectorySeparatorChar + fullFileName;
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                    CreateNewFile();
+                    Debug.Log("File is deleted");
+                }
             }
         }
     }
