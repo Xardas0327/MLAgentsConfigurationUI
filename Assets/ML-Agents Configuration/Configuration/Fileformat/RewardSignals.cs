@@ -22,8 +22,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             foreach (var element in yaml.elements)
             {
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     switch (yamlObject.name)
                     {

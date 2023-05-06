@@ -22,8 +22,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 
             foreach(var element in ((YamlObject)curriculum).elements)
             {
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     items.Add(new CurriculumItem(yamlObject));
                 }

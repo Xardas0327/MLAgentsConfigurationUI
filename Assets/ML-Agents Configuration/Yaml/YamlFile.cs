@@ -55,8 +55,7 @@ namespace Xardas.MLAgents.Yaml
 
                     currentParent.elements.Add(element);
 
-                    var newParent = element as YamlObject;
-                    if(newParent != null)
+                    if(element is YamlObject newParent)
                     {
                         newParent.deep = deep;
                         newParent.parent = currentParent;

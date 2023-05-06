@@ -15,8 +15,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
         {
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     switch(yamlValue.name)
                     {
@@ -30,8 +29,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                     continue;
                 }
 
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     switch (yamlObject.name)
                     {

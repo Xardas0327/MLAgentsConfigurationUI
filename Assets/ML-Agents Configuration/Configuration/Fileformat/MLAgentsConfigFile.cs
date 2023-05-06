@@ -31,15 +31,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public MLAgentsConfigFile(YamlElement yaml)
         {
-            YamlObject yamlFile = yaml as YamlObject;
+            var yamlFile = yaml as YamlObject;
             if (yamlFile == null
                 || yamlFile.elements.Count < 1 || !(yamlFile.elements[0] is YamlObject))
                 throw new System.Exception("The yaml file is not a MLAgents config file.");
 
             foreach (var element in yamlFile.elements)
             {
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     switch (yamlObject.name)
                     {
@@ -66,8 +65,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             //Firstly the YamlValue only
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
@@ -107,8 +105,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             YamlObject behavioralCloningYamlObject = null;
             foreach (var element in yaml.elements)
             {
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     switch (yamlObject.name)
                     {
@@ -146,8 +143,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     parameters.Add(new SimpleValue()
                     {
@@ -158,8 +154,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     continue;
                 }
 
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     if (yamlObject.elements.Find(x => x.name == ConfigText.samplerTypeText) != null)
                     {
@@ -251,9 +246,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             foreach(var item in parameters)
             {
                 var yamlElement = item.ToYaml();
-                var yamlObject = yamlElement as YamlObject;
 
-                if(yamlObject != null)
+                if (yamlElement is YamlObject yamlObject)
                     yamlObject.parent = yaml;
 
                 yaml.elements.Add(yamlElement);

@@ -28,8 +28,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             bool wasTeamChange = false;
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)

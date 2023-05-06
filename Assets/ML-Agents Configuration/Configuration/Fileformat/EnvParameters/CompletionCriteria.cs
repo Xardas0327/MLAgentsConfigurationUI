@@ -25,8 +25,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     string lowerValue = yamlValue.value.ToLower();
                     switch (yamlValue.name)
