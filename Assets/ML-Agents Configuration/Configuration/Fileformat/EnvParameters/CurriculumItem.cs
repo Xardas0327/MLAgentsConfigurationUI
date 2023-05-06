@@ -1,4 +1,3 @@
-using static UnityEditor.Progress;
 using Xardas.MLAgents.Yaml;
 using System.Globalization;
 
@@ -16,8 +15,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
         {
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     switch(yamlValue.name)
                     {
@@ -31,8 +29,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                     continue;
                 }
 
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     switch (yamlObject.name)
                     {
@@ -42,6 +39,21 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                     }
                 }
             }
+        }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = YamlFile.ArrayItemName;
+
+            yaml.elements.Add(new YamlValue(ConfigText.nameText, name));
+
+            if(completionCriteria != null)
+                yaml.elements.Add(completionCriteria.ToYaml());
+
+            yaml.elements.Add(new YamlValue(ConfigText.valueText, value));
+
+            return yaml;
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -7,6 +6,8 @@ namespace Xardas.MLAgents.Yaml
 {
     public static class YamlFile
     {
+        public const string ArrayItemName = "ArrayItem";
+
         public static YamlElement ConvertFileToObject(string filePath)
         {
             var root = new YamlObject();
@@ -40,7 +41,7 @@ namespace Xardas.MLAgents.Yaml
                         currentParent.type = YamlObjectType.List;
 
                         var arrayItem = new YamlObject();
-                        arrayItem.name = "ArrayItem";
+                        arrayItem.name = ArrayItemName;
                         arrayItem.deep = deep;
                         arrayItem.parent = currentParent;
                         currentParent.elements.Add(arrayItem);
@@ -54,8 +55,7 @@ namespace Xardas.MLAgents.Yaml
 
                     currentParent.elements.Add(element);
 
-                    var newParent = element as YamlObject;
-                    if(newParent != null)
+                    if(element is YamlObject newParent)
                     {
                         newParent.deep = deep;
                         newParent.parent = currentParent;
@@ -122,6 +122,71 @@ namespace Xardas.MLAgents.Yaml
             }
 
             return element;
+        }
+
+        public static void SaveObjectToFile(YamlElement yaml, string filePath)
+        {
+            File.WriteAllText(filePath, ConvertToText(yaml));
+        }
+
+        private static string ConvertToText(YamlElement yaml)
+        {
+            var text = new StringBuilder();
+            ConvertToText(yaml, text, 0);
+            return text.ToString();
+        }
+
+        private static void ConvertToText(YamlElement yaml, StringBuilder text, int deep)
+        {
+            if(yaml is YamlObject yamlObject)
+            {
+                if (yamlObject.name != null)
+                {
+                    WriteSpaces(text, deep);
+                    text.Append(yamlObject.name);
+                    text.Append(":");
+                    text.Append(Environment.NewLine);
+                    deep += 2;
+                }
+
+                switch(yamlObject.type)
+                {
+                    case YamlObjectType.Simple:
+                        foreach (var element in yamlObject.elements)
+                        {
+                            ConvertToText(element, text, deep);
+                        }
+                        break;
+                    case YamlObjectType.List:
+                        foreach (var arrayItem in yamlObject.elements)
+                        {
+                            if (arrayItem.name == ArrayItemName)
+                                arrayItem.name = null;
+
+                            var arrayItemText = new StringBuilder();
+                            ConvertToText(arrayItem, arrayItemText, deep + 2);
+                            arrayItemText[deep] = '-';
+                            text.Append(arrayItemText);
+                        }
+                        break;
+                }
+            }
+            else if (yaml is YamlValue yamlValue)
+            {
+                WriteSpaces(text, deep);
+                text.Append(yamlValue.name);
+                text.Append(": ");
+                text.Append(yamlValue.value);
+                text.Append(Environment.NewLine);
+            }
+        }
+
+        private static void WriteSpaces(StringBuilder text, int deep)
+        {
+            for (int i = 0; i < deep; ++i)
+            {
+                text.Append(" ");
+            }
         }
     }
 }

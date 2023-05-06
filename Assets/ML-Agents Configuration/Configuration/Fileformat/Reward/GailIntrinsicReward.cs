@@ -26,8 +26,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
             base.Init(yaml);
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
@@ -46,6 +45,18 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
                     }
                 }
             }
+        }
+        public override YamlObject ToYaml()
+        {
+            var yaml = base.ToYaml();
+            yaml.name = ConfigText.gailRewardText;
+
+            yaml.elements.Add(new YamlValue(ConfigText.learningRateText, learningRate));
+            yaml.elements.Add(new YamlValue(ConfigText.demoPathText, demoPath));
+            yaml.elements.Add(new YamlValue(ConfigText.useActionsText, useActions));
+            yaml.elements.Add(new YamlValue(ConfigText.useVailText, useVail));
+
+            return yaml;
         }
     }
 }

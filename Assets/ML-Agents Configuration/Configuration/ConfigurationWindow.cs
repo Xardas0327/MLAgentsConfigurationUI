@@ -3,6 +3,8 @@ using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
 using Xardas.MLAgents.Configuration.Fileformat;
+using System.Linq;
+using UnityEngine.UIElements;
 
 namespace Xardas.MLAgents.Configuration
 {
@@ -11,11 +13,11 @@ namespace Xardas.MLAgents.Configuration
         const string fileExtension = ".yaml";
         string[] filesInTheFolder;
         int selectedFileIndex = 0;
-        string loadedFileName;
+        string fileName;
         bool isLoaded = false;
-        bool isEditableFileName = true;
+        bool isEditableFileName = false;
 
-        MLAgentsConfigFile configFile;
+        MLAgentsConfigFile configFile = null;
 
         [MenuItem("Window/ML-Agents/Configuration")]
         public static void ShowWindow()
@@ -45,7 +47,7 @@ namespace Xardas.MLAgents.Configuration
             EditorGUILayout.BeginHorizontal();
 
             EditorGUI.BeginDisabledGroup(!isEditableFileName);
-            loadedFileName = EditorGUILayout.TextField("Loaded file:", loadedFileName);
+            fileName = EditorGUILayout.TextField("File's name:", fileName);
             EditorGUI.EndDisabledGroup();
 
             if(GUILayout.Button("New", GUILayout.Width(100)))
@@ -54,13 +56,22 @@ namespace Xardas.MLAgents.Configuration
             EditorGUI.BeginDisabledGroup(!isLoaded);
             if (GUILayout.Button("Copy", GUILayout.Width(100)))
                 Copy();
-            GUILayout.Button("Delete", GUILayout.Width(100));
+            if (GUILayout.Button("Delete", GUILayout.Width(100)))
+                Delete();
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
 
+            if(configFile != null)
+            {
+                GUILayout.Space(10);
+                configFile.name = EditorGUILayout.TextField("Name:", configFile.name, GUILayout.Width(400));
+            }
+
+            EditorGUI.BeginDisabledGroup(configFile == null);
             if (GUILayout.Button("Save"))
                 Save();
+            EditorGUI.EndDisabledGroup();
         }
 
         private void LoadFileNames()
@@ -68,10 +79,22 @@ namespace Xardas.MLAgents.Configuration
             var fileNames = GetFileNames();
             if(filesInTheFolder == null || filesInTheFolder.Length != fileNames.Length)
             {
-                selectedFileIndex = 0;
-                CreateNewFile();
+                selectedFileIndex = GetIndex(fileNames, fileName + fileExtension);
+                if(selectedFileIndex < 0)
+                    CreateNewFile();
             }
             filesInTheFolder = fileNames;
+        }
+
+        private int GetIndex(string[] fileNames, string fileName)
+        {
+            for(int i = 0; i < fileNames.Length; ++i)
+            {
+                if (fileNames[i] == fileName)
+                    return i;
+            }
+
+            return -1;
         }
 
         private string[] GetFileNames()
@@ -102,23 +125,25 @@ namespace Xardas.MLAgents.Configuration
             if (selectedFileIndex >= filesInTheFolder.Length || selectedFileIndex == 0)
                 return;
 
-            loadedFileName = filesInTheFolder[selectedFileIndex];
-            if (loadedFileName.EndsWith(fileExtension))
-                loadedFileName = loadedFileName.Substring(0, loadedFileName.Length - fileExtension.Length);
+            fileName = filesInTheFolder[selectedFileIndex];
+            if (fileName.EndsWith(fileExtension))
+                fileName = fileName.Substring(0, fileName.Length - fileExtension.Length);
 
             isEditableFileName = false;
             isLoaded = true;
 
             string filePath = ConfigurationSettings.Instance.YamlFolderPath
-                + Path.DirectorySeparatorChar + loadedFileName + fileExtension;
+                + Path.DirectorySeparatorChar + fileName + fileExtension;
 
             var yaml = YamlFile.ConvertFileToObject(filePath);
             configFile = new MLAgentsConfigFile(yaml);
+            Debug.Log("File is loaded");
         }
 
         private void CreateNewFile()
         {
-            loadedFileName = "";
+            selectedFileIndex = 0;
+            fileName = "";
             isLoaded = false;
             isEditableFileName = true;
             configFile = new MLAgentsConfigFile();
@@ -131,6 +156,38 @@ namespace Xardas.MLAgents.Configuration
 
         private void Save()
         {
+            if (string.IsNullOrEmpty(fileName))
+                throw new System.Exception("It has to have a file name.");
+
+            var fullFileName = fileName + fileExtension;
+
+            if (isEditableFileName && filesInTheFolder != null && filesInTheFolder.Contains(fullFileName))
+                throw new System.Exception("This file name is used in the folder.");
+
+            var yaml = configFile.ToYaml();
+            string filePath = ConfigurationSettings.Instance.YamlFolderPath
+                + Path.DirectorySeparatorChar + fullFileName;
+
+            YamlFile.SaveObjectToFile(yaml, filePath);
+            Debug.Log("File is saved.");
+        }
+
+        private void Delete()
+        {
+            var fullFileName = fileName + fileExtension;
+            if(EditorUtility.DisplayDialog("Delete config file",
+                $"Are you sure you want to delete the {fullFileName} config file?", "Yes", "No"))
+            {
+                string filePath = ConfigurationSettings.Instance.YamlFolderPath
+                    + Path.DirectorySeparatorChar + fullFileName;
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                    CreateNewFile();
+                    Debug.Log("File is deleted");
+                }
+            }
         }
     }
 }

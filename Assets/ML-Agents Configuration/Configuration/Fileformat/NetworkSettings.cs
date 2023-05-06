@@ -24,8 +24,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
@@ -66,8 +65,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     continue;
                 }
 
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     switch (yamlObject.name)
                     {
@@ -77,6 +75,26 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     }
                 }
             }
+        }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.networkSettingsText;
+
+            yaml.elements.Add(new YamlValue(ConfigText.hiddenUnitsText, hiddenUnits));
+            yaml.elements.Add(new YamlValue(ConfigText.numLayersText, numLayers));
+            yaml.elements.Add(new YamlValue(ConfigText.normalizeText, normalize));
+            yaml.elements.Add(new YamlValue(ConfigText.visEncodeTypeText, visEncodeType));
+            yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, conditioningType));
+
+            if(memory != null)
+            {
+                var m = memory.ToYaml();
+                m.parent = yaml;
+                yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, m));
+            }
+            return yaml;
         }
     }
 }

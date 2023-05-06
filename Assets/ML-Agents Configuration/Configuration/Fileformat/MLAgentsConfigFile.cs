@@ -31,15 +31,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public MLAgentsConfigFile(YamlElement yaml)
         {
-            YamlObject yamlFile = yaml as YamlObject;
+            var yamlFile = yaml as YamlObject;
             if (yamlFile == null
                 || yamlFile.elements.Count < 1 || !(yamlFile.elements[0] is YamlObject))
                 throw new System.Exception("The yaml file is not a MLAgents config file.");
 
             foreach (var element in yamlFile.elements)
             {
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     switch (yamlObject.name)
                     {
@@ -53,7 +52,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 }
             }
 
-            
+
         }
 
         protected void LoadBehaviors(YamlObject yaml)
@@ -66,8 +65,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             //Firstly the YamlValue only
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
@@ -107,8 +105,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             YamlObject behavioralCloningYamlObject = null;
             foreach (var element in yaml.elements)
             {
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
                     switch (yamlObject.name)
                     {
@@ -146,8 +143,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     parameters.Add(new SimpleValue()
                     {
@@ -158,22 +154,106 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     continue;
                 }
 
-                var yamlObject = element as YamlObject;
-                if (yamlObject != null)
+                if (element is YamlObject yamlObject)
                 {
-                    if(yamlObject.elements.Find(x => x.name == ConfigText.samplerTypeText) != null)
+                    if (yamlObject.elements.Find(x => x.name == ConfigText.samplerTypeText) != null)
                     {
                         var sampler = SampleFactory.GetSampler(yamlObject);
                         if (sampler != null)
                             parameters.Add(sampler);
                     }
 
-                    if(yamlObject.elements.Find(x => x.name == ConfigText.curriculumText) != null)
+                    if (yamlObject.elements.Find(x => x.name == ConfigText.curriculumText) != null)
                     {
                         parameters.Add(new Curriculum(yamlObject));
                     }
                 }
             }
+        }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+
+            var behaviorsYaml = ConvertBehaviorsToYaml();
+            behaviorsYaml.parent = yaml;
+            yaml.elements.Add(behaviorsYaml);
+
+            if(parameters.Count > 0)
+            {
+                var envParametersYaml = ConvertEnvParametersToYaml();
+                envParametersYaml.parent = yaml;
+                yaml.elements.Add(envParametersYaml);
+            }
+
+            return yaml;
+        }
+
+        protected YamlObject ConvertBehaviorsToYaml()
+        {
+            var behaviors = new YamlObject();
+            behaviors.name = ConfigText.behaviorsText;
+
+            var mlName = new YamlObject()
+            {
+                name = name,
+                parent = behaviors
+            };
+            behaviors.elements.Add(mlName);
+
+            mlName.elements.Add(new YamlValue(ConfigText.trainerTypeText, trainerType));
+            mlName.elements.Add(new YamlValue(ConfigText.summaryFreqText, summaryFreq));
+            mlName.elements.Add(new YamlValue(ConfigText.timeHorizonText, timeHorizon));
+            mlName.elements.Add(new YamlValue(ConfigText.maxStepsText, maxSteps));
+            mlName.elements.Add(new YamlValue(ConfigText.keepCheckpointsText, keepCheckpoints));
+            mlName.elements.Add(new YamlValue(ConfigText.checkpointIntervalText, checkpointInterval));
+            mlName.elements.Add(new YamlValue(ConfigText.threadedText, threaded));
+
+            var hp = hyperparameters.ToYaml(trainerType);
+            hp.parent = mlName;
+            mlName.elements.Add(hp);
+
+            var ns = networkSettings.ToYaml();
+            ns.parent = mlName;
+            mlName.elements.Add(ns);
+
+            var rs = rewardSignals.ToYaml();
+            rs.parent = mlName;
+            mlName.elements.Add(rs);
+
+            if(behavioralCloning != null)
+            {
+                var bc = behavioralCloning.ToYaml();
+                bc.parent = mlName;
+                mlName.elements.Add(bc);
+            }
+
+            if (selfPlay != null)
+            {
+                var sp = selfPlay.ToYaml();
+                sp.parent = mlName;
+                mlName.elements.Add(sp);
+            }
+
+            return behaviors;
+        }
+
+        protected YamlObject ConvertEnvParametersToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.environmentParametersText;
+
+            foreach(var item in parameters)
+            {
+                var yamlElement = item.ToYaml();
+
+                if (yamlElement is YamlObject yamlObject)
+                    yamlObject.parent = yaml;
+
+                yaml.elements.Add(yamlElement);
+            }
+
+            return yaml;
         }
     }
 }

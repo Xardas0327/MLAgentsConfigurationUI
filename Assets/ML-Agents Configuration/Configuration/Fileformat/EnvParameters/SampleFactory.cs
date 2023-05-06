@@ -42,8 +42,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             var sampler = new UniformSampler();
             foreach (var element in parameters.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     switch (yamlValue.name)
                     {
@@ -80,9 +79,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             var sampler = new MultiUniformSampler();
             var intervals = parameters.elements.Find(x => x.name == ConfigText.intervalsText);
 
-            if (intervals != null && intervals is YamlValue)
+            if (intervals != null && (intervals is YamlValue yamlValue))
             {
-                var valuesText = (intervals as YamlValue).value;
+                var valuesText = yamlValue.value;
                 if (valuesText != null && valuesText[0] == '[' && valuesText[valuesText.Length - 1] == ']')
                 {
                     var values = valuesText.Substring(1, valuesText.Length - 2).Split(',').Select(x => x.Trim()).ToList();
@@ -128,8 +127,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             var sampler = new GaussianSampler();
             foreach (var element in parameters.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     switch (yamlValue.name)
                     {

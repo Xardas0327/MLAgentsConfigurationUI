@@ -28,8 +28,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             bool wasTeamChange = false;
             foreach (var element in yaml.elements)
             {
-                var yamlValue = element as YamlValue;
-                if (yamlValue != null)
+                if (element is YamlValue yamlValue)
                 {
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
@@ -59,6 +58,21 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             if (!wasTeamChange)
                 teamChange = DefaultTeamChange;
+        }
+
+        public YamlObject ToYaml()
+        {
+            var yaml = new YamlObject();
+            yaml.name = ConfigText.selfPlayText;
+
+            yaml.elements.Add(new YamlValue(ConfigText.saveStepsText, saveSteps));
+            yaml.elements.Add(new YamlValue(ConfigText.teamChangeText, teamChange));
+            yaml.elements.Add(new YamlValue(ConfigText.swapStepsText, swapSteps));
+            yaml.elements.Add(new YamlValue(ConfigText.playAgainstLatestModelRatioText, playAgainstLatestModelRatio));
+            yaml.elements.Add(new YamlValue(ConfigText.windowText, window));
+            yaml.elements.Add(new YamlValue(ConfigText.initialEloText, initialElo));
+
+            return yaml;
         }
     }
 }
