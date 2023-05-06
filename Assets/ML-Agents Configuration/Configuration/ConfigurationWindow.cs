@@ -55,7 +55,8 @@ namespace Xardas.MLAgents.Configuration
             EditorGUI.BeginDisabledGroup(!isLoaded);
             if (GUILayout.Button("Copy", GUILayout.Width(100)))
                 Copy();
-            GUILayout.Button("Delete", GUILayout.Width(100));
+            if (GUILayout.Button("Delete", GUILayout.Width(100)))
+                Delete();
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
@@ -66,8 +67,10 @@ namespace Xardas.MLAgents.Configuration
                 configFile.name = EditorGUILayout.TextField("Name:", configFile.name, GUILayout.Width(400));
             }
 
+            EditorGUI.BeginDisabledGroup(configFile == null);
             if (GUILayout.Button("Save"))
                 Save();
+            EditorGUI.EndDisabledGroup();
         }
 
         private void LoadFileNames()
@@ -75,10 +78,22 @@ namespace Xardas.MLAgents.Configuration
             var fileNames = GetFileNames();
             if(filesInTheFolder == null || filesInTheFolder.Length != fileNames.Length)
             {
-                selectedFileIndex = 0;
-                CreateNewFile();
+                selectedFileIndex = GetIndex(fileNames, fileName + fileExtension);
+                if(selectedFileIndex < 0)
+                    CreateNewFile();
             }
             filesInTheFolder = fileNames;
+        }
+
+        private int GetIndex(string[] fileNames, string fileName)
+        {
+            for(int i = 0; i < fileNames.Length; ++i)
+            {
+                if (fileNames[i] == fileName)
+                    return i;
+            }
+
+            return -1;
         }
 
         private string[] GetFileNames()
@@ -125,6 +140,7 @@ namespace Xardas.MLAgents.Configuration
 
         private void CreateNewFile()
         {
+            selectedFileIndex = 0;
             fileName = "";
             isLoaded = false;
             isEditableFileName = true;
@@ -151,6 +167,18 @@ namespace Xardas.MLAgents.Configuration
                 + Path.DirectorySeparatorChar + fullFileName;
 
             YamlFile.SaveObjectToFile(yaml, filePath);
+        }
+
+        private void Delete()
+        {
+            string filePath = ConfigurationSettings.Instance.YamlFolderPath
+                + Path.DirectorySeparatorChar + fileName + fileExtension;
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                CreateNewFile();
+            }
         }
     }
 }

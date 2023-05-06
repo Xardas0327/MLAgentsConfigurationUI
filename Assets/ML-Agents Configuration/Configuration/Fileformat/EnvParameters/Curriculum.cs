@@ -36,7 +36,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             yaml.name = name;
 
             var curriculum = new YamlObject();
-            curriculum.name = name;
+            curriculum.name = "curriculum";
             curriculum.parent = yaml;
             curriculum.type = YamlObjectType.List;
             yaml.elements.Add(curriculum);

@@ -1,6 +1,9 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Xml.Linq;
+using UnityEditor;
+using UnityEngine.UIElements;
 
 namespace Xardas.MLAgents.Yaml
 {
@@ -127,7 +130,67 @@ namespace Xardas.MLAgents.Yaml
 
         public static void SaveObjectToFile(YamlElement yaml, string filePath)
         {
+            File.WriteAllText(filePath, ConvertToText(yaml));
+        }
 
+        private static string ConvertToText(YamlElement yaml)
+        {
+            var text = new StringBuilder();
+            ConvertToText(yaml, text, 0);
+            return text.ToString();
+        }
+
+        private static void ConvertToText(YamlElement yaml, StringBuilder text, int deep)
+        {
+            if(yaml is YamlObject yamlObject)
+            {
+                if (yamlObject.name != null)
+                {
+                    WriteSpaces(text, deep);
+                    text.Append(yamlObject.name);
+                    text.Append(":");
+                    text.Append(Environment.NewLine);
+                    deep += 2;
+                }
+
+                switch(yamlObject.type)
+                {
+                    case YamlObjectType.Simple:
+                        foreach (var element in yamlObject.elements)
+                        {
+                            ConvertToText(element, text, deep);
+                        }
+                        break;
+                    case YamlObjectType.List:
+                        foreach (var arrayItem in yamlObject.elements)
+                        {
+                            if (arrayItem.name == ArrayItemName)
+                                arrayItem.name = null;
+
+                            var arrayItemText = new StringBuilder();
+                            ConvertToText(arrayItem, arrayItemText, deep + 2);
+                            arrayItemText[deep] = '-';
+                            text.Append(arrayItemText);
+                        }
+                        break;
+                }
+            }
+            else if (yaml is YamlValue yamlValue)
+            {
+                WriteSpaces(text, deep);
+                text.Append(yamlValue.name);
+                text.Append(": ");
+                text.Append(yamlValue.value);
+                text.Append(Environment.NewLine);
+            }
+        }
+
+        private static void WriteSpaces(StringBuilder text, int deep)
+        {
+            for (int i = 0; i < deep; ++i)
+            {
+                text.Append(" ");
+            }
         }
     }
 }
