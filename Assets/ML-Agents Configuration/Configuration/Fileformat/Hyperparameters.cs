@@ -17,7 +17,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public int bufferSize = 10240;
         public ScheduleType learningRateSchedule = ScheduleType.linear;
 
-        [Header("Only in PPO and POCA")]
+        [Header("PPO and POCA specific")]
         public float beta = 0.005f;
         public float epsilon = 0.2f;
         public ScheduleType betaSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
@@ -25,7 +25,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public float lambd = 0.95f;
         public int numEpoch = 3;
         
-        [Header("Only in SAC")]
+        [Header("SAC specific")]
         public int bufferInitSteps = 0;
         public float initEntcoef = 1f;
         public bool saveReplayBuffer = false;
