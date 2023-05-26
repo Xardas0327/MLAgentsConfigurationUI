@@ -4,8 +4,12 @@ using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
+    [Serializable]
     public class SelfPlay
     {
+        //This is temporary only
+        public bool isUse = false;
+
         public int saveSteps = 20000;
         public int teamChange;
         public int swapSteps = 10000;
@@ -24,6 +28,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         {
             if (yaml == null || yaml.name != ConfigText.selfPlayText || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.selfPlayText} is not right.");
+
+            isUse = true;
 
             bool wasTeamChange = false;
             foreach (var element in yaml.elements)

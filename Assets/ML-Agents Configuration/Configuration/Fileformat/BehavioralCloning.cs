@@ -4,8 +4,12 @@ using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
+    [Serializable]
     public class BehavioralCloning
     {
+        //This is temporary only
+        public bool isUse = false;
+
         public string demoPath;
         public float strength = 1f;
         public int steps = 0;
@@ -26,6 +30,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             batchSize = defaultBatchSize;
             numEpoch = defaultNumEpoch;
+            isUse = true;
 
             foreach (var element in yaml.elements)
             {

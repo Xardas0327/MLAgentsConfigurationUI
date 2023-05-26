@@ -1,7 +1,10 @@
+using System;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 {
+
+    [Serializable]
     public class UniformSampler : Sampler
     {
         public float minValue;

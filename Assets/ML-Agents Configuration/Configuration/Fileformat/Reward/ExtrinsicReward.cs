@@ -1,10 +1,15 @@
+using System;
 using System.Globalization;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 {
+    [Serializable]
     public class ExtrinsicReward
     {
+        //This is temporary only
+        public bool isUse = false;
+
         public float strength = 1f;
         public float gamma = 0.99f;
 
@@ -20,6 +25,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 
         protected virtual void Init(YamlObject yaml)
         {
+            isUse = true;
+
             foreach (var element in yaml.elements)
             {
                 if (element is YamlValue yamlValue)

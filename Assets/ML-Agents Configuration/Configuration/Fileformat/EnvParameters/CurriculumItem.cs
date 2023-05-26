@@ -1,8 +1,11 @@
 using Xardas.MLAgents.Yaml;
 using System.Globalization;
+using System;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 {
+
+    [Serializable]
     public class CurriculumItem
     {
         public string name;
@@ -48,7 +51,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 
             yaml.elements.Add(new YamlValue(ConfigText.nameText, name));
 
-            if(completionCriteria != null)
+            if(completionCriteria != null && completionCriteria.isUse)
                 yaml.elements.Add(completionCriteria.ToYaml());
 
             yaml.elements.Add(new YamlValue(ConfigText.valueText, value));

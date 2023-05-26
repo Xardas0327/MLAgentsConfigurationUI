@@ -110,7 +110,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                                 isWrong = true;
                                 break;
                             }
-                            sampler.values.Add((minValue, maxValue));
+                            sampler.values.Add(new MultiUniformSamplerValue(minValue, maxValue));
                         }
 
                         if (!isWrong)

@@ -6,6 +6,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     public enum VisEncodeType { simple, nature_cnn, resnet, match3, fully_connected }
     public enum ConditioningType { none, hyper }
 
+    [Serializable]
     public class NetworkSettings
     {
         public int hiddenUnits = 128;
@@ -88,7 +89,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.elements.Add(new YamlValue(ConfigText.visEncodeTypeText, visEncodeType));
             yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, conditioningType));
 
-            if(memory != null)
+            if(memory != null && memory.isUse)
             {
                 var m = memory.ToYaml();
                 m.parent = yaml;

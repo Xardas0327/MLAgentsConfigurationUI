@@ -1,3 +1,4 @@
+using Xardas.MLAgents.Property;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
@@ -6,6 +7,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 
     public abstract class Sampler: EnvParam
     {
+        [ReadOnly]
         public SamplerType type;
 
         public override YamlElement ToYaml()

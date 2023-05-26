@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 {
+
+    [Serializable]
     public class Curriculum : EnvParam
     {
         public List<CurriculumItem> items = new();
