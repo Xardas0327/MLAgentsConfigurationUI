@@ -17,12 +17,12 @@ namespace Xardas.MLAgents.Configuration
         bool isLoaded = false;
         bool isEditableFileName = false;
 
-        MLAgentsConfigFile configFile = null;
+        OldMLAgentsConfigFile configFile = null;
 
-        [MenuItem("Window/ML-Agents/Configuration")]
+        [MenuItem("Window/ML-Agents/ConfigFiles")]
         public static void ShowWindow()
         {
-            GetWindow<ConfigurationWindow>("ML-Agents Configuration");
+            GetWindow<ConfigurationWindow>("ML-Agents Config Files");
         }
 
         private void OnGUI()
@@ -69,6 +69,8 @@ namespace Xardas.MLAgents.Configuration
             }
 
             EditorGUI.BeginDisabledGroup(configFile == null);
+            if (GUILayout.Button("Create Asset file"))
+                CreateAsset();
             if (GUILayout.Button("Save"))
                 Save();
             EditorGUI.EndDisabledGroup();
@@ -136,7 +138,7 @@ namespace Xardas.MLAgents.Configuration
                 + Path.DirectorySeparatorChar + fileName + fileExtension;
 
             var yaml = YamlFile.ConvertFileToObject(filePath);
-            configFile = new MLAgentsConfigFile(yaml);
+            configFile = new OldMLAgentsConfigFile(yaml);
             Debug.Log("File is loaded");
         }
 
@@ -146,7 +148,7 @@ namespace Xardas.MLAgents.Configuration
             fileName = "";
             isLoaded = false;
             isEditableFileName = true;
-            configFile = new MLAgentsConfigFile();
+            configFile = new OldMLAgentsConfigFile();
         }
 
         private void Copy()
@@ -169,6 +171,26 @@ namespace Xardas.MLAgents.Configuration
                 + Path.DirectorySeparatorChar + fullFileName;
 
             YamlFile.SaveObjectToFile(yaml, filePath);
+            Debug.Log("File is saved.");
+        }
+
+        private void CreateAsset()
+        {
+            string yamlPath = Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension); ;
+            var yaml = YamlFile.ConvertFileToObject(yamlPath);
+
+            string folder = Path.Combine("Assets", "ML-Agents Configuration", "Files");
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+
+            string scriptableObjectFilePath = Path.Combine(folder, fileName + ".asset");
+            if (File.Exists(scriptableObjectFilePath))
+                throw new System.Exception("This file exists.");
+
+            var file = ScriptableObject.CreateInstance<MLAgentsConfigFile>();
+            file.LoadDataFromYaml(yaml);
+            AssetDatabase.CreateAsset(file, scriptableObjectFilePath);
+            AssetDatabase.SaveAssets();
             Debug.Log("File is saved.");
         }
 
