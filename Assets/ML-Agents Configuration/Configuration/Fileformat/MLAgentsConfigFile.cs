@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat.EnvParameters;
+using Xardas.MLAgents.Property;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
@@ -9,6 +10,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     public enum TrainerType { ppo, sac, poca }
     public class MLAgentsConfigFile : ScriptableObject
     {
+        [SerializeField]
+        [ReadOnly]
+        private string yamlFolderPath;
+
+        public string YamlFolderPath => yamlFolderPath;
+
         public string behaviorName;
         public TrainerType trainerType = TrainerType.ppo;
         public int summaryFreq = 50000;
@@ -26,8 +33,15 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public SelfPlay selfPlay = null;
         public List<EnvParam> parameters = new();
 
-        public void LoadDataFromYaml(YamlElement yaml)
+        public void LoadData(string path)
         {
+            yamlFolderPath = path;
+        }
+
+        public void LoadData(string path, YamlElement yaml)
+        {
+            LoadData(path);
+
             var yamlFile = yaml as YamlObject;
             if (yamlFile == null
                 || yamlFile.elements.Count < 1 || !(yamlFile.elements[0] is YamlObject))
@@ -193,7 +207,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             var mlName = new YamlObject()
             {
-                name = name,
+                name = behaviorName,
                 parent = behaviors
             };
             behaviors.elements.Add(mlName);

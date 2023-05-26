@@ -136,7 +136,6 @@ namespace Xardas.MLAgents.Configuration
 
             isEditableFileName = false;
             isLoaded = true;
-            Debug.Log("File is loaded");
         }
 
         private void CreateNewFile()
@@ -163,17 +162,21 @@ namespace Xardas.MLAgents.Configuration
 
             string scriptableObjectFilePath = Path.Combine(Paths.FilesPath, fileName + ".asset");
             if (File.Exists(scriptableObjectFilePath))
-                throw new System.Exception("This file exists.");
+                throw new System.Exception("This asset exists.");
 
             var file = ScriptableObject.CreateInstance<MLAgentsConfigFile>();
+            string filePath = Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension);
             if (isLoaded)
             {
-                var yaml = YamlFile.ConvertStringToObject(fileData);
-                file.LoadDataFromYaml(yaml);
+                var yaml = YamlFile.ConvertStringToObject(fileData); 
+                file.LoadData(filePath, yaml);
             }
+            else
+                file.LoadData(filePath);
+
             AssetDatabase.CreateAsset(file, scriptableObjectFilePath);
             AssetDatabase.SaveAssets();
-            Debug.Log("File is saved.");
+            Debug.Log("Asset is saved: " + fileName);
         }
 
         private void Delete()
@@ -189,27 +192,9 @@ namespace Xardas.MLAgents.Configuration
                 {
                     File.Delete(filePath);
                     CreateNewFile();
-                    Debug.Log("File is deleted");
+                    Debug.Log("File is deleted: " + filePath);
                 }
             }
         }
-
-        //private void Save()
-        //{
-        //    if (string.IsNullOrEmpty(fileName))
-        //        throw new System.Exception("It has to have a file name.");
-
-        //    var fullFileName = fileName + fileExtension;
-
-        //    if (isEditableFileName && filesInTheFolder != null && filesInTheFolder.Contains(fullFileName))
-        //        throw new System.Exception("This file name is used in the folder.");
-
-        //    var yaml = configFile.ToYaml();
-        //    string filePath = ConfigurationSettings.Instance.YamlFolderPath
-        //        + Path.DirectorySeparatorChar + fullFileName;
-
-        //    YamlFile.SaveObjectToFile(yaml, filePath);
-        //    Debug.Log("File is saved.");
-        //}
     }
 }
