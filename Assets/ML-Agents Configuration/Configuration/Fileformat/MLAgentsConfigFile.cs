@@ -16,6 +16,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public string YamlFolderPath => yamlFolderPath;
 
+        [Header("Behavior")]
         public string behaviorName;
         public TrainerType trainerType = TrainerType.ppo;
         public int summaryFreq = 50000;
@@ -31,7 +32,28 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public RewardSignals rewardSignals = new();
         public BehavioralCloning behavioralCloning = null;
         public SelfPlay selfPlay = null;
-        public List<EnvParam> parameters = new();
+
+        [Header("Environment Parameters")]
+        public List<SimpleValue> simpleValues = new();
+        public List<UniformSampler> uniformSamplers = new();
+        public List<MultiUniformSampler> multiUniformSamplers = new();
+        public List<GaussianSampler> gaussianSamplers = new();
+        public List<Curriculum> curriculums = new();
+
+        private int EnvParamCount
+        {
+            get
+            {
+                int length = 0;
+                length += simpleValues != null ? simpleValues.Count : 0;
+                length += uniformSamplers != null ? uniformSamplers.Count : 0;
+                length += multiUniformSamplers != null ? multiUniformSamplers.Count : 0;
+                length += gaussianSamplers != null ? gaussianSamplers.Count : 0;
+                length += curriculums != null ? curriculums.Count : 0;
+
+                return length;
+            }
+        }
 
         public void LoadData(string path)
         {
@@ -156,7 +178,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             {
                 if (element is YamlValue yamlValue)
                 {
-                    parameters.Add(new SimpleValue()
+                    simpleValues.Add(new SimpleValue()
                     {
                         name = yamlValue.name,
                         value = yamlValue.value
@@ -171,13 +193,17 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     {
                         var sampler = SampleFactory.GetSampler(yamlObject);
                         if (sampler != null)
-                            parameters.Add(sampler);
+                        {
+                            if (sampler is UniformSampler uniformSampler)
+                                uniformSamplers.Add(uniformSampler);
+                            else if (sampler is MultiUniformSampler multiUniformSampler)
+                                multiUniformSamplers.Add(multiUniformSampler);
+                            else if (sampler is GaussianSampler gaussianSampler)
+                                gaussianSamplers.Add(gaussianSampler);
+                        }
                     }
-
-                    if (yamlObject.elements.Find(x => x.name == ConfigText.curriculumText) != null)
-                    {
-                        parameters.Add(new Curriculum(yamlObject));
-                    }
+                    else if (yamlObject.elements.Find(x => x.name == ConfigText.curriculumText) != null)
+                        curriculums.Add(new Curriculum(yamlObject));
                 }
             }
         }
@@ -190,7 +216,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             behaviorsYaml.parent = yaml;
             yaml.elements.Add(behaviorsYaml);
 
-            if (parameters.Count > 0)
+            if (EnvParamCount > 0)
             {
                 var envParametersYaml = ConvertEnvParametersToYaml();
                 envParametersYaml.parent = yaml;
@@ -232,14 +258,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             rs.parent = mlName;
             mlName.elements.Add(rs);
 
-            if (behavioralCloning != null)
+            if (behavioralCloning != null && behavioralCloning.isUse)
             {
                 var bc = behavioralCloning.ToYaml();
                 bc.parent = mlName;
                 mlName.elements.Add(bc);
             }
 
-            if (selfPlay != null)
+            if (selfPlay != null && selfPlay.isUse)
             {
                 var sp = selfPlay.ToYaml();
                 sp.parent = mlName;
@@ -254,17 +280,32 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.environmentParametersText;
 
-            foreach (var item in parameters)
-            {
-                var yamlElement = item.ToYaml();
+            foreach (var item in simpleValues)
+                AddEnvParamToYaml(yaml, item);
 
-                if (yamlElement is YamlObject yamlObject)
-                    yamlObject.parent = yaml;
+            foreach (var item in uniformSamplers)
+                AddEnvParamToYaml(yaml, item);
 
-                yaml.elements.Add(yamlElement);
-            }
+            foreach (var item in multiUniformSamplers)
+                AddEnvParamToYaml(yaml, item);
+
+            foreach (var item in gaussianSamplers)
+                AddEnvParamToYaml(yaml, item);
+
+            foreach (var item in curriculums)
+                AddEnvParamToYaml(yaml, item);
 
             return yaml;
+        }
+
+        protected void AddEnvParamToYaml(YamlObject yaml, EnvParam item)
+        {
+            var yamlElement = item.ToYaml();
+
+            if (yamlElement is YamlObject yamlObject)
+                yamlObject.parent = yaml;
+
+            yaml.elements.Add(yamlElement);
         }
     }
 }

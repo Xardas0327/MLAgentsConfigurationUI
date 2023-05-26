@@ -1,7 +1,9 @@
+using System;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 {
+    [Serializable]
     public class GailIntrinsicReward : CuriosityIntrinsicReward
     {
         public string demoPath;

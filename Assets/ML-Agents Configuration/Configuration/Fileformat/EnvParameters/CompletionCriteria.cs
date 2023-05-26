@@ -1,5 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Globalization;
 using Xardas.MLAgents.Yaml;
@@ -8,8 +6,13 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 {
     public enum CompletionCriteriaMeasure { progress, reward, Elo}
 
+
+    [Serializable]
     public class CompletionCriteria
     {
+        //This is temporary only
+        public bool isUse = false;
+
         public CompletionCriteriaMeasure measure;
         public string behavior;
         public bool signalSmoothing;
@@ -22,6 +25,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
         {
             if (yaml == null || yaml.name != ConfigText.completionCriteriaText || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.completionCriteriaText} is not right.");
+
+            isUse = true;
 
             foreach (var element in yaml.elements)
             {

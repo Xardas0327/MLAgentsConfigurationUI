@@ -1,8 +1,10 @@
+using System;
 using System.Globalization;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 {
+    [Serializable]
     public class CuriosityIntrinsicReward : ExtrinsicReward
     {
         public NetworkSettings networkSettings = new();

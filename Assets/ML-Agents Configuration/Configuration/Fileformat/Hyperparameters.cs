@@ -1,12 +1,14 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
     public enum ScheduleType { linear, constant}
 
+    [Serializable]
     public class Hyperparameters
     {
         public float learningRate = 0.0003f;
@@ -15,15 +17,15 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public int bufferSize = 10240;
         public ScheduleType learningRateSchedule = ScheduleType.linear;
 
-        //PPO and POCA specific Configurations
+        [Header("Only in PPO and POCA")]
         public float beta = 0.005f;
         public float epsilon = 0.2f;
         public ScheduleType betaSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
         public ScheduleType epsilonSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
         public float lambd = 0.95f;
         public int numEpoch = 3;
-
-        //SAC-specific Configurations
+        
+        [Header("Only in SAC")]
         public int bufferInitSteps = 0;
         public float initEntcoef = 1f;
         public bool saveReplayBuffer = false;

@@ -1,8 +1,10 @@
 using Xardas.MLAgents.Yaml;
 using Xardas.MLAgents.Configuration.Fileformat.Reward;
+using System;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
+    [Serializable]
     public class RewardSignals
     {
         public ExtrinsicReward extrinsic = null;
@@ -48,28 +50,28 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.rewardSignalsText;
 
-            if(extrinsic != null)
+            if(extrinsic != null && extrinsic.isUse)
             {
                 var e = extrinsic.ToYaml();
                 e.parent = yaml;
                 yaml.elements.Add(e);
             }
 
-            if (curiosity != null)
+            if (curiosity != null && curiosity.isUse)
             {
                 var c = curiosity.ToYaml();
                 c.parent = yaml;
                 yaml.elements.Add(c);
             }
 
-            if (gail != null)
+            if (gail != null && gail.isUse)
             {
                 var g = gail.ToYaml();
                 g.parent = yaml;
                 yaml.elements.Add(g);
             }
 
-            if (rnd != null)
+            if (rnd != null && rnd.isUse)
             {
                 var r = rnd.ToYaml();
                 r.parent = yaml;
