@@ -7,8 +7,6 @@ namespace Xardas.MLAgents.Configuration
 {
     class ConfigurationSettings : ScriptableObject
     {
-        private readonly static string settingsPath = Path.Combine("Assets", "ML-Agents Configuration");
-
         private const string settingsFileName = "ML-Agents Configuration.asset";
 
         [SerializeField]
@@ -16,7 +14,7 @@ namespace Xardas.MLAgents.Configuration
         [ReadOnly]
         private string yamlFolderPath;
 
-        private static string filePath => Path.Combine(settingsPath, settingsFileName);
+        private static string filePath => Path.Combine(Paths.SettingsPath, settingsFileName);
 
         public string YamlFolderPath
         {
@@ -43,8 +41,8 @@ namespace Xardas.MLAgents.Configuration
                 if (File.Exists(filePath) && instance != null)
                     return instance;
 
-                if (!Directory.Exists(settingsPath))
-                    Directory.CreateDirectory(settingsPath);
+                if (!Directory.Exists(Paths.SettingsPath))
+                    Directory.CreateDirectory(Paths.SettingsPath);
 
                 instance = AssetDatabase.LoadAssetAtPath<ConfigurationSettings>(filePath);
                 if (instance == null)

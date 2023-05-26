@@ -3,8 +3,6 @@ using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
 using Xardas.MLAgents.Configuration.Fileformat;
-using System.Linq;
-using UnityEngine.UIElements;
 
 namespace Xardas.MLAgents.Configuration
 {
@@ -16,13 +14,13 @@ namespace Xardas.MLAgents.Configuration
         string fileName;
         bool isLoaded = false;
         bool isEditableFileName = false;
+        string fileData = null;
+        Vector2 fileDataScrollPos;
 
-        MLAgentsConfigFile configFile = null;
-
-        [MenuItem("Window/ML-Agents/Configuration")]
+        [MenuItem("Window/ML-Agents/ConfigFiles")]
         public static void ShowWindow()
         {
-            GetWindow<ConfigurationWindow>("ML-Agents Configuration");
+            GetWindow<ConfigurationWindow>("ML-Agents Config Files");
         }
 
         private void OnGUI()
@@ -62,16 +60,19 @@ namespace Xardas.MLAgents.Configuration
 
             EditorGUILayout.EndHorizontal();
 
-            if(configFile != null)
-            {
-                GUILayout.Space(10);
-                configFile.name = EditorGUILayout.TextField("Name:", configFile.name, GUILayout.Width(400));
-            }
+            if (GUILayout.Button("Create Asset file"))
+                CreateAsset();
 
-            EditorGUI.BeginDisabledGroup(configFile == null);
-            if (GUILayout.Button("Save"))
-                Save();
-            EditorGUI.EndDisabledGroup();
+            if (fileData != null)
+            {
+                GUILayout.Space(20);
+                EditorGUILayout.LabelField("File's data:");
+                fileDataScrollPos = EditorGUILayout.BeginScrollView(fileDataScrollPos, GUILayout.Height(600));
+                EditorGUI.BeginDisabledGroup(true);
+                EditorGUILayout.TextArea(fileData);
+                EditorGUI.EndDisabledGroup();
+                EditorGUILayout.EndScrollView();
+            }
         }
 
         private void LoadFileNames()
@@ -129,15 +130,12 @@ namespace Xardas.MLAgents.Configuration
             if (fileName.EndsWith(fileExtension))
                 fileName = fileName.Substring(0, fileName.Length - fileExtension.Length);
 
+            fileData = File.ReadAllText(
+                Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension)
+                );
+
             isEditableFileName = false;
             isLoaded = true;
-
-            string filePath = ConfigurationSettings.Instance.YamlFolderPath
-                + Path.DirectorySeparatorChar + fileName + fileExtension;
-
-            var yaml = YamlFile.ConvertFileToObject(filePath);
-            configFile = new MLAgentsConfigFile(yaml);
-            Debug.Log("File is loaded");
         }
 
         private void CreateNewFile()
@@ -146,7 +144,7 @@ namespace Xardas.MLAgents.Configuration
             fileName = "";
             isLoaded = false;
             isEditableFileName = true;
-            configFile = new MLAgentsConfigFile();
+            fileData = null;
         }
 
         private void Copy()
@@ -154,22 +152,31 @@ namespace Xardas.MLAgents.Configuration
             isEditableFileName = true;
         }
 
-        private void Save()
+        private void CreateAsset()
         {
             if (string.IsNullOrEmpty(fileName))
                 throw new System.Exception("It has to have a file name.");
 
-            var fullFileName = fileName + fileExtension;
+            if (!Directory.Exists(Paths.FilesPath))
+                Directory.CreateDirectory(Paths.FilesPath);
 
-            if (isEditableFileName && filesInTheFolder != null && filesInTheFolder.Contains(fullFileName))
-                throw new System.Exception("This file name is used in the folder.");
+            string scriptableObjectFilePath = Path.Combine(Paths.FilesPath, fileName + ".asset");
+            if (File.Exists(scriptableObjectFilePath))
+                throw new System.Exception("This asset exists.");
 
-            var yaml = configFile.ToYaml();
-            string filePath = ConfigurationSettings.Instance.YamlFolderPath
-                + Path.DirectorySeparatorChar + fullFileName;
+            var file = ScriptableObject.CreateInstance<MLAgentsConfigFile>();
+            string filePath = Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension);
+            if (isLoaded)
+            {
+                var yaml = YamlFile.ConvertStringToObject(fileData); 
+                file.LoadData(filePath, yaml);
+            }
+            else
+                file.LoadData(filePath);
 
-            YamlFile.SaveObjectToFile(yaml, filePath);
-            Debug.Log("File is saved.");
+            AssetDatabase.CreateAsset(file, scriptableObjectFilePath);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Asset is saved: " + fileName);
         }
 
         private void Delete()
@@ -185,7 +192,7 @@ namespace Xardas.MLAgents.Configuration
                 {
                     File.Delete(filePath);
                     CreateNewFile();
-                    Debug.Log("File is deleted");
+                    Debug.Log("File is deleted: " + filePath);
                 }
             }
         }

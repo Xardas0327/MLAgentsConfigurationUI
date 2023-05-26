@@ -1,16 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat.EnvParameters;
+using Xardas.MLAgents.Property;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
-    public enum TrainerType { ppo, sac, poca}
-
-    public class MLAgentsConfigFile
+    public enum TrainerType { ppo, sac, poca }
+    public class MLAgentsConfigFile : ScriptableObject
     {
-        public string name;
+        [SerializeField]
+        [ReadOnly]
+        private string yamlFolderPath;
+
+        public string YamlFolderPath => yamlFolderPath;
+
+        public string behaviorName;
         public TrainerType trainerType = TrainerType.ppo;
         public int summaryFreq = 50000;
         public int timeHorizon = 64;
@@ -27,10 +33,15 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public SelfPlay selfPlay = null;
         public List<EnvParam> parameters = new();
 
-        public MLAgentsConfigFile() { }
-
-        public MLAgentsConfigFile(YamlElement yaml)
+        public void LoadData(string path)
         {
+            yamlFolderPath = path;
+        }
+
+        public void LoadData(string path, YamlElement yaml)
+        {
+            LoadData(path);
+
             var yamlFile = yaml as YamlObject;
             if (yamlFile == null
                 || yamlFile.elements.Count < 1 || !(yamlFile.elements[0] is YamlObject))
@@ -61,7 +72,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 throw new System.Exception($"The {ConfigText.behaviorsText} is not right.");
 
             yaml = yaml.elements[0] as YamlObject;
-            name = yaml.name;
+            behaviorName = yaml.name;
             //Firstly the YamlValue only
             foreach (var element in yaml.elements)
             {
@@ -179,7 +190,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             behaviorsYaml.parent = yaml;
             yaml.elements.Add(behaviorsYaml);
 
-            if(parameters.Count > 0)
+            if (parameters.Count > 0)
             {
                 var envParametersYaml = ConvertEnvParametersToYaml();
                 envParametersYaml.parent = yaml;
@@ -196,7 +207,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             var mlName = new YamlObject()
             {
-                name = name,
+                name = behaviorName,
                 parent = behaviors
             };
             behaviors.elements.Add(mlName);
@@ -221,7 +232,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             rs.parent = mlName;
             mlName.elements.Add(rs);
 
-            if(behavioralCloning != null)
+            if (behavioralCloning != null)
             {
                 var bc = behavioralCloning.ToYaml();
                 bc.parent = mlName;
@@ -243,7 +254,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.environmentParametersText;
 
-            foreach(var item in parameters)
+            foreach (var item in parameters)
             {
                 var yamlElement = item.ToYaml();
 

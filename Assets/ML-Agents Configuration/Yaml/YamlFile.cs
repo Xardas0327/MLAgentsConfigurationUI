@@ -10,11 +10,16 @@ namespace Xardas.MLAgents.Yaml
 
         public static YamlElement ConvertFileToObject(string filePath)
         {
+            return ConvertStringToObject(File.ReadAllText(filePath));
+        }
+
+        public static YamlElement ConvertStringToObject(string fileData)
+        {
             var root = new YamlObject();
             root.deep = -1;
             YamlObject currentParent = root;
 
-            var lines = File.ReadLines(filePath);
+            var lines = fileData.Split('\n');
             foreach (var line in lines)
             {
                 var element = ConvertToElement(line);
