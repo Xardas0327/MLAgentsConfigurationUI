@@ -10,12 +10,13 @@
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 /[Uu]ser[Ss]ettings/
-/Assets/ML-Agents Configuration/Files
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
 
 # Basic ML-Agents Configuration
+/[Aa]ssets/ML-Agents Configuration/Files
+/[Aa]ssets/ML-Agents Configuration/Files.meta
 /[Aa]ssets/ML-Agents Configuration/ML-Agents Configuration.asset
 /[Aa]ssets/ML-Agents Configuration/ML-Agents Configuration.asset.meta
 
