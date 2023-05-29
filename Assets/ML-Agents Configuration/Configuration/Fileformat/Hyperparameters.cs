@@ -36,6 +36,26 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         const int defaultPOOBufferSize = 10240;
         const int defaultSACBufferSize = 50000;
 
+        public static readonly string[] OnlyPpoAndPocaFields = 
+        {
+            nameof(beta), 
+            nameof(epsilon), 
+            nameof(betaSchedule),
+            nameof(epsilonSchedule),
+            nameof(lambd),
+            nameof(numEpoch),
+        };
+
+        public static readonly string[] OnlySacFields =
+        {
+            nameof(bufferInitSteps),
+            nameof(initEntcoef),
+            nameof(saveReplayBuffer),
+            nameof(tau),
+            nameof(stepsPerUpdate),
+            nameof(rewardSignalNumUpdate),
+        };
+
         public Hyperparameters(TrainerType trainerType) 
         {
             bufferSize = trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPOOBufferSize;
