@@ -17,7 +17,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public int bufferSize = 10240;
         public ScheduleType learningRateSchedule = ScheduleType.linear;
 
-        [Header("PPO and POCA specific")]
+        [Header("PPO/POCA specific")]
         public float beta = 0.005f;
         public float epsilon = 0.2f;
         public ScheduleType betaSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
