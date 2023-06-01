@@ -14,6 +14,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
     public class MLAgentsConfigFileInspector : Editor
     {
         private static Dictionary<string, bool> showPropertiesOfObject = new();
+        private const float depthSize = 15f;
 
         public override void OnInspectorGUI()
         {
@@ -47,13 +48,19 @@ namespace Xardas.MLAgents.Configuration.Inspector
                     using (new EditorGUI.DisabledScope("m_Script" == iterator.propertyPath))
                     {
                         if (iterator.type == typeof(Hyperparameters).Name)
-                            DrawObject(iterator, typeof(Hyperparameters), configFile,  DrawHyperparameters);
+                        {
+                            DrawObject(iterator, typeof(Hyperparameters), configFile, DrawHyperparameters);
+                        }
                         else if (iterator.type == typeof(NetworkSettings).Name)
+                        {
                             DrawObject(iterator, typeof(NetworkSettings), configFile.networkSettings, DrawNetworkSettings);
+                        }
                         else if (iterator.type == typeof(RewardSignals).Name)
+                        {
                             DrawObject(iterator, typeof(RewardSignals), configFile, DrawRewardSignals);
+                        }
                         else
-                            EditorGUILayout.PropertyField(iterator, true);
+                            DefaultDrawProperty(iterator);
                     }
 
                     enterChildren = false;
@@ -64,44 +71,65 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
+        void DefaultDrawProperty(SerializedProperty property)
+        {
+            EditorGUILayout.PropertyField(property, true);
+        }
+
+        void DrawPropertyWithDetph(SerializedProperty property)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * property.depth));
+            EditorGUILayout.PropertyField(property, true);
+            EditorGUILayout.EndHorizontal();
+        }
+
+        bool DrawObjectWithDetph(SerializedProperty property)
+        {
+            if (!showPropertiesOfObject.ContainsKey(property.propertyPath))
+            {
+                showPropertiesOfObject.Add(property.propertyPath, false);
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * property.depth));
+
+            showPropertiesOfObject[property.propertyPath] =
+                EditorGUILayout.Foldout(showPropertiesOfObject[property.propertyPath], property.displayName);
+            EditorGUILayout.EndHorizontal();
+
+            return showPropertiesOfObject[property.propertyPath];
+        }
+
         void DrawObject<T>(
-            SerializedProperty iterator,
+            SerializedProperty property,
             Type objectType,
             T objectForDraw,
             Action<SerializedProperty, T> drawFunction)
         {
-            if(!showPropertiesOfObject.ContainsKey(iterator.propertyPath))
-            {
-                showPropertiesOfObject.Add(iterator.propertyPath, false);
-            }
-
-            showPropertiesOfObject[iterator.propertyPath] = 
-                EditorGUILayout.Foldout(showPropertiesOfObject[iterator.propertyPath], iterator.displayName);
-
-            if (showPropertiesOfObject[iterator.propertyPath])
+            if (DrawObjectWithDetph(property))
             {
                 int numberOfFields = objectType.GetFields().Where(x => !x.IsStatic).Count();
                 int index = 0;
                 bool enterChildren = true;
-                while (iterator.NextVisible(enterChildren))
+                while (property.NextVisible(enterChildren))
                 {
                     enterChildren = false;
-                    using (new EditorGUI.DisabledScope("m_Script" == iterator.propertyPath))
+                    using (new EditorGUI.DisabledScope("m_Script" == property.propertyPath))
                     {
-                        drawFunction(iterator, objectForDraw);
+                        drawFunction(property, objectForDraw);
                     }
                     ++index;
                     if (index >= numberOfFields)
                         break;
                 }
-                GUILayout.Space(10);
             }
         }
 
-        void DrawHyperparameters(SerializedProperty iterator, MLAgentsConfigFile configFile)
+        void DrawHyperparameters(SerializedProperty property, MLAgentsConfigFile configFile)
         {
-            bool isPpoAndPocaSpecific = Hyperparameters.OnlyPpoAndPocaFields.Contains(iterator.name);
-            bool isSacSpecific = Hyperparameters.OnlySacFields.Contains(iterator.name);
+            bool isPpoAndPocaSpecific = Hyperparameters.OnlyPpoAndPocaFields.Contains(property.name);
+            bool isSacSpecific = Hyperparameters.OnlySacFields.Contains(property.name);
 
             //PPO OR POCA
             if (((configFile.trainerType == TrainerType.ppo || configFile.trainerType == TrainerType.poca)
@@ -111,69 +139,69 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 //Not specific field, so it should be render always
                 || (!isPpoAndPocaSpecific && !isSacSpecific))
             {
-                EditorGUILayout.PropertyField(iterator, true);
+                DrawPropertyWithDetph(property);
             }
         }
 
-        void DrawNetworkSettings(SerializedProperty iterator, NetworkSettings networkSettings)
+        void DrawNetworkSettings(SerializedProperty property, NetworkSettings networkSettings)
         {
-            if (iterator.name != nameof(networkSettings.memory)
+            if (property.name != nameof(networkSettings.memory)
                             || networkSettings.isUseMemory)
             {
-                EditorGUILayout.PropertyField(iterator, true);
+                DrawPropertyWithDetph(property);
             }
         }
 
-        void DrawRewardSignals(SerializedProperty iterator, MLAgentsConfigFile configFile)
+        void DrawRewardSignals(SerializedProperty property, MLAgentsConfigFile configFile)
         {
-            if(iterator.name.StartsWith("isUse"))
-            {
-                EditorGUILayout.PropertyField(iterator, true);
-            }
             //Extrinsic
-            else if(iterator.name == nameof(configFile.rewardSignals.extrinsic) 
-                && configFile.rewardSignals.isUseExtrinsic)
+            if(property.name == nameof(configFile.rewardSignals.extrinsic))
             {
-                DrawObject(iterator, typeof(ExtrinsicReward), (NetworkSettings)null,  DrawReward);
+                if (configFile.rewardSignals.isUseExtrinsic)
+                    DrawObject(property, typeof(ExtrinsicReward), (NetworkSettings)null,  DrawReward);
             }
             //Curiosity
-            else if (iterator.name == nameof(configFile.rewardSignals.curiosity) 
-                && configFile.rewardSignals.isUseCuriosity)
+            else if (property.name == nameof(configFile.rewardSignals.curiosity))
             {
-                DrawObject(
-                    iterator, 
-                    typeof(CuriosityIntrinsicReward),
-                    configFile.rewardSignals.curiosity.networkSettings, 
-                    DrawReward);
+                if(configFile.rewardSignals.isUseCuriosity)
+                    DrawObject(
+                        property,
+                        typeof(CuriosityIntrinsicReward),
+                        configFile.rewardSignals.curiosity.networkSettings,
+                        DrawReward);
             }
             //Gail
-            else if (iterator.name == nameof(configFile.rewardSignals.gail) 
-                && configFile.rewardSignals.isUseGail)
+            else if (property.name == nameof(configFile.rewardSignals.gail))
             {
-                DrawObject(
-                    iterator, 
-                    typeof(GailIntrinsicReward),
-                    configFile.rewardSignals.gail.networkSettings,
-                    DrawReward);
+                if(configFile.rewardSignals.isUseGail)
+                    DrawObject(
+                        property, 
+                        typeof(GailIntrinsicReward),
+                        configFile.rewardSignals.gail.networkSettings,
+                        DrawReward);
             }
             //Rnd
-            else if (iterator.name == nameof(configFile.rewardSignals.rnd) 
-                && configFile.rewardSignals.isUseRnd)
+            else if (property.name == nameof(configFile.rewardSignals.rnd))
             {
-                DrawObject(
-                    iterator, 
-                    typeof(RndIntrinsicReward),
-                    configFile.rewardSignals.rnd.networkSettings,
-                    DrawReward);
+                if(configFile.rewardSignals.isUseRnd)
+                    DrawObject(
+                        property, 
+                        typeof(RndIntrinsicReward),
+                        configFile.rewardSignals.rnd.networkSettings,
+                        DrawReward);
+            }
+            else
+            {
+                DrawPropertyWithDetph(property);
             }
         }
 
-        void DrawReward(SerializedProperty iterator, NetworkSettings networkSettings)
+        void DrawReward(SerializedProperty property, NetworkSettings networkSettings)
         {
-            if (iterator.type == typeof(NetworkSettings).Name)
-                DrawObject(iterator, typeof(NetworkSettings), networkSettings, DrawNetworkSettings);
+            if (property.type == typeof(NetworkSettings).Name)
+                DrawObject(property, typeof(NetworkSettings), networkSettings, DrawNetworkSettings);
             else
-                EditorGUILayout.PropertyField(iterator, true);
+                DrawPropertyWithDetph(property);
         }
     }
 }

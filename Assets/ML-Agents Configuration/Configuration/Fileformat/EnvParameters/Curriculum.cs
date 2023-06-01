@@ -8,7 +8,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     [Serializable]
     public class Curriculum : EnvParam
     {
-        public List<CurriculumItem> items = new();
+        public List<CurriculumItem> lessons = new();
 
         public Curriculum() { }
 
@@ -27,7 +27,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             {
                 if (element is YamlObject yamlObject)
                 {
-                    items.Add(new CurriculumItem(yamlObject));
+                    lessons.Add(new CurriculumItem(yamlObject));
                 }
             }
         }
@@ -43,7 +43,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             curriculum.type = YamlObjectType.List;
             yaml.elements.Add(curriculum);
 
-            foreach (var item in items)
+            foreach (var item in lessons)
                 curriculum.elements.Add(item.ToYaml());
 
             return yaml;
