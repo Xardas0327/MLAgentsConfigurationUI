@@ -11,7 +11,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public float strength = 1f;
         public int steps = 0;
         public int batchSize;//if not specified, it will default to the batch_size of the trainer.
-        public int numEpoch;//if not specified, it will default to the batch_size of the trainer.
+        public int numEpoch;//if not specified, it will default to the numEpoch of the trainer.
         public int samplesPerUpdate = 0;
 
         public BehavioralCloning(int defaultBatchSize, int defaultNumEpoch) 
