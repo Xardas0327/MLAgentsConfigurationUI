@@ -30,7 +30,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public Hyperparameters hyperparameters = new Hyperparameters(TrainerType.ppo);
         public NetworkSettings networkSettings = new();
         public RewardSignals rewardSignals = new();
+
+        public bool isUseBehavioralCloning = false;
         public BehavioralCloning behavioralCloning = null;
+        public bool isUseSelfPlay = false;
         public SelfPlay selfPlay = null;
 
         [Header("Environment Parameters")]
@@ -152,9 +155,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             rewardSignals = new RewardSignals(yamlObject);
                             break;
                         case ConfigText.behavioralCloningText:
+                            isUseBehavioralCloning = true;
                             behavioralCloningYamlObject = yamlObject;
                             break;
                         case ConfigText.selfPlayText:
+                            isUseSelfPlay = true;
                             selfPlay = new SelfPlay(yamlObject);
                             break;
                     }
@@ -258,14 +263,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             rs.parent = mlName;
             mlName.elements.Add(rs);
 
-            if (behavioralCloning != null && behavioralCloning.isUse)
+            if (isUseBehavioralCloning && behavioralCloning != null)
             {
                 var bc = behavioralCloning.ToYaml();
                 bc.parent = mlName;
                 mlName.elements.Add(bc);
             }
 
-            if (selfPlay != null && selfPlay.isUse)
+            if (isUseSelfPlay && selfPlay != null)
             {
                 var sp = selfPlay.ToYaml();
                 sp.parent = mlName;

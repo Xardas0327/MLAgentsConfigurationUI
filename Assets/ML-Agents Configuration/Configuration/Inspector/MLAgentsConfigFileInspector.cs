@@ -59,6 +59,16 @@ namespace Xardas.MLAgents.Configuration.Inspector
                         {
                             DrawObject(iterator, typeof(RewardSignals), configFile, DrawRewardSignalsProperties);
                         }
+                        else if (iterator.type == typeof(BehavioralCloning).Name)
+                        {
+                            if(configFile.isUseBehavioralCloning)
+                                DrawProperty(iterator);
+                        }
+                        else if (iterator.type == typeof(SelfPlay).Name)
+                        {
+                            if (configFile.isUseSelfPlay)
+                                DrawProperty(iterator);
+                        }
                         else
                             DrawProperty(iterator);
                     }

@@ -91,7 +91,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.elements.Add(new YamlValue(ConfigText.visEncodeTypeText, visEncodeType));
             yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, conditioningType));
 
-            if(isUseMemory)
+            if(isUseMemory && memory != null)
             {
                 var m = memory.ToYaml();
                 m.parent = yaml;

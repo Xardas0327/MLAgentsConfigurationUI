@@ -58,28 +58,28 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.rewardSignalsText;
 
-            if(isUseExtrinsic)
+            if(isUseExtrinsic && extrinsic != null)
             {
                 var e = extrinsic.ToYaml();
                 e.parent = yaml;
                 yaml.elements.Add(e);
             }
 
-            if (isUseCuriosity)
+            if (isUseCuriosity && curiosity != null)
             {
                 var c = curiosity.ToYaml();
                 c.parent = yaml;
                 yaml.elements.Add(c);
             }
 
-            if (isUseGail)
+            if (isUseGail && gail != null)
             {
                 var g = gail.ToYaml();
                 g.parent = yaml;
                 yaml.elements.Add(g);
             }
 
-            if (isUseRnd)
+            if (isUseRnd && rnd != null)
             {
                 var r = rnd.ToYaml();
                 r.parent = yaml;
