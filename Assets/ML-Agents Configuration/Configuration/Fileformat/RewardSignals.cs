@@ -7,9 +7,13 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     [Serializable]
     public class RewardSignals
     {
+        public bool isUseExtrinsic;
         public ExtrinsicReward extrinsic = null;
+        public bool isUseCuriosity;
         public CuriosityIntrinsicReward curiosity = null;
+        public bool isUseGail;
         public GailIntrinsicReward gail = null;
+        public bool isUseRnd;
         public RndIntrinsicReward rnd = null;
 
         public RewardSignals() 
@@ -29,15 +33,19 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     switch (yamlObject.name)
                     {
                         case ConfigText.extrinsicRewardText:
+                            isUseExtrinsic = true;
                             extrinsic = new ExtrinsicReward(yamlObject);
                             break;
                         case ConfigText.curiosityRewardText:
+                            isUseCuriosity = true;
                             curiosity = new CuriosityIntrinsicReward(yamlObject);
                             break;
                         case ConfigText.gailRewardText:
+                            isUseGail = true;
                             gail = new GailIntrinsicReward(yamlObject);
                             break;
                         case ConfigText.rndRewardText:
+                            isUseRnd = true;
                             rnd = new RndIntrinsicReward(yamlObject);
                             break;
                     }
@@ -50,28 +58,28 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             var yaml = new YamlObject();
             yaml.name = ConfigText.rewardSignalsText;
 
-            if(extrinsic != null && extrinsic.isUse)
+            if(isUseExtrinsic && extrinsic != null)
             {
                 var e = extrinsic.ToYaml();
                 e.parent = yaml;
                 yaml.elements.Add(e);
             }
 
-            if (curiosity != null && curiosity.isUse)
+            if (isUseCuriosity && curiosity != null)
             {
                 var c = curiosity.ToYaml();
                 c.parent = yaml;
                 yaml.elements.Add(c);
             }
 
-            if (gail != null && gail.isUse)
+            if (isUseGail && gail != null)
             {
                 var g = gail.ToYaml();
                 g.parent = yaml;
                 yaml.elements.Add(g);
             }
 
-            if (rnd != null && rnd.isUse)
+            if (isUseRnd && rnd != null)
             {
                 var r = rnd.ToYaml();
                 r.parent = yaml;

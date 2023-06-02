@@ -7,9 +7,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     [Serializable]
     public class Memory
     {
-        //This is temporary only
-        public bool isUse = false;
-
         public int memorySize = 128;
         public int sequenceLength = 64;
 
@@ -19,8 +16,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         {
             if (yaml == null || yaml.name != ConfigText.memoryText || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.memoryText} is not right.");
-
-            isUse = true;
 
             foreach (var element in yaml.elements)
             {

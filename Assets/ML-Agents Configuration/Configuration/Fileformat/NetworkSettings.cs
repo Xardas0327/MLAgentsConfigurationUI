@@ -14,6 +14,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public bool normalize = false;
         public VisEncodeType visEncodeType = VisEncodeType.simple;
         public ConditioningType conditioningType = ConditioningType.hyper;
+        public bool isUseMemory = false;
         public Memory memory = null;
 
         public NetworkSettings() { }
@@ -71,6 +72,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     switch (yamlObject.name)
                     {
                         case ConfigText.memoryText:
+                            isUseMemory = true;
                             memory = new Memory(yamlObject);
                             break;
                     }
@@ -89,7 +91,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.elements.Add(new YamlValue(ConfigText.visEncodeTypeText, visEncodeType));
             yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, conditioningType));
 
-            if(memory != null && memory.isUse)
+            if(isUseMemory && memory != null)
             {
                 var m = memory.ToYaml();
                 m.parent = yaml;

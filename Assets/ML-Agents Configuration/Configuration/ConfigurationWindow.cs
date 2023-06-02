@@ -17,7 +17,7 @@ namespace Xardas.MLAgents.Configuration
         string fileData = null;
         Vector2 fileDataScrollPos;
 
-        [MenuItem("Window/ML-Agents/ConfigFiles")]
+        [MenuItem("Window/ML-Agents/Config Files")]
         public static void ShowWindow()
         {
             GetWindow<ConfigurationWindow>("ML-Agents Config Files");

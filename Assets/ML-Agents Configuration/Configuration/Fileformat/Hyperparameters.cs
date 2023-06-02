@@ -12,12 +12,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     public class Hyperparameters
     {
         public float learningRate = 0.0003f;
-        //This should always be multiple times smaller than buffer_size
-        public int batchSize = 512;
-        public int bufferSize = 10240;
-        public ScheduleType learningRateSchedule = ScheduleType.linear;
+        public int batchSize = 512; //This should always be multiple times smaller than buffer_size
+        public int bufferSize = 10240; //default = 10240 for PPO and 50000 for SAC
+        public ScheduleType learningRateSchedule = ScheduleType.linear; //default = linear for PPO and constant for SAC
 
-        [Header("PPO and POCA specific")]
+        [Header("PPO/POCA specific")]
         public float beta = 0.005f;
         public float epsilon = 0.2f;
         public ScheduleType betaSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
@@ -31,14 +30,34 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public bool saveReplayBuffer = false;
         public float tau = 0.005f;
         public float stepsPerUpdate = 1;
-        public float rewardSignalNumUpdate = 1;
+        public float rewardSignalNumUpdate = 1; //The default should be the stepsPerUpdate
 
-        const int defaultPOOBufferSize = 10240;
+        const int defaultPPOBufferSize = 10240;
         const int defaultSACBufferSize = 50000;
+
+        public static readonly string[] OnlyPpoAndPocaFields = 
+        {
+            nameof(beta), 
+            nameof(epsilon), 
+            nameof(betaSchedule),
+            nameof(epsilonSchedule),
+            nameof(lambd),
+            nameof(numEpoch),
+        };
+
+        public static readonly string[] OnlySacFields =
+        {
+            nameof(bufferInitSteps),
+            nameof(initEntcoef),
+            nameof(saveReplayBuffer),
+            nameof(tau),
+            nameof(stepsPerUpdate),
+            nameof(rewardSignalNumUpdate),
+        };
 
         public Hyperparameters(TrainerType trainerType) 
         {
-            bufferSize = trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPOOBufferSize;
+            bufferSize = trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPPOBufferSize;
             learningRateSchedule = trainerType == TrainerType.sac ? ScheduleType.constant : ScheduleType.linear;
         }
 
@@ -47,9 +66,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             if (yaml == null || yaml.name != ConfigText.hyperparametersText || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.hyperparametersText} is not right.");
 
-            bool wasBufferSize = false;
+            bufferSize = trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPPOBufferSize;
+            learningRateSchedule = trainerType == TrainerType.sac ? ScheduleType.constant : ScheduleType.linear;
 
-            bool wasLearningRateSchedule = false;
             bool wasBetaSchedule = false;
             bool wasEpsilonSchedule = false;
 
@@ -71,14 +90,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             break;
                         case ConfigText.bufferSizeText:
                             Int32.TryParse(value, out bufferSize);
-
-                            wasBufferSize = true;
                             break;
                         case ConfigText.learningRateScheduleText:
                             if (value == "constant")
                                 learningRateSchedule = ScheduleType.constant;
-
-                            wasLearningRateSchedule = true;
                             break;
 
                         //PPO and POCA specific Configurations
@@ -134,13 +149,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     }
                 }
             }
-
-            if(!wasBufferSize)
-                bufferSize = trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPOOBufferSize;
-
-
-            if (!wasLearningRateSchedule)
-                learningRateSchedule = trainerType == TrainerType.sac ? ScheduleType.constant : ScheduleType.linear;
 
             //The default of betaSchedule should be the learningRateSchedule
             if (!wasBetaSchedule)

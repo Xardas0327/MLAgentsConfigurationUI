@@ -10,9 +10,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     [Serializable]
     public class CompletionCriteria
     {
-        //This is temporary only
-        public bool isUse = false;
-
         public CompletionCriteriaMeasure measure;
         public string behavior;
         public bool signalSmoothing;
@@ -25,8 +22,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
         {
             if (yaml == null || yaml.name != ConfigText.completionCriteriaText || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.completionCriteriaText} is not right.");
-
-            isUse = true;
 
             foreach (var element in yaml.elements)
             {
