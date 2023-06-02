@@ -31,7 +31,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public bool saveReplayBuffer = false;
         public float tau = 0.005f;
         public float stepsPerUpdate = 1;
-        public float rewardSignalNumUpdate = 1;
+        public float rewardSignalNumUpdate = 1; //The default should be the stepsPerUpdate
 
         const int defaultPOOBufferSize = 10240;
         const int defaultSACBufferSize = 50000;
