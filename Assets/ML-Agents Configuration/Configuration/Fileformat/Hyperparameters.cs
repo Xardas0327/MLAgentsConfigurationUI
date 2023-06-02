@@ -14,8 +14,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public float learningRate = 0.0003f;
         //This should always be multiple times smaller than buffer_size
         public int batchSize = 512;
-        public int bufferSize = 10240;
-        public ScheduleType learningRateSchedule = ScheduleType.linear;
+        public int bufferSize = 10240; //default = 10240 for PPO and 50000 for SAC
+        public ScheduleType learningRateSchedule = ScheduleType.linear; //default = linear for PPO and constant for SAC
 
         [Header("PPO/POCA specific")]
         public float beta = 0.005f;
