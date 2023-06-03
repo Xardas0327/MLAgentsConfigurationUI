@@ -14,8 +14,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 
         public ExtrinsicReward(YamlObject yaml)
         {
-            if (yaml == null || yaml.name != ConfigText.extrinsicRewardText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.extrinsicRewardText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.extrinsicReward || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.extrinsicReward} is not right.");
 
             Init(yaml);
         }
@@ -29,10 +29,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
                     {
-                        case ConfigText.strengthText:
+                        case ConfigText.strength:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out strength);
                             break;
-                        case ConfigText.gammaText:
+                        case ConfigText.gamma:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out gamma);
                             break;
                     }
@@ -43,10 +43,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
         public virtual YamlObject ToYaml()
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.extrinsicRewardText;
+            yaml.name = ConfigText.extrinsicReward;
 
-            yaml.elements.Add(new YamlValue(ConfigText.strengthText, strength));
-            yaml.elements.Add(new YamlValue(ConfigText.gammaText, gamma));
+            yaml.elements.Add(new YamlValue(ConfigText.strength, strength));
+            yaml.elements.Add(new YamlValue(ConfigText.gamma, gamma));
 
             return yaml;
         }

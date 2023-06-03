@@ -17,15 +17,22 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public string YamlFolderPath => yamlFolderPath;
 
         [Header("Behavior")]
+        [Tooltip(ConfigTooltip.behaviorName)]
         public string behaviorName;
         public TrainerType trainerType = TrainerType.ppo;
-        public int summaryFreq = 50000;
-        public int timeHorizon = 64;
-        public int maxSteps = 500000;
-        public int keepCheckpoints = 5;
-        public int checkpointInterval = 500000;
+        [Tooltip(ConfigTooltip.summaryFreq)]
+        public uint summaryFreq = 50000;
+        [Tooltip(ConfigTooltip.timeHorizon)]
+        public uint timeHorizon = 64;
+        [Tooltip(ConfigTooltip.maxSteps)]
+        public uint maxSteps = 500000;
+        [Tooltip(ConfigTooltip.keepCheckpoints)]
+        public uint keepCheckpoints = 5;
+        [Tooltip(ConfigTooltip.checkpointInterval)]
+        public uint checkpointInterval = 500000;
         // We don't care with it, because we can use it as CLI param.
         //public string init_path
+        [Tooltip(ConfigTooltip.threaded)]
         public bool threaded = false;
         public Hyperparameters hyperparameters = new Hyperparameters(TrainerType.ppo);
         public NetworkSettings networkSettings = new();
@@ -78,10 +85,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 {
                     switch (yamlObject.name)
                     {
-                        case ConfigText.behaviorsText:
+                        case ConfigText.behaviors:
                             LoadBehaviors(yamlObject);
                             break;
-                        case ConfigText.environmentParametersText:
+                        case ConfigText.environmentParameters:
                             LoadEnvParameters(yamlObject);
                             break;
                     }
@@ -93,8 +100,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         protected void LoadBehaviors(YamlObject yaml)
         {
-            if (yaml.name != ConfigText.behaviorsText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.behaviorsText} is not right.");
+            if (yaml.name != ConfigText.behaviors || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.behaviors} is not right.");
 
             yaml = yaml.elements[0] as YamlObject;
             behaviorName = yaml.name;
@@ -106,7 +113,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
                     {
-                        case ConfigText.trainerTypeText:
+                        case ConfigText.trainerType:
                             if (value == "ppo")
                                 trainerType = TrainerType.ppo;
                             else if (value == "sac")
@@ -114,22 +121,22 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             else if (value == "poca")
                                 trainerType = TrainerType.poca;
                             break;
-                        case ConfigText.summaryFreqText:
-                            Int32.TryParse(value, out summaryFreq);
+                        case ConfigText.summaryFreq:
+                            UInt32.TryParse(value, out summaryFreq);
                             break;
-                        case ConfigText.timeHorizonText:
-                            Int32.TryParse(value, out timeHorizon);
+                        case ConfigText.timeHorizon:
+                            UInt32.TryParse(value, out timeHorizon);
                             break;
-                        case ConfigText.maxStepsText:
-                            Int32.TryParse(value, out maxSteps);
+                        case ConfigText.maxSteps:
+                            UInt32.TryParse(value, out maxSteps);
                             break;
-                        case ConfigText.keepCheckpointsText:
-                            Int32.TryParse(value, out keepCheckpoints);
+                        case ConfigText.keepCheckpoints:
+                            UInt32.TryParse(value, out keepCheckpoints);
                             break;
-                        case ConfigText.checkpointIntervalText:
-                            Int32.TryParse(value, out checkpointInterval);
+                        case ConfigText.checkpointInterval:
+                            UInt32.TryParse(value, out checkpointInterval);
                             break;
-                        case ConfigText.threadedText:
+                        case ConfigText.threaded:
                             if (value == "true")
                                 threaded = true;
                             break;
@@ -145,20 +152,20 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 {
                     switch (yamlObject.name)
                     {
-                        case ConfigText.hyperparametersText:
+                        case ConfigText.hyperparameters:
                             hyperparameters = new Hyperparameters(trainerType, yamlObject);
                             break;
-                        case ConfigText.networkSettingsText:
+                        case ConfigText.networkSettings:
                             networkSettings = new NetworkSettings(yamlObject);
                             break;
-                        case ConfigText.rewardSignalsText:
+                        case ConfigText.rewardSignals:
                             rewardSignals = new RewardSignals(yamlObject);
                             break;
-                        case ConfigText.behavioralCloningText:
+                        case ConfigText.behavioralCloning:
                             isUseBehavioralCloning = true;
                             behavioralCloningYamlObject = yamlObject;
                             break;
-                        case ConfigText.selfPlayText:
+                        case ConfigText.selfPlay:
                             isUseSelfPlay = true;
                             selfPlay = new SelfPlay(yamlObject);
                             break;
@@ -176,8 +183,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         protected void LoadEnvParameters(YamlObject yaml)
         {
-            if (yaml.name != ConfigText.environmentParametersText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.environmentParametersText} is not right.");
+            if (yaml.name != ConfigText.environmentParameters || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.environmentParameters} is not right.");
 
             foreach (var element in yaml.elements)
             {
@@ -194,7 +201,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
                 if (element is YamlObject yamlObject)
                 {
-                    if (yamlObject.elements.Find(x => x.name == ConfigText.samplerTypeText) != null)
+                    if (yamlObject.elements.Find(x => x.name == ConfigText.samplerType) != null)
                     {
                         var sampler = SampleFactory.GetSampler(yamlObject);
                         if (sampler != null)
@@ -207,7 +214,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                                 gaussianSamplers.Add(gaussianSampler);
                         }
                     }
-                    else if (yamlObject.elements.Find(x => x.name == ConfigText.curriculumText) != null)
+                    else if (yamlObject.elements.Find(x => x.name == ConfigText.curriculum) != null)
                         curriculums.Add(new Curriculum(yamlObject));
                 }
             }
@@ -234,7 +241,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         protected YamlObject ConvertBehaviorsToYaml()
         {
             var behaviors = new YamlObject();
-            behaviors.name = ConfigText.behaviorsText;
+            behaviors.name = ConfigText.behaviors;
 
             var mlName = new YamlObject()
             {
@@ -243,13 +250,13 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             };
             behaviors.elements.Add(mlName);
 
-            mlName.elements.Add(new YamlValue(ConfigText.trainerTypeText, trainerType));
-            mlName.elements.Add(new YamlValue(ConfigText.summaryFreqText, summaryFreq));
-            mlName.elements.Add(new YamlValue(ConfigText.timeHorizonText, timeHorizon));
-            mlName.elements.Add(new YamlValue(ConfigText.maxStepsText, maxSteps));
-            mlName.elements.Add(new YamlValue(ConfigText.keepCheckpointsText, keepCheckpoints));
-            mlName.elements.Add(new YamlValue(ConfigText.checkpointIntervalText, checkpointInterval));
-            mlName.elements.Add(new YamlValue(ConfigText.threadedText, threaded));
+            mlName.elements.Add(new YamlValue(ConfigText.trainerType, trainerType));
+            mlName.elements.Add(new YamlValue(ConfigText.summaryFreq, summaryFreq));
+            mlName.elements.Add(new YamlValue(ConfigText.timeHorizon, timeHorizon));
+            mlName.elements.Add(new YamlValue(ConfigText.maxSteps, maxSteps));
+            mlName.elements.Add(new YamlValue(ConfigText.keepCheckpoints, keepCheckpoints));
+            mlName.elements.Add(new YamlValue(ConfigText.checkpointInterval, checkpointInterval));
+            mlName.elements.Add(new YamlValue(ConfigText.threaded, threaded));
 
             var hp = hyperparameters.ToYaml(trainerType);
             hp.parent = mlName;
@@ -283,7 +290,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         protected YamlObject ConvertEnvParametersToYaml()
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.environmentParametersText;
+            yaml.name = ConfigText.environmentParameters;
 
             foreach (var item in simpleValues)
                 AddEnvParamToYaml(yaml, item);

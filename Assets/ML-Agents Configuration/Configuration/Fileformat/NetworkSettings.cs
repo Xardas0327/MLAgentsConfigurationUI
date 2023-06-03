@@ -21,8 +21,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public NetworkSettings(YamlObject yaml)
         {
-            if (yaml == null || yaml.name != ConfigText.networkSettingsText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.networkSettingsText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.networkSettings || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.networkSettings} is not right.");
 
             foreach (var element in yaml.elements)
             {
@@ -31,17 +31,17 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
                     {
-                        case ConfigText.hiddenUnitsText:
+                        case ConfigText.hiddenUnits:
                             Int32.TryParse(value, out hiddenUnits);
                             break;
-                        case ConfigText.numLayersText:
+                        case ConfigText.numLayers:
                             Int32.TryParse(value, out numLayers);
                             break;
-                        case ConfigText.normalizeText:
+                        case ConfigText.normalize:
                             if (value == "true")
                                 normalize = true;
                             break;
-                        case ConfigText.visEncodeTypeText:
+                        case ConfigText.visEncodeType:
                             // default is the simple
                             switch(value)
                             {
@@ -59,7 +59,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                                     break;
                             }
                             break;
-                        case ConfigText.conditioningTypeText:
+                        case ConfigText.conditioningType:
                             if (value == "none")
                                 conditioningType = ConditioningType.none;
                             break;
@@ -71,7 +71,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 {
                     switch (yamlObject.name)
                     {
-                        case ConfigText.memoryText:
+                        case ConfigText.memory:
                             isUseMemory = true;
                             memory = new Memory(yamlObject);
                             break;
@@ -83,19 +83,19 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public YamlObject ToYaml()
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.networkSettingsText;
+            yaml.name = ConfigText.networkSettings;
 
-            yaml.elements.Add(new YamlValue(ConfigText.hiddenUnitsText, hiddenUnits));
-            yaml.elements.Add(new YamlValue(ConfigText.numLayersText, numLayers));
-            yaml.elements.Add(new YamlValue(ConfigText.normalizeText, normalize));
-            yaml.elements.Add(new YamlValue(ConfigText.visEncodeTypeText, visEncodeType));
-            yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, conditioningType));
+            yaml.elements.Add(new YamlValue(ConfigText.hiddenUnits, hiddenUnits));
+            yaml.elements.Add(new YamlValue(ConfigText.numLayers, numLayers));
+            yaml.elements.Add(new YamlValue(ConfigText.normalize, normalize));
+            yaml.elements.Add(new YamlValue(ConfigText.visEncodeType, visEncodeType));
+            yaml.elements.Add(new YamlValue(ConfigText.conditioningType, conditioningType));
 
             if(isUseMemory && memory != null)
             {
                 var m = memory.ToYaml();
                 m.parent = yaml;
-                yaml.elements.Add(new YamlValue(ConfigText.conditioningTypeText, m));
+                yaml.elements.Add(new YamlValue(ConfigText.conditioningType, m));
             }
             return yaml;
         }

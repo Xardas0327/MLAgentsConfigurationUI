@@ -13,8 +13,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 
         public CuriosityIntrinsicReward(YamlObject yaml)
         {
-            if (yaml == null || yaml.name != ConfigText.curiosityRewardText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.curiosityRewardText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.curiosityReward || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.curiosityReward} is not right.");
 
             Init(yaml);
         }
@@ -29,7 +29,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
                     {
-                        case ConfigText.learningRateText:
+                        case ConfigText.learningRate:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out learningRate);
                             break;
                     }
@@ -40,7 +40,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
                 {
                     switch (yamlObject.name)
                     {
-                        case ConfigText.networkSettingsText:
+                        case ConfigText.networkSettings:
                             networkSettings = new NetworkSettings(yamlObject);
                             break;
                     }
@@ -50,9 +50,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
         public override YamlObject ToYaml()
         {
             var yaml = base.ToYaml();
-            yaml.name = ConfigText.curiosityRewardText;
+            yaml.name = ConfigText.curiosityReward;
 
-            yaml.elements.Add(new YamlValue(ConfigText.learningRateText, learningRate));
+            yaml.elements.Add(new YamlValue(ConfigText.learningRate, learningRate));
 
             var ns = networkSettings.ToYaml();
             ns.parent = yaml;

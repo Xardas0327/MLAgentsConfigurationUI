@@ -23,8 +23,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public SelfPlay(YamlObject yaml)
         {
-            if (yaml == null || yaml.name != ConfigText.selfPlayText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.selfPlayText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.selfPlay || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.selfPlay} is not right.");
 
             bool wasTeamChange = false;
             foreach (var element in yaml.elements)
@@ -34,23 +34,23 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
                     {
-                        case ConfigText.saveStepsText:
+                        case ConfigText.saveSteps:
                             Int32.TryParse(value, out saveSteps);
                             break;
-                        case ConfigText.teamChangeText:
+                        case ConfigText.teamChange:
                             Int32.TryParse(value, out teamChange);
                             wasTeamChange = true;
                             break;
-                        case ConfigText.swapStepsText:
+                        case ConfigText.swapSteps:
                             Int32.TryParse(value, out swapSteps);
                             break;
-                        case ConfigText.playAgainstLatestModelRatioText:
+                        case ConfigText.playAgainstLatestModelRatio:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out playAgainstLatestModelRatio);
                             break;
-                        case ConfigText.windowText:
+                        case ConfigText.window:
                             Int32.TryParse(value, out window);
                             break;
-                        case ConfigText.initialEloText:
+                        case ConfigText.initialElo:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out initialElo);
                             break;
                     }
@@ -64,14 +64,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public YamlObject ToYaml()
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.selfPlayText;
+            yaml.name = ConfigText.selfPlay;
 
-            yaml.elements.Add(new YamlValue(ConfigText.saveStepsText, saveSteps));
-            yaml.elements.Add(new YamlValue(ConfigText.teamChangeText, teamChange));
-            yaml.elements.Add(new YamlValue(ConfigText.swapStepsText, swapSteps));
-            yaml.elements.Add(new YamlValue(ConfigText.playAgainstLatestModelRatioText, playAgainstLatestModelRatio));
-            yaml.elements.Add(new YamlValue(ConfigText.windowText, window));
-            yaml.elements.Add(new YamlValue(ConfigText.initialEloText, initialElo));
+            yaml.elements.Add(new YamlValue(ConfigText.saveSteps, saveSteps));
+            yaml.elements.Add(new YamlValue(ConfigText.teamChange, teamChange));
+            yaml.elements.Add(new YamlValue(ConfigText.swapSteps, swapSteps));
+            yaml.elements.Add(new YamlValue(ConfigText.playAgainstLatestModelRatio, playAgainstLatestModelRatio));
+            yaml.elements.Add(new YamlValue(ConfigText.window, window));
+            yaml.elements.Add(new YamlValue(ConfigText.initialElo, initialElo));
 
             return yaml;
         }

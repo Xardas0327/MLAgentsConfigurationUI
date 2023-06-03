@@ -23,8 +23,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public RewardSignals(YamlObject yaml)
         {
-            if (yaml == null || yaml.name != ConfigText.rewardSignalsText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.rewardSignalsText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.rewardSignals || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.rewardSignals} is not right.");
 
             foreach (var element in yaml.elements)
             {
@@ -32,19 +32,19 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 {
                     switch (yamlObject.name)
                     {
-                        case ConfigText.extrinsicRewardText:
+                        case ConfigText.extrinsicReward:
                             isUseExtrinsic = true;
                             extrinsic = new ExtrinsicReward(yamlObject);
                             break;
-                        case ConfigText.curiosityRewardText:
+                        case ConfigText.curiosityReward:
                             isUseCuriosity = true;
                             curiosity = new CuriosityIntrinsicReward(yamlObject);
                             break;
-                        case ConfigText.gailRewardText:
+                        case ConfigText.gailReward:
                             isUseGail = true;
                             gail = new GailIntrinsicReward(yamlObject);
                             break;
-                        case ConfigText.rndRewardText:
+                        case ConfigText.rndReward:
                             isUseRnd = true;
                             rnd = new RndIntrinsicReward(yamlObject);
                             break;
@@ -56,7 +56,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public YamlObject ToYaml()
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.rewardSignalsText;
+            yaml.name = ConfigText.rewardSignals;
 
             if(isUseExtrinsic && extrinsic != null)
             {

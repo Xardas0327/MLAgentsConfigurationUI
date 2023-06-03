@@ -14,8 +14,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public Memory(YamlObject yaml)
         {
-            if (yaml == null || yaml.name != ConfigText.memoryText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.memoryText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.memory || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.memory} is not right.");
 
             foreach (var element in yaml.elements)
             {
@@ -24,10 +24,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
                     {
-                        case ConfigText.memorySizeText:
+                        case ConfigText.memorySize:
                             Int32.TryParse(value, out memorySize);
                             break;
-                        case ConfigText.sequenceLengthText:
+                        case ConfigText.sequenceLength:
                             Int32.TryParse(value, out sequenceLength);
                             break;
                     }
@@ -38,11 +38,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public YamlObject ToYaml()
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.memoryText;
+            yaml.name = ConfigText.memory;
 
-            yaml.elements.Add(new YamlValue(ConfigText.memorySizeText, memorySize));
+            yaml.elements.Add(new YamlValue(ConfigText.memorySize, memorySize));
 
-            yaml.elements.Add(new YamlValue(ConfigText.sequenceLengthText, sequenceLength));
+            yaml.elements.Add(new YamlValue(ConfigText.sequenceLength, sequenceLength));
 
             return yaml;
         }

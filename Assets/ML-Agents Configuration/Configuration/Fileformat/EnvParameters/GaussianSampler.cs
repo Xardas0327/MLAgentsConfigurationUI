@@ -20,12 +20,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             var yaml = (YamlObject)base.ToYaml();
 
             var samplerParameters = new YamlObject();
-            samplerParameters.name = ConfigText.samplerParametersText;
+            samplerParameters.name = ConfigText.samplerParameters;
             samplerParameters.parent = yaml;
             yaml.elements.Add(samplerParameters);
 
-            samplerParameters.elements.Add(new YamlValue(ConfigText.meanText, mean));
-            samplerParameters.elements.Add(new YamlValue(ConfigText.stDevText, stDev));
+            samplerParameters.elements.Add(new YamlValue(ConfigText.mean, mean));
+            samplerParameters.elements.Add(new YamlValue(ConfigText.stDev, stDev));
 
             return yaml;
         }

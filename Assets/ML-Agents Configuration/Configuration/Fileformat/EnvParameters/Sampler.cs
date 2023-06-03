@@ -15,7 +15,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             var yaml = new YamlObject();
             yaml.name = name;
 
-            yaml.elements.Add(new YamlValue(ConfigText.samplerTypeText, type));
+            yaml.elements.Add(new YamlValue(ConfigText.samplerType, type));
 
             return yaml;
         }

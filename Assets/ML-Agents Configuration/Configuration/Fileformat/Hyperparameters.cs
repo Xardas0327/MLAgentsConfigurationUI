@@ -11,29 +11,51 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     [Serializable]
     public class Hyperparameters
     {
+        [Tooltip(ConfigTooltip.learningRate)]
+        [Min(0)]
         public float learningRate = 0.0003f;
-        public int batchSize = 512; //This should always be multiple times smaller than buffer_size
-        public int bufferSize = 10240; //default = 10240 for PPO and 50000 for SAC
+        [Tooltip(ConfigTooltip.batchSize)]
+        public uint batchSize = 512;
+        [Tooltip(ConfigTooltip.bufferSize)]
+        public uint bufferSize = 10240; //default = 10240 for PPO and 50000 for SAC
+        [Tooltip (ConfigTooltip.learningRateSchedule)]
         public ScheduleType learningRateSchedule = ScheduleType.linear; //default = linear for PPO and constant for SAC
 
         [Header("PPO/POCA specific")]
+        [Tooltip(ConfigTooltip.beta)]
+        [Min(0)]
         public float beta = 0.005f;
+        [Tooltip(ConfigTooltip.epsilon)]
+        [Min(0)]
         public float epsilon = 0.2f;
+        [Tooltip(ConfigTooltip.betaSchedule)]
         public ScheduleType betaSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
+        [Tooltip(ConfigTooltip.epsilonSchedule)]
         public ScheduleType epsilonSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
+        [Tooltip(ConfigTooltip.lambd)]
+        [Min(0)]
         public float lambd = 0.95f;
-        public int numEpoch = 3;
+        [Tooltip(ConfigTooltip.numEpoch)]
+        public uint numEpoch = 3;
         
         [Header("SAC specific")]
-        public int bufferInitSteps = 0;
+        [Tooltip(ConfigTooltip.bufferInitSteps)]
+        public uint bufferInitSteps = 0;
+        [Tooltip(ConfigTooltip.initEntcoef)]
+        [Min(0)]
         public float initEntcoef = 1f;
+        [Tooltip(ConfigTooltip.saveReplayBuffer)]
         public bool saveReplayBuffer = false;
+        [Tooltip(ConfigTooltip.tau)]
+        [Min(0)]
         public float tau = 0.005f;
-        public float stepsPerUpdate = 1;
-        public float rewardSignalNumUpdate = 1; //The default should be the stepsPerUpdate
+        [Tooltip(ConfigTooltip.stepsPerUpdate)]
+        public uint stepsPerUpdate = 1;
+        [Tooltip(ConfigTooltip.rewardSignalNumUpdate)]
+        public uint rewardSignalNumUpdate = 1; //The default should be the stepsPerUpdate
 
-        const int defaultPPOBufferSize = 10240;
-        const int defaultSACBufferSize = 50000;
+        const uint defaultPPOBufferSize = 10240;
+        const uint defaultSACBufferSize = 50000;
 
         public static readonly string[] OnlyPpoAndPocaFields = 
         {
@@ -63,8 +85,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public Hyperparameters(TrainerType trainerType, YamlObject yaml)
         {
-            if (yaml == null || yaml.name != ConfigText.hyperparametersText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.hyperparametersText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.hyperparameters || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.hyperparameters} is not right.");
 
             bufferSize = trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPPOBufferSize;
             learningRateSchedule = trainerType == TrainerType.sac ? ScheduleType.constant : ScheduleType.linear;
@@ -82,67 +104,67 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     string value = yamlValue.value.ToLower();
                     switch(yamlValue.name)
                     {
-                        case ConfigText.learningRateText:
+                        case ConfigText.learningRate:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out learningRate);
                             break;
-                        case ConfigText.batchSizeText:
-                            Int32.TryParse(value, out batchSize);
+                        case ConfigText.batchSize:
+                            UInt32.TryParse(value, out batchSize);
                             break;
-                        case ConfigText.bufferSizeText:
-                            Int32.TryParse(value, out bufferSize);
+                        case ConfigText.bufferSize:
+                            UInt32.TryParse(value, out bufferSize);
                             break;
-                        case ConfigText.learningRateScheduleText:
+                        case ConfigText.learningRateSchedule:
                             if (value == "constant")
                                 learningRateSchedule = ScheduleType.constant;
                             break;
 
                         //PPO and POCA specific Configurations
-                        case ConfigText.betaText:
+                        case ConfigText.beta:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out beta);
                             break;
-                        case ConfigText.epsilonText:
+                        case ConfigText.epsilon:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out epsilon);
                             break;
-                        case ConfigText.betaScheduleText:
+                        case ConfigText.betaSchedule:
                             if (value == "constant")
                                 betaSchedule = ScheduleType.constant;
 
                             wasBetaSchedule = true;
                             break;
-                        case ConfigText.epsilonScheduleText:
+                        case ConfigText.epsilonSchedule:
                             if (value == "constant")
                                 epsilonSchedule = ScheduleType.constant;
 
                             wasEpsilonSchedule = true;
                             break;
-                        case ConfigText.lambdText:
+                        case ConfigText.lambd:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out lambd);
                             break;
-                        case ConfigText.numEpochText:
-                            Int32.TryParse(value, out numEpoch);
+                        case ConfigText.numEpoch:
+                            UInt32.TryParse(value, out numEpoch);
                             break;
 
                         //SAC-specific Configurations
-                        case ConfigText.bufferInitStepsText:
-                            Int32.TryParse(value, out bufferInitSteps);
+                        case ConfigText.bufferInitSteps:
+                            UInt32.TryParse(value, out bufferInitSteps);
                             break;
-                        case ConfigText.initEntcoefText:
+                        case ConfigText.initEntcoef:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out initEntcoef);
                             break;
-                        case ConfigText.saveReplayBufferText:
+                        case ConfigText.saveReplayBuffer:
                             if (value == "true")
                                 saveReplayBuffer = true;
                             break;
-                        case ConfigText.tauText:
+                        case ConfigText.tau:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out tau);
                             break;
-                        case ConfigText.stepsPerUpdateText:
-                            float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out stepsPerUpdate);
+                        case ConfigText.stepsPerUpdate:
+                            UInt32.TryParse(value, out stepsPerUpdate);
 
                             wasStepsPerUpdate = true;
                             break;
-                        case ConfigText.rewardSignalNumUpdateText:
-                            float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out rewardSignalNumUpdate);
+                        case ConfigText.rewardSignalNumUpdate:
+                            UInt32.TryParse(value, out rewardSignalNumUpdate);
 
                             wasRewardSignalNumUpdate = true;
                             break;
@@ -166,36 +188,36 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public YamlObject ToYaml(TrainerType trainerType)
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.hyperparametersText;
+            yaml.name = ConfigText.hyperparameters;
 
-            yaml.elements.Add(new YamlValue(ConfigText.learningRateText, learningRate));
-            yaml.elements.Add(new YamlValue(ConfigText.batchSizeText, batchSize));
-            yaml.elements.Add(new YamlValue(ConfigText.bufferSizeText, bufferSize));
-            yaml.elements.Add(new YamlValue(ConfigText.learningRateScheduleText, learningRateSchedule));
+            yaml.elements.Add(new YamlValue(ConfigText.learningRate, learningRate));
+            yaml.elements.Add(new YamlValue(ConfigText.batchSize, batchSize));
+            yaml.elements.Add(new YamlValue(ConfigText.bufferSize, bufferSize));
+            yaml.elements.Add(new YamlValue(ConfigText.learningRateSchedule, learningRateSchedule));
 
             switch(trainerType)
             {
                 case TrainerType.ppo:
                 case TrainerType.poca:
-                    yaml.elements.Add(new YamlValue(ConfigText.betaText, beta));
-                    yaml.elements.Add(new YamlValue(ConfigText.epsilonText, epsilon));
+                    yaml.elements.Add(new YamlValue(ConfigText.beta, beta));
+                    yaml.elements.Add(new YamlValue(ConfigText.epsilon, epsilon));
 
                     if(learningRateSchedule != betaSchedule)
-                        yaml.elements.Add(new YamlValue(ConfigText.betaScheduleText, betaSchedule));
+                        yaml.elements.Add(new YamlValue(ConfigText.betaSchedule, betaSchedule));
 
                     if (learningRateSchedule != epsilonSchedule)
-                        yaml.elements.Add(new YamlValue(ConfigText.epsilonScheduleText, epsilonSchedule));
+                        yaml.elements.Add(new YamlValue(ConfigText.epsilonSchedule, epsilonSchedule));
 
-                    yaml.elements.Add(new YamlValue(ConfigText.lambdText, lambd));
-                    yaml.elements.Add(new YamlValue(ConfigText.numEpochText, numEpoch));
+                    yaml.elements.Add(new YamlValue(ConfigText.lambd, lambd));
+                    yaml.elements.Add(new YamlValue(ConfigText.numEpoch, numEpoch));
                     break;
                 case TrainerType.sac:
-                    yaml.elements.Add(new YamlValue(ConfigText.bufferInitStepsText, bufferInitSteps));
-                    yaml.elements.Add(new YamlValue(ConfigText.initEntcoefText, initEntcoef));
-                    yaml.elements.Add(new YamlValue(ConfigText.saveReplayBufferText, saveReplayBuffer));
-                    yaml.elements.Add(new YamlValue(ConfigText.tauText, tau));
-                    yaml.elements.Add(new YamlValue(ConfigText.stepsPerUpdateText, stepsPerUpdate));
-                    yaml.elements.Add(new YamlValue(ConfigText.rewardSignalNumUpdateText, rewardSignalNumUpdate));
+                    yaml.elements.Add(new YamlValue(ConfigText.bufferInitSteps, bufferInitSteps));
+                    yaml.elements.Add(new YamlValue(ConfigText.initEntcoef, initEntcoef));
+                    yaml.elements.Add(new YamlValue(ConfigText.saveReplayBuffer, saveReplayBuffer));
+                    yaml.elements.Add(new YamlValue(ConfigText.tau, tau));
+                    yaml.elements.Add(new YamlValue(ConfigText.stepsPerUpdate, stepsPerUpdate));
+                    yaml.elements.Add(new YamlValue(ConfigText.rewardSignalNumUpdate, rewardSignalNumUpdate));
                     break;
             }
 

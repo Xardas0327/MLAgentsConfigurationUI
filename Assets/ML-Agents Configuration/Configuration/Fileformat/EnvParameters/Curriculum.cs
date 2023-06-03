@@ -15,11 +15,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
         public Curriculum(YamlObject yaml)
         {
             if (yaml == null || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.curriculumText} is not right.");
+                throw new System.Exception($"The {ConfigText.curriculum} is not right.");
 
-            var curriculum = yaml.elements.Find(x => x.name == ConfigText.curriculumText);
+            var curriculum = yaml.elements.Find(x => x.name == ConfigText.curriculum);
             if (curriculum == null)
-                throw new System.Exception($"The {ConfigText.curriculumText} is not right.");
+                throw new System.Exception($"The {ConfigText.curriculum} is not right.");
 
             name = yaml.name;
 

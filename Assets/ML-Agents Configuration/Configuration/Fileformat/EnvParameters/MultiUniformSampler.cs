@@ -34,7 +34,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             var yaml = (YamlObject)base.ToYaml();
 
             var samplerParameters = new YamlObject();
-            samplerParameters.name = ConfigText.samplerParametersText;
+            samplerParameters.name = ConfigText.samplerParameters;
             samplerParameters.parent = yaml;
             yaml.elements.Add(samplerParameters);
 
@@ -49,7 +49,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             }
             sb.Append("]");
 
-            samplerParameters.elements.Add(new YamlValue(ConfigText.intervalsText, sb.ToString()));
+            samplerParameters.elements.Add(new YamlValue(ConfigText.intervals, sb.ToString()));
 
             return yaml;
         }
