@@ -32,5 +32,16 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string tau = "How aggressively to update the target network used for bootstrapping value estimation in SAC.";
         public const string stepsPerUpdate = "Average ratio of agent steps (actions) taken to updates made of the agent's policy.\nTypical range: 1 - 20";
         public const string rewardSignalNumUpdate = "Number of steps per mini batch sampled and used for updating the reward signals.";
+
+        //NetworkSettings
+        public const string hiddenUnits = "Number of units in the hidden layers of the neural network.\nTypical range: 32 - 512";
+        public const string numLayers = "The number of hidden layers in the neural network.\nTypical range: 1 - 3";
+        public const string normalize = "Whether normalization is applied to the vector observation inputs.";
+        public const string visEncodeType = "Encoder type for encoding visual observations.";
+        public const string conditioningType = "Conditioning type for the policy using goal observations.\nNone: it treats the goal observations as regular observations.\nHyper: it uses a HyperNetwork with goal observations as input to generate some of the weights of the policy.";
+
+        public const string memorySize = "Size of the memory an agent must keep.\nIt is required that it is divisible by 2.";
+        public const string sequenceLength = "Defines how long the sequences of experiences must be while training.";
+
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
@@ -7,8 +8,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     [Serializable]
     public class Memory
     {
-        public int memorySize = 128;
-        public int sequenceLength = 64;
+        [Tooltip(ConfigTooltip.memorySize)]
+        public uint memorySize = 128;
+        [Tooltip(ConfigTooltip.sequenceLength)]
+        public uint sequenceLength = 64;
 
         public Memory() { }
 
@@ -25,10 +28,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     switch (yamlValue.name)
                     {
                         case ConfigText.memorySize:
-                            Int32.TryParse(value, out memorySize);
+                            UInt32.TryParse(value, out memorySize);
                             break;
                         case ConfigText.sequenceLength:
-                            Int32.TryParse(value, out sequenceLength);
+                            UInt32.TryParse(value, out sequenceLength);
                             break;
                     }
                 }

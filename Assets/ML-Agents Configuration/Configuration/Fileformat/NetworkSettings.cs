@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
@@ -9,10 +10,15 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     [Serializable]
     public class NetworkSettings
     {
-        public int hiddenUnits = 128;
-        public int numLayers = 2;
+        [Tooltip(ConfigTooltip.hiddenUnits)]
+        public uint hiddenUnits = 128;
+        [Tooltip(ConfigTooltip.numLayers)]
+        public uint numLayers = 2;
+        [Tooltip(ConfigTooltip.normalize)]
         public bool normalize = false;
+        [Tooltip(ConfigTooltip.visEncodeType)]
         public VisEncodeType visEncodeType = VisEncodeType.simple;
+        [Tooltip(ConfigTooltip.conditioningType)]
         public ConditioningType conditioningType = ConditioningType.hyper;
         public bool isUseMemory = false;
         public Memory memory = null;
@@ -32,10 +38,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     switch (yamlValue.name)
                     {
                         case ConfigText.hiddenUnits:
-                            Int32.TryParse(value, out hiddenUnits);
+                            UInt32.TryParse(value, out hiddenUnits);
                             break;
                         case ConfigText.numLayers:
-                            Int32.TryParse(value, out numLayers);
+                            UInt32.TryParse(value, out numLayers);
                             break;
                         case ConfigText.normalize:
                             if (value == "true")
