@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
@@ -10,18 +11,26 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     [Serializable]
     public class CompletionCriteria
     {
+        [Tooltip(ConfigTooltip.measure)]
         public CompletionCriteriaMeasure measure;
+        [Tooltip(ConfigTooltip.behavior)]
         public string behavior;
-        public bool signalSmoothing;
-        public uint minLessonLength;
+        [Tooltip(ConfigTooltip.threshold)]
+        [Min(0)]
         public float threshold;
+        [Tooltip(ConfigTooltip.minLessonLength)]
+        public uint minLessonLength;
+        [Tooltip(ConfigTooltip.signalSmoothing)]
+        public bool signalSmoothing;
+        [Tooltip(ConfigTooltip.requireReset)]
+        public bool requireReset;
 
         public CompletionCriteria() { }
 
         public CompletionCriteria(YamlObject yaml)
         {
-            if (yaml == null || yaml.name != ConfigText.completionCriteriaText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.completionCriteriaText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.completionCriteria || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.completionCriteria} is not right.");
 
             foreach (var element in yaml.elements)
             {
@@ -30,7 +39,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                     string lowerValue = yamlValue.value.ToLower();
                     switch (yamlValue.name)
                     {
-                        case ConfigText.measureText:
+                        case ConfigText.measure:
                             if (lowerValue == "progress")
                                 measure = CompletionCriteriaMeasure.progress;
                             else if (lowerValue == "reward")
@@ -38,18 +47,22 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                             else if (lowerValue == "Elo")
                                 measure = CompletionCriteriaMeasure.Elo;
                             break;
-                        case ConfigText.behaviorText:
+                        case ConfigText.behavior:
                             behavior = yamlValue.value;
                             break;
-                        case ConfigText.signalSmoothingText:
+                        case ConfigText.threshold:
+                            float.TryParse(lowerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out threshold);
+                            break;
+                        case ConfigText.minLessonLength:
+                            UInt32.TryParse(lowerValue, out minLessonLength);
+                            break;
+                        case ConfigText.signalSmoothing:
                             if (lowerValue == "true")
                                 signalSmoothing = true;
                             break;
-                        case ConfigText.minLessonLengthText:
-                            UInt32.TryParse(lowerValue, out minLessonLength);
-                            break;
-                        case ConfigText.thresholdText:
-                            float.TryParse(lowerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out threshold);
+                        case ConfigText.requireReset:
+                            if (lowerValue == "true")
+                                signalSmoothing = true;
                             break;
                     }
                 }
@@ -59,13 +72,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
         public YamlObject ToYaml()
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.completionCriteriaText;
+            yaml.name = ConfigText.completionCriteria;
 
-            yaml.elements.Add(new YamlValue(ConfigText.measureText, measure));
-            yaml.elements.Add(new YamlValue(ConfigText.behaviorText, behavior));
-            yaml.elements.Add(new YamlValue(ConfigText.signalSmoothingText, signalSmoothing));
-            yaml.elements.Add(new YamlValue(ConfigText.minLessonLengthText, minLessonLength));
-            yaml.elements.Add(new YamlValue(ConfigText.thresholdText, threshold));
+            yaml.elements.Add(new YamlValue(ConfigText.measure, measure));
+            yaml.elements.Add(new YamlValue(ConfigText.behavior, behavior));
+            yaml.elements.Add(new YamlValue(ConfigText.threshold, threshold));
+            yaml.elements.Add(new YamlValue(ConfigText.minLessonLength, minLessonLength));
+            yaml.elements.Add(new YamlValue(ConfigText.signalSmoothing, signalSmoothing));
+            yaml.elements.Add(new YamlValue(ConfigText.requireReset, requireReset));
 
             return yaml;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
@@ -7,23 +8,30 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     [Serializable]
     public class BehavioralCloning
     {
+        [Tooltip(ConfigTooltip.behavioralCloningDemoPath)]
         public string demoPath;
+        [Tooltip(ConfigTooltip.behavioralCloningStrength)]
+        [Min(0)]
         public float strength = 1f;
-        public int steps = 0;
-        public int batchSize;//if not specified, it will default to the batch_size of the trainer.
-        public int numEpoch;//if not specified, it will default to the numEpoch of the trainer.
-        public int samplesPerUpdate = 0;
+        [Tooltip(ConfigTooltip.behavioralCloningSteps)]
+        public uint steps = 0;
+        [Tooltip(ConfigTooltip.behavioralCloningBatchSize)]
+        public uint batchSize;//if not specified, it will default to the batch_size of the trainer.
+        [Tooltip(ConfigTooltip.behavioralCloningNumEpoch)]
+        public uint numEpoch;//if not specified, it will default to the numEpoch of the trainer.
+        [Tooltip(ConfigTooltip.behavioralCloningSamplesPerUpdate)]
+        public uint samplesPerUpdate = 0;
 
-        public BehavioralCloning(int defaultBatchSize, int defaultNumEpoch) 
+        public BehavioralCloning(uint defaultBatchSize, uint defaultNumEpoch) 
         {
             batchSize = defaultBatchSize;
             numEpoch = defaultNumEpoch;
         }
 
-        public BehavioralCloning(YamlObject yaml, int defaultBatchSize, int defaultNumEpoch)
+        public BehavioralCloning(YamlObject yaml, uint defaultBatchSize, uint defaultNumEpoch)
         {
-            if (yaml == null || yaml.name != ConfigText.behavioralCloningText || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.behavioralCloningText} is not right.");
+            if (yaml == null || yaml.name != ConfigText.behavioralCloning || yaml.elements.Count < 1)
+                throw new System.Exception($"The {ConfigText.behavioralCloning} is not right.");
 
             batchSize = defaultBatchSize;
             numEpoch = defaultNumEpoch;
@@ -35,43 +43,43 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     string value = yamlValue.value.ToLower();
                     switch (yamlValue.name)
                     {
-                        case ConfigText.demoPathText:
+                        case ConfigText.demoPath:
                             demoPath = yamlValue.value; // we have to have the original string.
                             break;
-                        case ConfigText.strengthText:
+                        case ConfigText.strength:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out strength);
                             break;
-                        case ConfigText.stepsText:
-                            Int32.TryParse(value, out steps);
+                        case ConfigText.steps:
+                            UInt32.TryParse(value, out steps);
                             break;
-                        case ConfigText.batchSizeText:
-                            Int32.TryParse(value, out batchSize);
+                        case ConfigText.batchSize:
+                            UInt32.TryParse(value, out batchSize);
                             break;
-                        case ConfigText.numEpochText:
-                            Int32.TryParse(value, out numEpoch);
+                        case ConfigText.numEpoch:
+                            UInt32.TryParse(value, out numEpoch);
                             break;
-                        case ConfigText.samplesPerUpdateText:
-                            Int32.TryParse(value, out samplesPerUpdate);
+                        case ConfigText.samplesPerUpdate:
+                            UInt32.TryParse(value, out samplesPerUpdate);
                             break;
                     }
                 }
             }
 
             if (string.IsNullOrEmpty(demoPath))
-                throw new System.Exception($"The {ConfigText.demoPathText} can't be empty in {ConfigText.behavioralCloningText}.");
+                throw new System.Exception($"The {ConfigText.demoPath} can't be empty in {ConfigText.behavioralCloning}.");
         }
 
         public YamlObject ToYaml()
         {
             var yaml = new YamlObject();
-            yaml.name = ConfigText.behavioralCloningText;
+            yaml.name = ConfigText.behavioralCloning;
 
-            yaml.elements.Add(new YamlValue(ConfigText.demoPathText, demoPath));
-            yaml.elements.Add(new YamlValue(ConfigText.strengthText, strength));
-            yaml.elements.Add(new YamlValue(ConfigText.stepsText, steps));
-            yaml.elements.Add(new YamlValue(ConfigText.batchSizeText, batchSize));
-            yaml.elements.Add(new YamlValue(ConfigText.numEpochText, numEpoch));
-            yaml.elements.Add(new YamlValue(ConfigText.samplesPerUpdateText, samplesPerUpdate));
+            yaml.elements.Add(new YamlValue(ConfigText.demoPath, demoPath));
+            yaml.elements.Add(new YamlValue(ConfigText.strength, strength));
+            yaml.elements.Add(new YamlValue(ConfigText.steps, steps));
+            yaml.elements.Add(new YamlValue(ConfigText.batchSize, batchSize));
+            yaml.elements.Add(new YamlValue(ConfigText.numEpoch, numEpoch));
+            yaml.elements.Add(new YamlValue(ConfigText.samplesPerUpdate, samplesPerUpdate));
 
             return yaml;
         }

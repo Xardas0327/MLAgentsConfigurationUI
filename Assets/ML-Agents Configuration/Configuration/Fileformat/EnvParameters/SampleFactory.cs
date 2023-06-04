@@ -8,8 +8,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     {
         public static Sampler GetSampler(YamlObject yaml)
         {
-            var samplerType = yaml.elements.Find(x => x.name == ConfigText.samplerTypeText);
-            var samplerParameters = yaml.elements.Find(x => x.name == ConfigText.samplerParametersText);
+            var samplerType = yaml.elements.Find(x => x.name == ConfigText.samplerType);
+            var samplerParameters = yaml.elements.Find(x => x.name == ConfigText.samplerParameters);
             if (samplerType == null || samplerParameters == null)
                 throw new System.Exception("The sampler has to have sampler_type and sampler_parameters.");
 
@@ -46,7 +46,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                 {
                     switch (yamlValue.name)
                     {
-                        case ConfigText.minValueText:
+                        case ConfigText.minValue:
                             if (!float.TryParse(
                                 yamlValue.value,
                                 NumberStyles.Any,
@@ -57,7 +57,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                                 throw new System.Exception("A Uniform Sampler has unvalid min value");
                             }
                             break;
-                        case ConfigText.maxValueText:
+                        case ConfigText.maxValue:
                             if(!float.TryParse(
                                 yamlValue.value,
                                 NumberStyles.Any,
@@ -77,7 +77,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
         private static MultiUniformSampler CreateMultiUniformSampler(YamlObject parameters)
         {
             var sampler = new MultiUniformSampler();
-            var intervals = parameters.elements.Find(x => x.name == ConfigText.intervalsText);
+            var intervals = parameters.elements.Find(x => x.name == ConfigText.intervals);
 
             if (intervals != null && (intervals is YamlValue yamlValue))
             {
@@ -131,7 +131,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                 {
                     switch (yamlValue.name)
                     {
-                        case ConfigText.meanText:
+                        case ConfigText.mean:
                             if(!float.TryParse(
                                 yamlValue.value,
                                 NumberStyles.Any,
@@ -143,7 +143,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                                 throw new System.Exception("A Gaussian Sampler has unvalid mean value");
                             }
                             break;
-                        case ConfigText.stDevText:
+                        case ConfigText.stDev:
                             if (!float.TryParse(
                                 yamlValue.value,
                                 NumberStyles.Any,

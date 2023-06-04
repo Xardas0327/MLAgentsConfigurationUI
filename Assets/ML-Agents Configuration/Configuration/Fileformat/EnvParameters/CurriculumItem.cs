@@ -1,6 +1,7 @@
 using Xardas.MLAgents.Yaml;
 using System.Globalization;
 using System;
+using UnityEngine;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 {
@@ -9,7 +10,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     public class CurriculumItem
     {
         public string name;
+        [Tooltip(ConfigTooltip.isUseCompletionCriteria)]
         public bool isUseCompletionCriteria;
+        [Tooltip(ConfigTooltip.completionCriteria)]
         public CompletionCriteria completionCriteria;
         public float value;
 
@@ -23,10 +26,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                 {
                     switch(yamlValue.name)
                     {
-                        case ConfigText.nameText:
+                        case ConfigText.name:
                             name = yamlValue.value;
                             break;
-                        case ConfigText.valueText:
+                        case ConfigText.value:
                             float.TryParse(yamlValue.value, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
                             break;
                     }
@@ -37,7 +40,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                 {
                     switch (yamlObject.name)
                     {
-                        case ConfigText.completionCriteriaText:
+                        case ConfigText.completionCriteria:
                             isUseCompletionCriteria = true;
                             completionCriteria = new CompletionCriteria(yamlObject);
                             break;
@@ -51,12 +54,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             var yaml = new YamlObject();
             yaml.name = YamlFile.ArrayItemName;
 
-            yaml.elements.Add(new YamlValue(ConfigText.nameText, name));
+            yaml.elements.Add(new YamlValue(ConfigText.name, name));
 
             if(isUseCompletionCriteria && completionCriteria != null)
                 yaml.elements.Add(completionCriteria.ToYaml());
 
-            yaml.elements.Add(new YamlValue(ConfigText.valueText, value));
+            yaml.elements.Add(new YamlValue(ConfigText.value, value));
 
             return yaml;
         }
