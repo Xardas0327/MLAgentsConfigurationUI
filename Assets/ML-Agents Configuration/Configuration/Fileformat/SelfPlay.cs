@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
@@ -7,14 +8,20 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     [Serializable]
     public class SelfPlay
     {
-        public int saveSteps = 20000;
-        public int teamChange;
-        public int swapSteps = 10000;
+        [Tooltip(ConfigTooltip.saveSteps)]
+        public uint saveSteps = 20000;
+        [Tooltip(ConfigTooltip.teamChange)]
+        public uint teamChange; //default = 5 * save_steps
+        [Tooltip(ConfigTooltip.swapSteps)]
+        public uint swapSteps = 10000;
+        [Tooltip(ConfigTooltip.playAgainstLatestModelRatio)]
+        [Min(0)]
         public float playAgainstLatestModelRatio = 0.5f;
-        public int window = 10;
+        [Tooltip(ConfigTooltip.window)]
+        public uint window = 10;
         public float initialElo = 1200f;
 
-        int DefaultTeamChange { get { return 5 * saveSteps; } }
+        uint DefaultTeamChange { get { return 5 * saveSteps; } }
 
         public SelfPlay() 
         {
@@ -35,20 +42,20 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     switch (yamlValue.name)
                     {
                         case ConfigText.saveSteps:
-                            Int32.TryParse(value, out saveSteps);
+                            UInt32.TryParse(value, out saveSteps);
                             break;
                         case ConfigText.teamChange:
-                            Int32.TryParse(value, out teamChange);
+                            UInt32.TryParse(value, out teamChange);
                             wasTeamChange = true;
                             break;
                         case ConfigText.swapSteps:
-                            Int32.TryParse(value, out swapSteps);
+                            UInt32.TryParse(value, out swapSteps);
                             break;
                         case ConfigText.playAgainstLatestModelRatio:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out playAgainstLatestModelRatio);
                             break;
                         case ConfigText.window:
-                            Int32.TryParse(value, out window);
+                            UInt32.TryParse(value, out window);
                             break;
                         case ConfigText.initialElo:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out initialElo);

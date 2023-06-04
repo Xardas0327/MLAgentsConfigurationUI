@@ -72,5 +72,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string behavioralCloningBatchSize = "Number of demonstration experiences used for one iteration of a gradient descent update.\nTypical range\nContinuous: 512 - 5120\nDiscrete: 32 - 512";
         public const string behavioralCloningNumEpoch = "Number of passes through the experience buffer during gradient descent.\nTypical range: 3 - 10";
         public const string behavioralCloningSamplesPerUpdate = "Maximum number of samples to use during each imitation update.\nTypical range: Buffer Size";
+
+        //Self play
+        public const string saveSteps = "Number of trainer steps between snapshots.\nTypical range: 10000 - 100000";
+        public const string teamChange = "Number of trainer_steps between switching the learning team.\nTypical range: 4x-10x where x=Save steps";
+        public const string swapSteps = "Number of ghost steps (not trainer steps) between swapping the opponents policy with a different snapshot.\nTypical range: 10000 - 100000";
+        public const string playAgainstLatestModelRatio = "Probability an agent will play against the latest opponent policy.\nTypical range: 0.0 - 1.0";
+        public const string window = "Size of the sliding window of past snapshots from which the agent's opponents are sampled.\nTypical range: 5 - 30";
     }
 }
