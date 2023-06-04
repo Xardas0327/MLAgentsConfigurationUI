@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
@@ -7,12 +8,19 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     [Serializable]
     public class BehavioralCloning
     {
+        [Tooltip(ConfigTooltip.behavioralCloningDemoPath)]
         public string demoPath;
+        [Tooltip(ConfigTooltip.behavioralCloningStrength)]
+        [Min(0)]
         public float strength = 1f;
-        public int steps = 0;
+        [Tooltip(ConfigTooltip.behavioralCloningSteps)]
+        public uint steps = 0;
+        [Tooltip(ConfigTooltip.behavioralCloningBatchSize)]
         public uint batchSize;//if not specified, it will default to the batch_size of the trainer.
+        [Tooltip(ConfigTooltip.behavioralCloningNumEpoch)]
         public uint numEpoch;//if not specified, it will default to the numEpoch of the trainer.
-        public int samplesPerUpdate = 0;
+        [Tooltip(ConfigTooltip.behavioralCloningSamplesPerUpdate)]
+        public uint samplesPerUpdate = 0;
 
         public BehavioralCloning(uint defaultBatchSize, uint defaultNumEpoch) 
         {
@@ -42,7 +50,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out strength);
                             break;
                         case ConfigText.steps:
-                            Int32.TryParse(value, out steps);
+                            UInt32.TryParse(value, out steps);
                             break;
                         case ConfigText.batchSize:
                             UInt32.TryParse(value, out batchSize);
@@ -51,7 +59,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             UInt32.TryParse(value, out numEpoch);
                             break;
                         case ConfigText.samplesPerUpdate:
-                            Int32.TryParse(value, out samplesPerUpdate);
+                            UInt32.TryParse(value, out samplesPerUpdate);
                             break;
                     }
                 }

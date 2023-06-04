@@ -13,8 +13,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         //Hyperparameters
         public const string learningRate = "Initial learning rate for gradient descent.\nTypical range: 1e-5 - 1e-3";
-        public const string batchSize = "Number of experiences in each iteration of gradient descent. This should always be multiple times smaller than buffer size.";
-        public const string bufferSize = "PPO/POCA: Number of experiences to collect before updating the policy model.\nSAC: The max size of the experience buffer.";
+        public const string batchSize = "Number of experiences in each iteration of gradient descent. This should always be multiple times smaller than buffer size.\nTypical range\nContinuous - PPO: 512 - 5120\nContinuous - SAC: 128 - 1024\nDiscrete, PPO & SAC: 32 - 512";
+        public const string bufferSize = "PPO/POCA: Number of experiences to collect before updating the policy model.\nSAC: The max size of the experience buffer.\nTypical range\nPPO: 2048 - 409600\nSAC: 50000 - 1000000";
         public const string learningRateSchedule = "Linear: it decays the learning_rate linearly, reaching 0 at max_steps.\nConstant: it keeps the learning rate constant for the entire training run.";
 
         //Hyperparameters - PPO and POCA specific Configurations
@@ -64,5 +64,13 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string gailUseActions = "Determines whether the discriminator should discriminate based on both observations and actions, or just observations.";
         public const string gailUseVail = "Enables a variational bottleneck within the GAIL discriminator.";
 
+
+        //Behavioral Cloning
+        public const string behavioralCloningDemoPath = "The path to your .demo file or directory of .demo files. (Required)";
+        public const string behavioralCloningStrength = "Learning rate of the imitation relative to the learning rate of PPO, and roughly corresponds to how strongly we allow BC to influence the policy.\nTypical range: 0.1 - 0.5";
+        public const string behavioralCloningSteps = "It corresponds to the training steps over which Behavioral Cloning is active.";
+        public const string behavioralCloningBatchSize = "Number of demonstration experiences used for one iteration of a gradient descent update.\nTypical range\nContinuous: 512 - 5120\nDiscrete: 32 - 512";
+        public const string behavioralCloningNumEpoch = "Number of passes through the experience buffer during gradient descent.\nTypical range: 3 - 10";
+        public const string behavioralCloningSamplesPerUpdate = "Maximum number of samples to use during each imitation update.\nTypical range: Buffer Size";
     }
 }
