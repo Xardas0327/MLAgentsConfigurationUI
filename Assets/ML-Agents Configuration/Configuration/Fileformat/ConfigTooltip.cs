@@ -79,5 +79,20 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string swapSteps = "Number of ghost steps (not trainer steps) between swapping the opponents policy with a different snapshot.\nTypical range: 10000 - 100000";
         public const string playAgainstLatestModelRatio = "Probability an agent will play against the latest opponent policy.\nTypical range: 0.0 - 1.0";
         public const string window = "Size of the sliding window of past snapshots from which the agent's opponents are sampled.\nTypical range: 5 - 30";
+
+        //Environment Parameters
+
+        //Sampler
+        public const string stDev = "Standard deviation";
+
+        //Curriculum
+        public const string isUseCompletionCriteria = "This lesson has completion criteria. If it is false, completion criteria won't be in Yaml file.";
+        public const string completionCriteria = "Which determines what needs to happen in the simulation before the lesson can be considered complete.";
+        public const string measure = "What to measure learning progress, and advancement in lessons by.\nReward: it uses a measure of received reward.\nProgress: it uses the ratio of steps/max_steps\nElo: it is available only for self-play situations and uses Elo score as a curriculum completion measure.";
+        public const string behavior = "Specifies which behavior is being tracked.";
+        public const string threshold = "Determines at what point in value of `measure` the lesson should be increased.";
+        public const string minLessonLength = "The minimum number of episodes that should be completed before the lesson can change.";
+        public const string signalSmoothing = "Whether to weight the current progress measure by previous values.";
+        public const string requireReset = "Whether changing lesson requires the environment to reset.";
     }
 }

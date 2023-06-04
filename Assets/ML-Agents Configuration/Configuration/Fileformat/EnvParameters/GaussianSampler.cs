@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
@@ -8,6 +9,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     public class GaussianSampler : Sampler
     {
         public float mean;
+        [Tooltip(ConfigTooltip.stDev)]
         public float stDev;
 
         public GaussianSampler()

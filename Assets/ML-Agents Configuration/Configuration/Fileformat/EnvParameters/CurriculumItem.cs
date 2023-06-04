@@ -1,6 +1,7 @@
 using Xardas.MLAgents.Yaml;
 using System.Globalization;
 using System;
+using UnityEngine;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 {
@@ -9,7 +10,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     public class CurriculumItem
     {
         public string name;
+        [Tooltip(ConfigTooltip.isUseCompletionCriteria)]
         public bool isUseCompletionCriteria;
+        [Tooltip(ConfigTooltip.completionCriteria)]
         public CompletionCriteria completionCriteria;
         public float value;
 

@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
@@ -10,11 +11,19 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     [Serializable]
     public class CompletionCriteria
     {
+        [Tooltip(ConfigTooltip.measure)]
         public CompletionCriteriaMeasure measure;
+        [Tooltip(ConfigTooltip.behavior)]
         public string behavior;
-        public bool signalSmoothing;
-        public uint minLessonLength;
+        [Tooltip(ConfigTooltip.threshold)]
+        [Min(0)]
         public float threshold;
+        [Tooltip(ConfigTooltip.minLessonLength)]
+        public uint minLessonLength;
+        [Tooltip(ConfigTooltip.signalSmoothing)]
+        public bool signalSmoothing;
+        [Tooltip(ConfigTooltip.requireReset)]
+        public bool requireReset;
 
         public CompletionCriteria() { }
 
@@ -41,15 +50,19 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                         case ConfigText.behavior:
                             behavior = yamlValue.value;
                             break;
-                        case ConfigText.signalSmoothing:
-                            if (lowerValue == "true")
-                                signalSmoothing = true;
+                        case ConfigText.threshold:
+                            float.TryParse(lowerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out threshold);
                             break;
                         case ConfigText.minLessonLength:
                             UInt32.TryParse(lowerValue, out minLessonLength);
                             break;
-                        case ConfigText.threshold:
-                            float.TryParse(lowerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out threshold);
+                        case ConfigText.signalSmoothing:
+                            if (lowerValue == "true")
+                                signalSmoothing = true;
+                            break;
+                        case ConfigText.requireReset:
+                            if (lowerValue == "true")
+                                signalSmoothing = true;
                             break;
                     }
                 }
@@ -63,9 +76,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 
             yaml.elements.Add(new YamlValue(ConfigText.measure, measure));
             yaml.elements.Add(new YamlValue(ConfigText.behavior, behavior));
-            yaml.elements.Add(new YamlValue(ConfigText.signalSmoothing, signalSmoothing));
-            yaml.elements.Add(new YamlValue(ConfigText.minLessonLength, minLessonLength));
             yaml.elements.Add(new YamlValue(ConfigText.threshold, threshold));
+            yaml.elements.Add(new YamlValue(ConfigText.minLessonLength, minLessonLength));
+            yaml.elements.Add(new YamlValue(ConfigText.signalSmoothing, signalSmoothing));
+            yaml.elements.Add(new YamlValue(ConfigText.requireReset, requireReset));
 
             return yaml;
         }
