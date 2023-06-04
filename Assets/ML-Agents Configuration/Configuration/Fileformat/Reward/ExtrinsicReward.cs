@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat.Reward
@@ -7,7 +8,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
     [Serializable]
     public class ExtrinsicReward
     {
+        [Tooltip(ConfigTooltip.extrinsicStrength)]
+        [Min(0f)]
         public float strength = 1f;
+        [Tooltip(ConfigTooltip.extrinsicGamma)]
+        [Range(0f, 0.9999f)]
         public float gamma = 0.99f;
 
         public ExtrinsicReward() { }
