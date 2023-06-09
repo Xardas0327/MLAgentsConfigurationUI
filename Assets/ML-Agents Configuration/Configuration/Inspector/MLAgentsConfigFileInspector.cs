@@ -47,27 +47,9 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 {
                     using (new EditorGUI.DisabledScope("m_Script" == iterator.propertyPath))
                     {
-                        if (iterator.type == typeof(Hyperparameters).Name)
+                        if (iterator.type == typeof(Behavior).Name)
                         {
-                            DrawObject(iterator, typeof(Hyperparameters), configFile, DrawHyperparametersProperties);
-                        }
-                        else if (iterator.type == typeof(NetworkSettings).Name)
-                        {
-                            DrawObject(iterator, typeof(NetworkSettings), configFile.networkSettings, DrawNetworkSettingsProperties);
-                        }
-                        else if (iterator.type == typeof(RewardSignals).Name)
-                        {
-                            DrawObject(iterator, typeof(RewardSignals), configFile, DrawRewardSignalsProperties);
-                        }
-                        else if (iterator.type == typeof(BehavioralCloning).Name)
-                        {
-                            if(configFile.isUseBehavioralCloning)
-                                DrawProperty(iterator);
-                        }
-                        else if (iterator.type == typeof(SelfPlay).Name)
-                        {
-                            if (configFile.isUseSelfPlay)
-                                DrawProperty(iterator);
+                            DrawObject(iterator, typeof(Behavior), configFile.behavior, DrawBehaviorProperties);
                         }
                         else
                             DrawProperty(iterator);
@@ -146,16 +128,44 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawHyperparametersProperties(SerializedProperty property, MLAgentsConfigFile configFile)
+        void DrawBehaviorProperties(SerializedProperty property, Behavior behavior)
+        {
+            if (property.type == typeof(Hyperparameters).Name)
+            {
+                DrawObject(property, typeof(Hyperparameters), behavior, DrawHyperparametersProperties);
+            }
+            else if (property.type == typeof(NetworkSettings).Name)
+            {
+                DrawObject(property, typeof(NetworkSettings), behavior.networkSettings, DrawNetworkSettingsProperties);
+            }
+            else if (property.type == typeof(RewardSignals).Name)
+            {
+                DrawObject(property, typeof(RewardSignals), behavior, DrawRewardSignalsProperties);
+            }
+            else if (property.type == typeof(BehavioralCloning).Name)
+            {
+                if (behavior.isUseBehavioralCloning)
+                    DrawProperty(property);
+            }
+            else if (property.type == typeof(SelfPlay).Name)
+            {
+                if (behavior.isUseSelfPlay)
+                    DrawProperty(property);
+            }
+            else
+                DrawProperty(property);
+        }
+
+        void DrawHyperparametersProperties(SerializedProperty property, Behavior behavior)
         {
             bool isPpoAndPocaSpecific = Hyperparameters.OnlyPpoAndPocaFields.Contains(property.name);
             bool isSacSpecific = Hyperparameters.OnlySacFields.Contains(property.name);
 
             //PPO OR POCA
-            if (((configFile.trainerType == TrainerType.ppo || configFile.trainerType == TrainerType.poca)
+            if (((behavior.trainerType == TrainerType.ppo || behavior.trainerType == TrainerType.poca)
                 && isPpoAndPocaSpecific)
                 // SAC
-                || (configFile.trainerType == TrainerType.sac && isSacSpecific)
+                || (behavior.trainerType == TrainerType.sac && isSacSpecific)
                 //Not specific field, so it should be render always
                 || (!isPpoAndPocaSpecific && !isSacSpecific))
             {
@@ -172,42 +182,42 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawRewardSignalsProperties(SerializedProperty property, MLAgentsConfigFile configFile)
+        void DrawRewardSignalsProperties(SerializedProperty property, Behavior behavior)
         {
             //Extrinsic
-            if(property.name == nameof(configFile.rewardSignals.extrinsic))
+            if(property.name == nameof(behavior.rewardSignals.extrinsic))
             {
-                if (configFile.rewardSignals.isUseExtrinsic)
+                if (behavior.rewardSignals.isUseExtrinsic)
                     DrawObject(property, typeof(ExtrinsicReward), (NetworkSettings)null,  DrawRewardProperties);
             }
             //Curiosity
-            else if (property.name == nameof(configFile.rewardSignals.curiosity))
+            else if (property.name == nameof(behavior.rewardSignals.curiosity))
             {
-                if(configFile.rewardSignals.isUseCuriosity)
+                if(behavior.rewardSignals.isUseCuriosity)
                     DrawObject(
                         property,
                         typeof(CuriosityIntrinsicReward),
-                        configFile.rewardSignals.curiosity.networkSettings,
+                        behavior.rewardSignals.curiosity.networkSettings,
                         DrawRewardProperties);
             }
             //Gail
-            else if (property.name == nameof(configFile.rewardSignals.gail))
+            else if (property.name == nameof(behavior.rewardSignals.gail))
             {
-                if(configFile.rewardSignals.isUseGail)
+                if(behavior.rewardSignals.isUseGail)
                     DrawObject(
                         property, 
                         typeof(GailIntrinsicReward),
-                        configFile.rewardSignals.gail.networkSettings,
+                        behavior.rewardSignals.gail.networkSettings,
                         DrawRewardProperties);
             }
             //Rnd
-            else if (property.name == nameof(configFile.rewardSignals.rnd))
+            else if (property.name == nameof(behavior.rewardSignals.rnd))
             {
-                if(configFile.rewardSignals.isUseRnd)
+                if(behavior.rewardSignals.isUseRnd)
                     DrawObject(
                         property, 
                         typeof(RndIntrinsicReward),
-                        configFile.rewardSignals.rnd.networkSettings,
+                        behavior.rewardSignals.rnd.networkSettings,
                         DrawRewardProperties);
             }
             else
