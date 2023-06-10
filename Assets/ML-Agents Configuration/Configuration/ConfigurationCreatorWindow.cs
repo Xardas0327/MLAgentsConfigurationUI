@@ -6,7 +6,7 @@ using Xardas.MLAgents.Configuration.Fileformat;
 
 namespace Xardas.MLAgents.Configuration
 {
-    public class ConfigurationWindow : EditorWindow
+    public class ConfigurationCreatorWindow : EditorWindow
     {
         const string fileExtension = ".yaml";
         string[] filesInTheFolder;
@@ -17,10 +17,10 @@ namespace Xardas.MLAgents.Configuration
         string fileData = null;
         Vector2 fileDataScrollPos;
 
-        [MenuItem("Window/ML-Agents/Config Files")]
+        [MenuItem("Window/ML-Agents/Config Creator")]
         public static void ShowWindow()
         {
-            GetWindow<ConfigurationWindow>("ML-Agents Config Files");
+            GetWindow<ConfigurationCreatorWindow>("ML-Agents Config Creator");
         }
 
         private void OnGUI()
@@ -59,6 +59,7 @@ namespace Xardas.MLAgents.Configuration
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
+            GUILayout.Space(5);
 
             if (GUILayout.Button("Create Asset file"))
                 CreateAsset();
@@ -157,26 +158,25 @@ namespace Xardas.MLAgents.Configuration
             if (string.IsNullOrEmpty(fileName))
                 throw new System.Exception("It has to have a file name.");
 
-            if (!Directory.Exists(Paths.FilesPath))
-                Directory.CreateDirectory(Paths.FilesPath);
+            string folderPath = Path.Combine(Paths.FilesPath, fileName);
 
-            string scriptableObjectFilePath = Path.Combine(Paths.FilesPath, fileName + ".asset");
-            if (File.Exists(scriptableObjectFilePath))
-                throw new System.Exception("This asset exists.");
+            if (Directory.Exists(folderPath))
+                throw new System.Exception("The folder exists. Please remove it or move it in another folder");
+            else
+                Directory.CreateDirectory(folderPath);
 
-            var file = ScriptableObject.CreateInstance<MLAgentsConfigFile>();
-            string filePath = Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension);
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
             if (isLoaded)
             {
-                var yaml = YamlFile.ConvertStringToObject(fileData); 
-                file.LoadData(filePath, yaml);
+                var yaml = YamlFile.ConvertStringToObject(fileData);
+                ConfigFileCreater.CreateFiles(folderPath, yaml);
             }
             else
-                file.LoadData(filePath);
-
-            AssetDatabase.CreateAsset(file, scriptableObjectFilePath);
-            AssetDatabase.SaveAssets();
-            Debug.Log("Asset is saved: " + fileName);
+            {
+                ConfigFileCreater.CreateBasicBehavior(folderPath);
+            }
         }
 
         private void Delete()

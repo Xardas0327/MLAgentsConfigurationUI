@@ -4,8 +4,9 @@ using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
-    [Serializable]
-    public class Behavior
+    public enum TrainerType { ppo, sac, poca }
+
+    public class Behavior : ScriptableObject, ConfigFile
     {
         [Tooltip(ConfigTooltip.behaviorName)]
         public string behaviorName;
@@ -32,12 +33,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public BehavioralCloning behavioralCloning = null;
         public bool isUseSelfPlay = false;
         public SelfPlay selfPlay = null;
-        public Behavior()
-        {
 
-        }
-
-        public Behavior(YamlObject yaml)
+        public void LoadData(YamlObject yaml)
         {
             if (yaml.name != ConfigText.behaviors || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.behaviors} is not right.");

@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat.EnvParameters;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
-    [Serializable]
-    public class EnvironmentParameters
+    public class EnvironmentParameters : ScriptableObject, ConfigFile
     {
         public List<SimpleValue> simpleValues = new();
         public List<UniformSampler> uniformSamplers = new();
@@ -28,12 +27,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 return length;
             }
         }
-        public EnvironmentParameters()
-        {
 
-        }
-
-        public EnvironmentParameters(YamlObject yaml)
+        public void LoadData(YamlObject yaml)
         {
             if (yaml.name != ConfigText.environmentParameters || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.environmentParameters} is not right.");
