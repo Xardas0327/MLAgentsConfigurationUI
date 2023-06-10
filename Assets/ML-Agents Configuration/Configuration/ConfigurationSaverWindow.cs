@@ -63,12 +63,15 @@ namespace Xardas.MLAgents.Configuration
             string fullFilePath = Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension);
 
             if(File.Exists(fullFilePath))
-                throw new System.Exception("This file name is used.");
-
-            var yaml = GenerateYamlFromFiles();
-
-            YamlFile.SaveObjectToFile(yaml, fullFilePath);
-            Debug.Log("File is saved: " + fullFilePath);
+            {
+                if (EditorUtility.DisplayDialog("Warning!",
+                $"The {fileName} file already exists. Do you want to overwrite it?", "Yes", "No"))
+                {
+                    CreateFile(fullFilePath);
+                }
+            }
+            else
+                CreateFile(fullFilePath);
         }
 
         private YamlElement GenerateYamlFromFiles()
@@ -87,6 +90,14 @@ namespace Xardas.MLAgents.Configuration
             }
 
             return yaml;
+        }
+
+        private void CreateFile(string path)
+        {
+            var yaml = GenerateYamlFromFiles();
+
+            YamlFile.SaveObjectToFile(yaml, path);
+            Debug.Log("File is saved: " + path);
         }
     }
 }

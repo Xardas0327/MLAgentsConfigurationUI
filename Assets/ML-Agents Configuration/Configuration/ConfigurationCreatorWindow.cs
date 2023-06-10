@@ -161,12 +161,23 @@ namespace Xardas.MLAgents.Configuration
             string folderPath = Path.Combine(Paths.FilesPath, fileName);
 
             if (Directory.Exists(folderPath))
-                throw new System.Exception("The folder exists. Please remove it or move it in another folder");
+            {
+                if (EditorUtility.DisplayDialog("Warning!",
+                $"The {fileName} folder already exists. If you continue maybe some files will be overwritten.", "Continue", "Stop"))
+                {
+                    CreateFiles(folderPath);
+                }
+            }
             else
+            {
                 Directory.CreateDirectory(folderPath);
+                CreateFiles(folderPath);
+            }
 
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
+        }
+
+        private void CreateFiles(string folderPath)
+        {
 
             if (isLoaded)
             {
