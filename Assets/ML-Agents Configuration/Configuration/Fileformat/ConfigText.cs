@@ -2,6 +2,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 {
     public static class ConfigText
     {
+        //Default
+        public const string defaultSettings = "default_settings";
+
         //Behavior
         public const string behaviors = "behaviors";
         public const string trainerType = "trainer_type";

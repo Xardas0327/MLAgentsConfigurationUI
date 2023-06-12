@@ -36,10 +36,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public void LoadData(YamlObject yaml)
         {
-            if (yaml.name != ConfigText.behaviors || yaml.elements.Count < 1)
-                throw new System.Exception($"The {ConfigText.behaviors} is not right.");
-
-            yaml = yaml.elements[0] as YamlObject;
             behaviorName = yaml.name;
             //Firstly the YamlValue only
             foreach (var element in yaml.elements)
