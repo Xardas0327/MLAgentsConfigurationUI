@@ -115,48 +115,43 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public YamlObject ToYaml()
         {
-            var yaml = new YamlObject();
-            yaml.name = ConfigText.behaviors;
-
-            var mlName = new YamlObject()
+            var yaml = new YamlObject()
             {
-                name = behaviorName,
-                parent = yaml
+                name = behaviorName
             };
-            yaml.elements.Add(mlName);
 
-            mlName.elements.Add(new YamlValue(ConfigText.trainerType, trainerType));
-            mlName.elements.Add(new YamlValue(ConfigText.summaryFreq, summaryFreq));
-            mlName.elements.Add(new YamlValue(ConfigText.timeHorizon, timeHorizon));
-            mlName.elements.Add(new YamlValue(ConfigText.maxSteps, maxSteps));
-            mlName.elements.Add(new YamlValue(ConfigText.keepCheckpoints, keepCheckpoints));
-            mlName.elements.Add(new YamlValue(ConfigText.checkpointInterval, checkpointInterval));
-            mlName.elements.Add(new YamlValue(ConfigText.threaded, threaded));
+            yaml.elements.Add(new YamlValue(ConfigText.trainerType, trainerType));
+            yaml.elements.Add(new YamlValue(ConfigText.summaryFreq, summaryFreq));
+            yaml.elements.Add(new YamlValue(ConfigText.timeHorizon, timeHorizon));
+            yaml.elements.Add(new YamlValue(ConfigText.maxSteps, maxSteps));
+            yaml.elements.Add(new YamlValue(ConfigText.keepCheckpoints, keepCheckpoints));
+            yaml.elements.Add(new YamlValue(ConfigText.checkpointInterval, checkpointInterval));
+            yaml.elements.Add(new YamlValue(ConfigText.threaded, threaded));
 
             var hp = hyperparameters.ToYaml(trainerType);
-            hp.parent = mlName;
-            mlName.elements.Add(hp);
+            hp.parent = yaml;
+            yaml.elements.Add(hp);
 
             var ns = networkSettings.ToYaml();
-            ns.parent = mlName;
-            mlName.elements.Add(ns);
+            ns.parent = yaml;
+            yaml.elements.Add(ns);
 
             var rs = rewardSignals.ToYaml();
-            rs.parent = mlName;
-            mlName.elements.Add(rs);
+            rs.parent = yaml;
+            yaml.elements.Add(rs);
 
             if (isUseBehavioralCloning && behavioralCloning != null)
             {
                 var bc = behavioralCloning.ToYaml();
-                bc.parent = mlName;
-                mlName.elements.Add(bc);
+                bc.parent = yaml;
+                yaml.elements.Add(bc);
             }
 
             if (isUseSelfPlay && selfPlay != null)
             {
                 var sp = selfPlay.ToYaml();
-                sp.parent = mlName;
-                mlName.elements.Add(sp);
+                sp.parent = yaml;
+                yaml.elements.Add(sp);
             }
 
             return yaml;

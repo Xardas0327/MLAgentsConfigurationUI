@@ -30,7 +30,7 @@ namespace Xardas.MLAgents.Configuration
             GUILayout.Space(10);
 
             EditorGUILayout.BeginHorizontal();
-            selectedFileIndex = EditorGUILayout.Popup("Files:", selectedFileIndex, filesInTheFolder);
+            selectedFileIndex = EditorGUILayout.Popup("Files", selectedFileIndex, filesInTheFolder);
             if (GUILayout.Button("Load file", GUILayout.Width(100)))
                 LoadFile();
             EditorGUILayout.EndHorizontal();
@@ -45,7 +45,7 @@ namespace Xardas.MLAgents.Configuration
             EditorGUILayout.BeginHorizontal();
 
             EditorGUI.BeginDisabledGroup(!isEditableFileName);
-            fileName = EditorGUILayout.TextField("File's name:", fileName);
+            fileName = EditorGUILayout.TextField("File's name", fileName);
             EditorGUI.EndDisabledGroup();
 
             if(GUILayout.Button("New", GUILayout.Width(100)))
@@ -67,7 +67,7 @@ namespace Xardas.MLAgents.Configuration
             if (fileData != null)
             {
                 GUILayout.Space(20);
-                EditorGUILayout.LabelField("File's data:");
+                EditorGUILayout.LabelField("File's data");
                 fileDataScrollPos = EditorGUILayout.BeginScrollView(fileDataScrollPos, GUILayout.Height(600));
                 EditorGUI.BeginDisabledGroup(true);
                 EditorGUILayout.TextArea(fileData);
