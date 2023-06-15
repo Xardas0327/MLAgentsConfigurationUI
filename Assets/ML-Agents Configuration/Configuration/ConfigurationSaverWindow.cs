@@ -12,7 +12,7 @@ namespace Xardas.MLAgents.Configuration
         const string fileExtension = ".yaml";
 
         string fileName;
-        List<Behavior> behaviors;
+        List<Behavior> behaviors = new();
         EnvironmentParameters environmentParameters;
 
         //Draw Behavior

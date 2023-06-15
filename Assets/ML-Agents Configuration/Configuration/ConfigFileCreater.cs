@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -27,6 +28,8 @@ namespace Xardas.MLAgents.Configuration
                 || yamlFile.elements.Count < 1 || !(yamlFile.elements[0] is YamlObject))
                 throw new System.Exception("The yaml file is not a valid MLAgents config file.");
 
+            List<YamlElement> behaviorYamls = null;
+            YamlObject defaultBehavior = null;
             foreach (var element in yamlFile.elements)
             {
                 if (element is YamlObject yamlObject)
@@ -34,24 +37,13 @@ namespace Xardas.MLAgents.Configuration
                     switch (yamlObject.name)
                     {
                         case ConfigText.defaultSettings:
-                            //later
+                            defaultBehavior = yamlObject;
                             break;
                         case ConfigText.behaviors:
                             if(yamlObject.elements.Count < 1)
                                 throw new System.Exception("The yaml file has to have a behavior.");
 
-                            foreach(var behaviorYaml in yamlObject.elements)
-                            {
-                                if (behaviorYaml is YamlObject behaviorYamlObject)
-                                {
-                                    var behavior = ScriptableObject.CreateInstance<Behavior>();
-                                    behavior.LoadData(behaviorYamlObject);
-
-                                    var behaviorFileName = behaviorYamlObject.name + fileExtension;
-                                    string behaviorFilePath = Path.Combine(path, behaviorFileName);
-                                    CreateAsset(behavior, behaviorFilePath);
-                                }
-                            }
+                            behaviorYamls = yamlObject.elements;
                             break;
                         case ConfigText.environmentParameters:
                             var envParams = ScriptableObject.CreateInstance<EnvironmentParameters>();
@@ -62,6 +54,22 @@ namespace Xardas.MLAgents.Configuration
                             CreateAsset(envParams, envParamsFilePath);
                             break;
                     }
+                }
+            }
+
+            if(behaviorYamls == null)
+                throw new System.Exception("The yaml file has to have a behavior.");
+
+            foreach (var behaviorYaml in behaviorYamls)
+            {
+                if (behaviorYaml is YamlObject behaviorYamlObject)
+                {
+                    var behavior = ScriptableObject.CreateInstance<Behavior>();
+                    behavior.LoadData(behaviorYamlObject);
+
+                    var behaviorFileName = behaviorYamlObject.name + fileExtension;
+                    string behaviorFilePath = Path.Combine(path, behaviorFileName);
+                    CreateAsset(behavior, behaviorFilePath);
                 }
             }
         }
