@@ -1,17 +1,15 @@
-#if UNITY_EDITOR
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;
 using Xardas.MLAgents.Configuration.Fileformat.Reward;
-using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Inspector
 {
-    [CustomEditor(typeof(MLAgentsConfigFile))]
-    public class MLAgentsConfigFileInspector : Editor
+    [CustomEditor(typeof(Behavior))]
+    public class BehaviorInspector : Editor
     {
         private static Dictionary<string, bool> showPropertiesOfObject = new();
         private const float depthSize = 15f;
@@ -19,23 +17,11 @@ namespace Xardas.MLAgents.Configuration.Inspector
         public override void OnInspectorGUI()
         {
             DrawIspector();
-
-            GUILayout.Space(20);
-            if (GUILayout.Button("Save Into File"))
-                Save();
-        }
-
-        private void Save()
-        {
-            var configFile = (MLAgentsConfigFile)target;
-
-            YamlFile.SaveObjectToFile(configFile.ToYaml(), configFile.YamlFolderPath);
-            Debug.Log("File is saved: " + configFile.YamlFolderPath);
         }
 
         void DrawIspector()
         {
-            var configFile = (MLAgentsConfigFile)target;
+            var behavior = (Behavior)target;
 
             using (new LocalizationGroup(target))
             {
@@ -49,24 +35,24 @@ namespace Xardas.MLAgents.Configuration.Inspector
                     {
                         if (iterator.type == typeof(Hyperparameters).Name)
                         {
-                            DrawObject(iterator, typeof(Hyperparameters), configFile, DrawHyperparametersProperties);
+                            DrawObject(iterator, typeof(Hyperparameters), behavior, DrawHyperparametersProperties);
                         }
                         else if (iterator.type == typeof(NetworkSettings).Name)
                         {
-                            DrawObject(iterator, typeof(NetworkSettings), configFile.networkSettings, DrawNetworkSettingsProperties);
+                            DrawObject(iterator, typeof(NetworkSettings), behavior.networkSettings, DrawNetworkSettingsProperties);
                         }
                         else if (iterator.type == typeof(RewardSignals).Name)
                         {
-                            DrawObject(iterator, typeof(RewardSignals), configFile, DrawRewardSignalsProperties);
+                            DrawObject(iterator, typeof(RewardSignals), behavior, DrawRewardSignalsProperties);
                         }
                         else if (iterator.type == typeof(BehavioralCloning).Name)
                         {
-                            if(configFile.isUseBehavioralCloning)
+                            if (behavior.isUseBehavioralCloning)
                                 DrawProperty(iterator);
                         }
                         else if (iterator.type == typeof(SelfPlay).Name)
                         {
-                            if (configFile.isUseSelfPlay)
+                            if (behavior.isUseSelfPlay)
                                 DrawProperty(iterator);
                         }
                         else
@@ -103,7 +89,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 showPropertiesOfObject.Add(property.propertyPath, false);
             }
 
-            if(property.depth == 0)
+            if (property.depth == 0)
             {
                 showPropertiesOfObject[property.propertyPath] =
                     EditorGUILayout.Foldout(showPropertiesOfObject[property.propertyPath], property.displayName);
@@ -146,16 +132,16 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawHyperparametersProperties(SerializedProperty property, MLAgentsConfigFile configFile)
+        void DrawHyperparametersProperties(SerializedProperty property, Behavior behavior)
         {
             bool isPpoAndPocaSpecific = Hyperparameters.OnlyPpoAndPocaFields.Contains(property.name);
             bool isSacSpecific = Hyperparameters.OnlySacFields.Contains(property.name);
 
             //PPO OR POCA
-            if (((configFile.trainerType == TrainerType.ppo || configFile.trainerType == TrainerType.poca)
+            if (((behavior.trainerType == TrainerType.ppo || behavior.trainerType == TrainerType.poca)
                 && isPpoAndPocaSpecific)
                 // SAC
-                || (configFile.trainerType == TrainerType.sac && isSacSpecific)
+                || (behavior.trainerType == TrainerType.sac && isSacSpecific)
                 //Not specific field, so it should be render always
                 || (!isPpoAndPocaSpecific && !isSacSpecific))
             {
@@ -172,42 +158,42 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawRewardSignalsProperties(SerializedProperty property, MLAgentsConfigFile configFile)
+        void DrawRewardSignalsProperties(SerializedProperty property, Behavior behavior)
         {
             //Extrinsic
-            if(property.name == nameof(configFile.rewardSignals.extrinsic))
+            if (property.name == nameof(behavior.rewardSignals.extrinsic))
             {
-                if (configFile.rewardSignals.isUseExtrinsic)
-                    DrawObject(property, typeof(ExtrinsicReward), (NetworkSettings)null,  DrawRewardProperties);
+                if (behavior.rewardSignals.isUseExtrinsic)
+                    DrawObject(property, typeof(ExtrinsicReward), (NetworkSettings)null, DrawRewardProperties);
             }
             //Curiosity
-            else if (property.name == nameof(configFile.rewardSignals.curiosity))
+            else if (property.name == nameof(behavior.rewardSignals.curiosity))
             {
-                if(configFile.rewardSignals.isUseCuriosity)
+                if (behavior.rewardSignals.isUseCuriosity)
                     DrawObject(
                         property,
                         typeof(CuriosityIntrinsicReward),
-                        configFile.rewardSignals.curiosity.networkSettings,
+                        behavior.rewardSignals.curiosity.networkSettings,
                         DrawRewardProperties);
             }
             //Gail
-            else if (property.name == nameof(configFile.rewardSignals.gail))
+            else if (property.name == nameof(behavior.rewardSignals.gail))
             {
-                if(configFile.rewardSignals.isUseGail)
+                if (behavior.rewardSignals.isUseGail)
                     DrawObject(
-                        property, 
+                        property,
                         typeof(GailIntrinsicReward),
-                        configFile.rewardSignals.gail.networkSettings,
+                        behavior.rewardSignals.gail.networkSettings,
                         DrawRewardProperties);
             }
             //Rnd
-            else if (property.name == nameof(configFile.rewardSignals.rnd))
+            else if (property.name == nameof(behavior.rewardSignals.rnd))
             {
-                if(configFile.rewardSignals.isUseRnd)
+                if (behavior.rewardSignals.isUseRnd)
                     DrawObject(
-                        property, 
+                        property,
                         typeof(RndIntrinsicReward),
-                        configFile.rewardSignals.rnd.networkSettings,
+                        behavior.rewardSignals.rnd.networkSettings,
                         DrawRewardProperties);
             }
             else
@@ -225,4 +211,3 @@ namespace Xardas.MLAgents.Configuration.Inspector
         }
     }
 }
-#endif

@@ -6,7 +6,7 @@ using Xardas.MLAgents.Configuration.Fileformat;
 
 namespace Xardas.MLAgents.Configuration
 {
-    public class ConfigurationWindow : EditorWindow
+    public class ConfigurationCreatorWindow : EditorWindow
     {
         const string fileExtension = ".yaml";
         string[] filesInTheFolder;
@@ -17,10 +17,10 @@ namespace Xardas.MLAgents.Configuration
         string fileData = null;
         Vector2 fileDataScrollPos;
 
-        [MenuItem("Window/ML-Agents/Config Files")]
+        [MenuItem("Window/ML-Agents/Config Creator")]
         public static void ShowWindow()
         {
-            GetWindow<ConfigurationWindow>("ML-Agents Config Files");
+            GetWindow<ConfigurationCreatorWindow>("ML-Agents Config Creator");
         }
 
         private void OnGUI()
@@ -30,7 +30,7 @@ namespace Xardas.MLAgents.Configuration
             GUILayout.Space(10);
 
             EditorGUILayout.BeginHorizontal();
-            selectedFileIndex = EditorGUILayout.Popup("Files:", selectedFileIndex, filesInTheFolder);
+            selectedFileIndex = EditorGUILayout.Popup("Files", selectedFileIndex, filesInTheFolder);
             if (GUILayout.Button("Load file", GUILayout.Width(100)))
                 LoadFile();
             EditorGUILayout.EndHorizontal();
@@ -45,7 +45,7 @@ namespace Xardas.MLAgents.Configuration
             EditorGUILayout.BeginHorizontal();
 
             EditorGUI.BeginDisabledGroup(!isEditableFileName);
-            fileName = EditorGUILayout.TextField("File's name:", fileName);
+            fileName = EditorGUILayout.TextField("File's name", fileName);
             EditorGUI.EndDisabledGroup();
 
             if(GUILayout.Button("New", GUILayout.Width(100)))
@@ -59,6 +59,7 @@ namespace Xardas.MLAgents.Configuration
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
+            GUILayout.Space(5);
 
             if (GUILayout.Button("Create Asset file"))
                 CreateAsset();
@@ -66,7 +67,7 @@ namespace Xardas.MLAgents.Configuration
             if (fileData != null)
             {
                 GUILayout.Space(20);
-                EditorGUILayout.LabelField("File's data:");
+                EditorGUILayout.LabelField("File's data");
                 fileDataScrollPos = EditorGUILayout.BeginScrollView(fileDataScrollPos, GUILayout.Height(600));
                 EditorGUI.BeginDisabledGroup(true);
                 EditorGUILayout.TextArea(fileData);
@@ -157,26 +158,36 @@ namespace Xardas.MLAgents.Configuration
             if (string.IsNullOrEmpty(fileName))
                 throw new System.Exception("It has to have a file name.");
 
-            if (!Directory.Exists(Paths.FilesPath))
-                Directory.CreateDirectory(Paths.FilesPath);
+            string folderPath = Path.Combine(Paths.FilesPath, fileName);
 
-            string scriptableObjectFilePath = Path.Combine(Paths.FilesPath, fileName + ".asset");
-            if (File.Exists(scriptableObjectFilePath))
-                throw new System.Exception("This asset exists.");
-
-            var file = ScriptableObject.CreateInstance<MLAgentsConfigFile>();
-            string filePath = Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension);
-            if (isLoaded)
+            if (Directory.Exists(folderPath))
             {
-                var yaml = YamlFile.ConvertStringToObject(fileData); 
-                file.LoadData(filePath, yaml);
+                if (EditorUtility.DisplayDialog("Warning!",
+                $"The {fileName} folder already exists. If you continue maybe some files will be overwritten.", "Continue", "Stop"))
+                {
+                    CreateFiles(folderPath);
+                }
             }
             else
-                file.LoadData(filePath);
+            {
+                Directory.CreateDirectory(folderPath);
+                CreateFiles(folderPath);
+            }
 
-            AssetDatabase.CreateAsset(file, scriptableObjectFilePath);
-            AssetDatabase.SaveAssets();
-            Debug.Log("Asset is saved: " + fileName);
+        }
+
+        private void CreateFiles(string folderPath)
+        {
+
+            if (isLoaded)
+            {
+                var yaml = YamlFile.ConvertStringToObject(fileData);
+                ConfigFileCreater.CreateFiles(folderPath, yaml);
+            }
+            else
+            {
+                ConfigFileCreater.CreateBasicBehavior(folderPath);
+            }
         }
 
         private void Delete()
