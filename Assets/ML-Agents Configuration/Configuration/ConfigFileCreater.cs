@@ -65,7 +65,7 @@ namespace Xardas.MLAgents.Configuration
                 if (behaviorYaml is YamlObject behaviorYamlObject)
                 {
                     var behavior = ScriptableObject.CreateInstance<Behavior>();
-                    behavior.LoadData(behaviorYamlObject);
+                    behavior.LoadData(YamlObject.Merge(defaultBehavior, behaviorYamlObject));
 
                     var behaviorFileName = behaviorYamlObject.name + fileExtension;
                     string behaviorFilePath = Path.Combine(path, behaviorFileName);
