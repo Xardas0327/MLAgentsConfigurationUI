@@ -2,11 +2,10 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
-using Xardas.MLAgents.Configuration.Fileformat;
 
 namespace Xardas.MLAgents.Configuration
 {
-    public class ConfigurationCreatorWindow : EditorWindow
+    public class ConfigurationImporterWindow : EditorWindow
     {
         const string fileExtension = ".yaml";
         string[] filesInTheFolder;
@@ -17,10 +16,10 @@ namespace Xardas.MLAgents.Configuration
         string fileData = null;
         Vector2 fileDataScrollPos;
 
-        [MenuItem("Window/ML-Agents/Config Creator")]
+        [MenuItem("Window/ML-Agents/Config Importer")]
         public static void ShowWindow()
         {
-            GetWindow<ConfigurationCreatorWindow>("ML-Agents Config Creator");
+            GetWindow<ConfigurationImporterWindow>("ML-Agents Config Importer");
         }
 
         private void OnGUI()
@@ -64,7 +63,7 @@ namespace Xardas.MLAgents.Configuration
             if (GUILayout.Button("Create Asset file"))
                 CreateAsset();
 
-            if (fileData != null)
+            if (!string.IsNullOrEmpty(fileData))
             {
                 GUILayout.Space(20);
                 EditorGUILayout.LabelField("File's data");
