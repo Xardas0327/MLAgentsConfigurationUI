@@ -7,7 +7,7 @@ using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration
 {
-    public class ConfigurationSaverWindow : EditorWindow
+    public class ConfigurationExporterWindow : EditorWindow
     {
         const string fileExtension = ".yaml";
 
@@ -19,10 +19,10 @@ namespace Xardas.MLAgents.Configuration
         Vector2 behaviorScrollPos;
         bool showBehaviors;
 
-        [MenuItem("Window/ML-Agents/Config Saver")]
+        [MenuItem("Window/ML-Agents/Config Exporter")]
         public static void ShowWindow()
         {
-            GetWindow<ConfigurationSaverWindow>("ML-Agents Config Saver");
+            GetWindow<ConfigurationExporterWindow>("ML-Agents Config Exporter");
         }
 
         private void OnGUI()
