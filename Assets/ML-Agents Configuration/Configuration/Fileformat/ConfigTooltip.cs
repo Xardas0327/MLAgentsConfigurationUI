@@ -86,8 +86,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string stDev = "Standard deviation";
 
         //Curriculum
-        public const string isUseCompletionCriteria = "This lesson has completion criteria. If it is false, completion criteria won't be in Yaml file.";
-        public const string completionCriteria = "Which determines what needs to happen in the simulation before the lesson can be considered complete.";
+        public const string completionCriteria = "Which determines what needs to happen in the simulation before the lesson can be considered complete.\nThe last lesson's completion criteria won't be in the yaml file.";
         public const string measure = "What to measure learning progress, and advancement in lessons by.\nReward: it uses a measure of received reward.\nProgress: it uses the ratio of steps/max_steps\nElo: it is available only for self-play situations and uses Elo score as a curriculum completion measure.";
         public const string behavior = "Specifies which behavior is being tracked.";
         public const string threshold = "Determines at what point in value of `measure` the lesson should be increased.";
