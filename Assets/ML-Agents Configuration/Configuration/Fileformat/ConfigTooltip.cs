@@ -75,6 +75,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         //Self play
         public const string saveSteps = "Number of trainer steps between snapshots.\nTypical range: 10000 - 100000";
+        public const string overwriteTeamChange = "Default value: 5 * save steps";
         public const string teamChange = "Number of trainer_steps between switching the learning team.\nTypical range: 4x-10x where x=Save steps";
         public const string swapSteps = "Number of ghost steps (not trainer steps) between swapping the opponents policy with a different snapshot.\nTypical range: 10000 - 100000";
         public const string playAgainstLatestModelRatio = "Probability an agent will play against the latest opponent policy.\nTypical range: 0.0 - 1.0";

@@ -53,7 +53,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
                         else if (iterator.type == typeof(SelfPlay).Name)
                         {
                             if (behavior.isUseSelfPlay)
-                                DrawProperty(iterator);
+                                DrawObject(iterator, typeof(SelfPlay), behavior.selfPlay, DrawSelfPlayProperties);
                         }
                         else
                             DrawProperty(iterator);
@@ -208,6 +208,15 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 DrawObject(property, typeof(NetworkSettings), networkSettings, DrawNetworkSettingsProperties);
             else
                 DrawProperty(property);
+        }
+
+        void DrawSelfPlayProperties(SerializedProperty property, SelfPlay selfPlay)
+        {
+            if (property.name != nameof(selfPlay.teamChange)
+                            || selfPlay.overwriteTeamChange)
+            {
+                DrawProperty(property);
+            }
         }
     }
 }
