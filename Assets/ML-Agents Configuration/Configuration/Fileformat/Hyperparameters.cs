@@ -16,8 +16,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public float learningRate = 0.0003f;
         [Tooltip(ConfigTooltip.batchSize)]
         public uint batchSize = 512;
+        [Tooltip(ConfigTooltip.overwriteBufferSize)]
+        public bool overwriteBufferSize = false;
         [Tooltip(ConfigTooltip.bufferSize)]
         public uint bufferSize = 10240; //default = 10240 for PPO and 50000 for SAC
+        [Tooltip(ConfigTooltip.overwriteLearningRateSchedule)]
+        public bool overwriteLearningRateSchedule = false;
         [Tooltip (ConfigTooltip.learningRateSchedule)]
         public ScheduleType learningRateSchedule = ScheduleType.linear; //default = linear for PPO and constant for SAC
 
@@ -28,8 +32,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         [Tooltip(ConfigTooltip.epsilon)]
         [Min(0)]
         public float epsilon = 0.2f;
+        [Tooltip(ConfigTooltip.overwriteBetaSchedule)]
+        public bool overwriteBetaSchedule = false;
         [Tooltip(ConfigTooltip.betaSchedule)]
         public ScheduleType betaSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
+        [Tooltip(ConfigTooltip.overwriteEpsilonSchedule)]
+        public bool overwriteEpsilonSchedule = false;
         [Tooltip(ConfigTooltip.epsilonSchedule)]
         public ScheduleType epsilonSchedule = ScheduleType.linear; //The default should be the learningRateSchedule
         [Tooltip(ConfigTooltip.lambd)]
@@ -51,6 +59,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public float tau = 0.005f;
         [Tooltip(ConfigTooltip.stepsPerUpdate)]
         public uint stepsPerUpdate = 1;
+        [Tooltip(ConfigTooltip.overwriteRewardSignalNumUpdate)]
+        public bool overwriteRewardSignalNumUpdate = false;
         [Tooltip(ConfigTooltip.rewardSignalNumUpdate)]
         public uint rewardSignalNumUpdate = 1; //The default should be the stepsPerUpdate
 
@@ -60,8 +70,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public static readonly string[] OnlyPpoAndPocaFields = 
         {
             nameof(beta), 
-            nameof(epsilon), 
+            nameof(epsilon),
+            nameof(overwriteBetaSchedule),
             nameof(betaSchedule),
+            nameof(overwriteEpsilonSchedule),
             nameof(epsilonSchedule),
             nameof(lambd),
             nameof(numEpoch),
@@ -74,6 +86,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             nameof(saveReplayBuffer),
             nameof(tau),
             nameof(stepsPerUpdate),
+            nameof(overwriteRewardSignalNumUpdate),
             nameof(rewardSignalNumUpdate),
         };
 
@@ -91,12 +104,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             bufferSize = trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPPOBufferSize;
             learningRateSchedule = trainerType == TrainerType.sac ? ScheduleType.constant : ScheduleType.linear;
 
-            bool wasBetaSchedule = false;
-            bool wasEpsilonSchedule = false;
-
-            bool wasStepsPerUpdate = false;
-            bool wasRewardSignalNumUpdate = false;
-
             foreach (var element in yaml.elements)
             {
                 if (element is YamlValue yamlValue)
@@ -112,8 +119,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             break;
                         case ConfigText.bufferSize:
                             UInt32.TryParse(value, out bufferSize);
+                            overwriteBufferSize = true;
                             break;
                         case ConfigText.learningRateSchedule:
+                            overwriteLearningRateSchedule = true;
                             if (value == "constant")
                                 learningRateSchedule = ScheduleType.constant;
                             break;
@@ -129,13 +138,13 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             if (value == "constant")
                                 betaSchedule = ScheduleType.constant;
 
-                            wasBetaSchedule = true;
+                            overwriteBetaSchedule = true;
                             break;
                         case ConfigText.epsilonSchedule:
                             if (value == "constant")
                                 epsilonSchedule = ScheduleType.constant;
 
-                            wasEpsilonSchedule = true;
+                            overwriteEpsilonSchedule = true;
                             break;
                         case ConfigText.lambd:
                             float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out lambd);
@@ -160,28 +169,26 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             break;
                         case ConfigText.stepsPerUpdate:
                             UInt32.TryParse(value, out stepsPerUpdate);
-
-                            wasStepsPerUpdate = true;
                             break;
                         case ConfigText.rewardSignalNumUpdate:
                             UInt32.TryParse(value, out rewardSignalNumUpdate);
 
-                            wasRewardSignalNumUpdate = true;
+                            overwriteRewardSignalNumUpdate = true;
                             break;
                     }
                 }
             }
 
             //The default of betaSchedule should be the learningRateSchedule
-            if (!wasBetaSchedule)
+            if (!overwriteBetaSchedule)
                 betaSchedule = learningRateSchedule;
 
             //The default of epsilonSchedule should be the learningRateSchedule
-            if (!wasEpsilonSchedule)
+            if (!overwriteEpsilonSchedule)
                 epsilonSchedule = learningRateSchedule;
 
             //The default of rewardSignalNumUpdate should be the stepsPerUpdate
-            if (wasStepsPerUpdate && !wasRewardSignalNumUpdate)
+            if (!overwriteRewardSignalNumUpdate)
                 rewardSignalNumUpdate = stepsPerUpdate;
         }
 
@@ -192,8 +199,16 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             yaml.elements.Add(new YamlValue(ConfigText.learningRate, learningRate));
             yaml.elements.Add(new YamlValue(ConfigText.batchSize, batchSize));
-            yaml.elements.Add(new YamlValue(ConfigText.bufferSize, bufferSize));
-            yaml.elements.Add(new YamlValue(ConfigText.learningRateSchedule, learningRateSchedule));
+
+            if (overwriteBufferSize)
+                yaml.elements.Add(new YamlValue(ConfigText.bufferSize, bufferSize));
+            else
+                yaml.elements.Add(new YamlValue(ConfigText.bufferSize, trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPPOBufferSize));
+
+            if (overwriteLearningRateSchedule)
+                yaml.elements.Add(new YamlValue(ConfigText.learningRateSchedule, learningRateSchedule));
+            else
+                yaml.elements.Add(new YamlValue(ConfigText.learningRateSchedule, trainerType == TrainerType.sac ? ScheduleType.constant : ScheduleType.linear));
 
             switch(trainerType)
             {
@@ -202,10 +217,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     yaml.elements.Add(new YamlValue(ConfigText.beta, beta));
                     yaml.elements.Add(new YamlValue(ConfigText.epsilon, epsilon));
 
-                    if(learningRateSchedule != betaSchedule)
+                    if(overwriteBetaSchedule)
                         yaml.elements.Add(new YamlValue(ConfigText.betaSchedule, betaSchedule));
 
-                    if (learningRateSchedule != epsilonSchedule)
+                    if (overwriteEpsilonSchedule)
                         yaml.elements.Add(new YamlValue(ConfigText.epsilonSchedule, epsilonSchedule));
 
                     yaml.elements.Add(new YamlValue(ConfigText.lambd, lambd));
@@ -217,7 +232,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     yaml.elements.Add(new YamlValue(ConfigText.saveReplayBuffer, saveReplayBuffer));
                     yaml.elements.Add(new YamlValue(ConfigText.tau, tau));
                     yaml.elements.Add(new YamlValue(ConfigText.stepsPerUpdate, stepsPerUpdate));
-                    yaml.elements.Add(new YamlValue(ConfigText.rewardSignalNumUpdate, rewardSignalNumUpdate));
+
+                    if (overwriteRewardSignalNumUpdate)
+                        yaml.elements.Add(new YamlValue(ConfigText.rewardSignalNumUpdate, rewardSignalNumUpdate));
                     break;
             }
 

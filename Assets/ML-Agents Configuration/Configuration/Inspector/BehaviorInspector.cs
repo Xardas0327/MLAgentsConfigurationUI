@@ -137,15 +137,48 @@ namespace Xardas.MLAgents.Configuration.Inspector
             bool isPpoAndPocaSpecific = Hyperparameters.OnlyPpoAndPocaFields.Contains(property.name);
             bool isSacSpecific = Hyperparameters.OnlySacFields.Contains(property.name);
 
-            //PPO OR POCA
-            if (((behavior.trainerType == TrainerType.ppo || behavior.trainerType == TrainerType.poca)
-                && isPpoAndPocaSpecific)
-                // SAC
-                || (behavior.trainerType == TrainerType.sac && isSacSpecific)
-                //Not specific field, so it should be render always
-                || (!isPpoAndPocaSpecific && !isSacSpecific))
+            //Not specific field, so it should be render always
+            if (!isPpoAndPocaSpecific && !isSacSpecific)
             {
-                DrawProperty(property);
+                if (property.name == nameof(behavior.hyperparameters.bufferSize))
+                {
+                    if (behavior.hyperparameters.overwriteBufferSize)
+                        DrawProperty(property);
+                }
+                else if(property.name == nameof(behavior.hyperparameters.learningRateSchedule))
+                {
+                    if (behavior.hyperparameters.overwriteLearningRateSchedule)
+                        DrawProperty(property);
+                }
+                else
+                    DrawProperty(property);
+            }
+            //PPO OR POCA
+            else if ((behavior.trainerType == TrainerType.ppo || behavior.trainerType == TrainerType.poca) && isPpoAndPocaSpecific)
+            {
+                if (property.name == nameof(behavior.hyperparameters.betaSchedule))
+                {
+                    if (behavior.hyperparameters.overwriteBetaSchedule)
+                        DrawProperty(property);
+                }
+                else if (property.name == nameof(behavior.hyperparameters.epsilonSchedule))
+                {
+                    if (behavior.hyperparameters.overwriteEpsilonSchedule)
+                        DrawProperty(property);
+                }
+                else
+                    DrawProperty(property);
+            }
+            // SAC
+            else if (behavior.trainerType == TrainerType.sac && isSacSpecific)
+            {
+                if (property.name == nameof(behavior.hyperparameters.rewardSignalNumUpdate))
+                {
+                    if (behavior.hyperparameters.overwriteRewardSignalNumUpdate)
+                        DrawProperty(property);
+                }
+                else
+                    DrawProperty(property);
             }
         }
 

@@ -14,13 +14,17 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         //Hyperparameters
         public const string learningRate = "Initial learning rate for gradient descent.\nTypical range: 1e-5 - 1e-3";
         public const string batchSize = "Number of experiences in each iteration of gradient descent. This should always be multiple times smaller than buffer size.\nTypical range\nContinuous - PPO: 512 - 5120\nContinuous - SAC: 128 - 1024\nDiscrete, PPO & SAC: 32 - 512";
+        public const string overwriteBufferSize = "Default:\nPPO/POCA: 10240\nSAC: 50000";
         public const string bufferSize = "PPO/POCA: Number of experiences to collect before updating the policy model.\nSAC: The max size of the experience buffer.\nTypical range\nPPO: 2048 - 409600\nSAC: 50000 - 1000000";
+        public const string overwriteLearningRateSchedule = "Default:\nPPO/POCA: linear\nSAC: constant";
         public const string learningRateSchedule = "Linear: it decays the learning_rate linearly, reaching 0 at max_steps.\nConstant: it keeps the learning rate constant for the entire training run.";
 
         //Hyperparameters - PPO and POCA specific Configurations
         public const string beta = "Strength of the entropy regularization, which makes the policy \"more random\".\nTypical range: 1e-4 - 1e-2";
         public const string epsilon = "Influences how rapidly the policy can evolve during training.\nTypical range: 0.1 - 0.3";
+        public const string overwriteBetaSchedule = "Default: learning rate schedule";
         public const string betaSchedule = "Determines how beta changes over time.";
+        public const string overwriteEpsilonSchedule = "Default: learning rate schedule";
         public const string epsilonSchedule = "Determines how epsilon changes over time (PPO only).";
         public const string lambd = " Regularization parameter (lambda) used when calculating the Generalized Advantage Estimate.\nTypical range: 0.9 - 0.95";
         public const string numEpoch = "Number of passes to make through the experience buffer when performing gradient descent optimization.\nTypical range: 3 - 10";
@@ -31,6 +35,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string saveReplayBuffer = "Whether to save and load the experience replay buffer as well as the model when quitting and re-starting training. ";
         public const string tau = "How aggressively to update the target network used for bootstrapping value estimation in SAC.";
         public const string stepsPerUpdate = "Average ratio of agent steps (actions) taken to updates made of the agent's policy.\nTypical range: 1 - 20";
+        public const string overwriteRewardSignalNumUpdate = "Default: steps per update";
         public const string rewardSignalNumUpdate = "Number of steps per mini batch sampled and used for updating the reward signals.";
 
         //NetworkSettings
