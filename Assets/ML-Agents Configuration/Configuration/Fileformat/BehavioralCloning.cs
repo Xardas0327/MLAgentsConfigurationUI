@@ -15,8 +15,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public float strength = 1f;
         [Tooltip(ConfigTooltip.behavioralCloningSteps)]
         public uint steps = 0;
+        [Tooltip(ConfigTooltip.behavioralCloningOverwriteBatchSize)]
+        public bool overwriteBatchSize = false;
         [Tooltip(ConfigTooltip.behavioralCloningBatchSize)]
         public uint batchSize;//if not specified, it will default to the batch_size of the trainer.
+        [Tooltip(ConfigTooltip.behavioralCloningOverwriteNumEpoch)]
+        public bool overwriteNumEpoch = false;
         [Tooltip(ConfigTooltip.behavioralCloningNumEpoch)]
         public uint numEpoch;//if not specified, it will default to the numEpoch of the trainer.
         [Tooltip(ConfigTooltip.behavioralCloningSamplesPerUpdate)]
@@ -54,9 +58,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             break;
                         case ConfigText.batchSize:
                             UInt32.TryParse(value, out batchSize);
+                            overwriteBatchSize = true;
                             break;
                         case ConfigText.numEpoch:
                             UInt32.TryParse(value, out numEpoch);
+                            overwriteNumEpoch = true;
                             break;
                         case ConfigText.samplesPerUpdate:
                             UInt32.TryParse(value, out samplesPerUpdate);
@@ -77,8 +83,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.elements.Add(new YamlValue(ConfigText.demoPath, demoPath));
             yaml.elements.Add(new YamlValue(ConfigText.strength, strength));
             yaml.elements.Add(new YamlValue(ConfigText.steps, steps));
-            yaml.elements.Add(new YamlValue(ConfigText.batchSize, batchSize));
-            yaml.elements.Add(new YamlValue(ConfigText.numEpoch, numEpoch));
+
+            if(overwriteBatchSize)
+                yaml.elements.Add(new YamlValue(ConfigText.batchSize, batchSize));
+
+            if (overwriteNumEpoch)
+                yaml.elements.Add(new YamlValue(ConfigText.numEpoch, numEpoch));
             yaml.elements.Add(new YamlValue(ConfigText.samplesPerUpdate, samplesPerUpdate));
 
             return yaml;

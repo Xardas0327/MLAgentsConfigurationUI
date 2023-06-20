@@ -202,13 +202,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             if (overwriteBufferSize)
                 yaml.elements.Add(new YamlValue(ConfigText.bufferSize, bufferSize));
-            else
-                yaml.elements.Add(new YamlValue(ConfigText.bufferSize, trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPPOBufferSize));
 
             if (overwriteLearningRateSchedule)
                 yaml.elements.Add(new YamlValue(ConfigText.learningRateSchedule, learningRateSchedule));
-            else
-                yaml.elements.Add(new YamlValue(ConfigText.learningRateSchedule, trainerType == TrainerType.sac ? ScheduleType.constant : ScheduleType.linear));
 
             switch(trainerType)
             {

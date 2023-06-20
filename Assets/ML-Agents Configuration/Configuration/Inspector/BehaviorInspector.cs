@@ -48,7 +48,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
                         else if (iterator.type == typeof(BehavioralCloning).Name)
                         {
                             if (behavior.isUseBehavioralCloning)
-                                DrawProperty(iterator);
+                                DrawObject(iterator, typeof(BehavioralCloning), behavior.behavioralCloning, DrawBehavioralCloningProperties);
                         }
                         else if (iterator.type == typeof(SelfPlay).Name)
                         {
@@ -239,6 +239,22 @@ namespace Xardas.MLAgents.Configuration.Inspector
         {
             if (property.type == typeof(NetworkSettings).Name)
                 DrawObject(property, typeof(NetworkSettings), networkSettings, DrawNetworkSettingsProperties);
+            else
+                DrawProperty(property);
+        }
+
+        void DrawBehavioralCloningProperties(SerializedProperty property, BehavioralCloning behavioralCloning)
+        {
+            if (property.name == nameof(behavioralCloning.batchSize))
+            {
+                if (behavioralCloning.overwriteBatchSize)
+                    DrawProperty(property);
+            }
+            else if (property.name == nameof(behavioralCloning.numEpoch))
+            {
+                if (behavioralCloning.overwriteNumEpoch)
+                    DrawProperty(property);
+            }
             else
                 DrawProperty(property);
         }
