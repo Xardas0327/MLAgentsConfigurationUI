@@ -43,8 +43,21 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
             curriculum.type = YamlObjectType.List;
             yaml.elements.Add(curriculum);
 
-            foreach (var item in lessons)
-                curriculum.elements.Add(item.ToYaml());
+            for(int i = 0; i < lessons.Count; ++i)
+            {
+                //last elem shouldn't have completion criteria
+                if (i == lessons.Count - 1)
+                {
+                    var cc = lessons[i].completionCriteria;
+                    lessons[i].completionCriteria = null;
+
+                    curriculum.elements.Add(lessons[i].ToYaml());
+
+                    lessons[i].completionCriteria = cc;
+                }
+                else
+                    curriculum.elements.Add(lessons[i].ToYaml());
+            }
 
             return yaml;
         }

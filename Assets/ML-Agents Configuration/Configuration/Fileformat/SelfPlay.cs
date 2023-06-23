@@ -10,6 +10,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     {
         [Tooltip(ConfigTooltip.saveSteps)]
         public uint saveSteps = 20000;
+        [Tooltip(ConfigTooltip.overwriteTeamChange)]
+        public bool overwriteTeamChange = false;
         [Tooltip(ConfigTooltip.teamChange)]
         public uint teamChange; //default = 5 * save_steps
         [Tooltip(ConfigTooltip.swapSteps)]
@@ -33,7 +35,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             if (yaml == null || yaml.name != ConfigText.selfPlay || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.selfPlay} is not right.");
 
-            bool wasTeamChange = false;
             foreach (var element in yaml.elements)
             {
                 if (element is YamlValue yamlValue)
@@ -46,7 +47,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             break;
                         case ConfigText.teamChange:
                             UInt32.TryParse(value, out teamChange);
-                            wasTeamChange = true;
+                            overwriteTeamChange = true;
                             break;
                         case ConfigText.swapSteps:
                             UInt32.TryParse(value, out swapSteps);
@@ -64,7 +65,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                 }
             }
 
-            if (!wasTeamChange)
+            if (!overwriteTeamChange)
                 teamChange = DefaultTeamChange;
         }
 
@@ -74,7 +75,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.name = ConfigText.selfPlay;
 
             yaml.elements.Add(new YamlValue(ConfigText.saveSteps, saveSteps));
-            yaml.elements.Add(new YamlValue(ConfigText.teamChange, teamChange));
+
+            if(overwriteTeamChange)
+                yaml.elements.Add(new YamlValue(ConfigText.teamChange, teamChange));
+            else
+                yaml.elements.Add(new YamlValue(ConfigText.teamChange, DefaultTeamChange));
+
             yaml.elements.Add(new YamlValue(ConfigText.swapSteps, swapSteps));
             yaml.elements.Add(new YamlValue(ConfigText.playAgainstLatestModelRatio, playAgainstLatestModelRatio));
             yaml.elements.Add(new YamlValue(ConfigText.window, window));

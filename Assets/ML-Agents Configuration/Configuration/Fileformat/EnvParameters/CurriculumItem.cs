@@ -10,8 +10,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
     public class CurriculumItem
     {
         public string name;
-        [Tooltip(ConfigTooltip.isUseCompletionCriteria)]
-        public bool isUseCompletionCriteria;
         [Tooltip(ConfigTooltip.completionCriteria)]
         public CompletionCriteria completionCriteria;
         public float value;
@@ -41,7 +39,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
                     switch (yamlObject.name)
                     {
                         case ConfigText.completionCriteria:
-                            isUseCompletionCriteria = true;
                             completionCriteria = new CompletionCriteria(yamlObject);
                             break;
                     }
@@ -56,7 +53,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
 
             yaml.elements.Add(new YamlValue(ConfigText.name, name));
 
-            if(isUseCompletionCriteria && completionCriteria != null)
+            if(completionCriteria != null)
                 yaml.elements.Add(completionCriteria.ToYaml());
 
             yaml.elements.Add(new YamlValue(ConfigText.value, value));

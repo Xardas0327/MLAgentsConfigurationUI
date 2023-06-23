@@ -6,7 +6,7 @@ using Xardas.MLAgents.Yaml;
 namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 {
     [Serializable]
-    public class GailIntrinsicReward
+    public class GailIntrinsicReward : IDemoPathObject
     {
         [Tooltip(ConfigTooltip.gailStrength)]
         [Min(0f)]
@@ -25,6 +25,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
         [Tooltip(ConfigTooltip.gailUseVail)]
         public bool useVail = false;
 
+        public string DemoPath { get => demoPath; set => demoPath = value; }
+
         public GailIntrinsicReward() { }
 
         public GailIntrinsicReward(YamlObject yaml)
@@ -35,7 +37,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
             Init(yaml);
 
             if (string.IsNullOrEmpty(demoPath))
-                throw new System.Exception($"The {ConfigText.demoPath} can't be empty in {ConfigText.gailReward}.");
+                Debug.LogWarning($"The {ConfigText.demoPath} shouldn't be empty in {ConfigText.gailReward}.");
         }
 
         protected virtual void Init(YamlObject yaml)

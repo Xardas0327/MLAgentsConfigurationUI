@@ -41,8 +41,16 @@ namespace Xardas.MLAgents.Configuration
                 (EnvironmentParameters)EditorGUILayout.ObjectField("EnvironmentParameters", environmentParameters, typeof(EnvironmentParameters), false);
             GUILayout.Space(5);
 
+            var isEmptyYamlFolderPath = string.IsNullOrEmpty(ConfigurationSettings.Instance.YamlFolderPath);
+            EditorGUI.BeginDisabledGroup(isEmptyYamlFolderPath);
+            if (isEmptyYamlFolderPath)
+                EditorGUILayout.LabelField("You have to set the Yaml Folder Path in Project Settings");
+
+            GUILayout.Space(5);
+
             if (GUILayout.Button("Create Yaml file"))
                 CreateYaml();
+            EditorGUI.EndDisabledGroup();
 
         }
 
