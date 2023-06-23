@@ -82,34 +82,22 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawPropertyWithFilePanel(SerializedProperty property, ref string path, string title, string extension)
+        void DrawDemoPathProperty(SerializedProperty property, IDemoPathObject demoPathObject)
         {
-            if (property.depth == 0)
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * property.depth));
+            EditorGUILayout.PropertyField(property, true);
+            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
             {
-                GUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(property, true);
-                FilePanelButton(ref path, title, extension);
-                EditorGUILayout.EndHorizontal();
-            }
-            else
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * property.depth));
-                EditorGUILayout.PropertyField(property, true);
-                FilePanelButton(ref path, title, extension);
-                EditorGUILayout.EndHorizontal();
-            }
-        }
+                EditorApplication.delayCall += () =>
+                {
+                    string newPath = EditorUtility.OpenFilePanel("Select demo file", Application.dataPath, "demo");
 
-        private void FilePanelButton(ref string path, string title, string extension)
-        {
-            if(GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
-            {
-                string newPath = EditorUtility.OpenFilePanel(title, Application.dataPath, extension);
-
-                if(newPath != path && !string.IsNullOrEmpty(newPath))
-                    path = newPath;
+                    if (newPath != demoPathObject.DemoPath && !string.IsNullOrEmpty(newPath))
+                        demoPathObject.DemoPath = newPath;
+                };
             }
+            EditorGUILayout.EndHorizontal();
         }
 
         bool DrawFoldout(SerializedProperty property)
@@ -281,7 +269,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
             else if (property.name == nameof(gail.demoPath))
             {
-                DrawPropertyWithFilePanel(property, ref gail.demoPath, "Select demo file", "demo");
+                DrawDemoPathProperty(property, gail);
             }
             else
                 DrawProperty(property);
@@ -301,7 +289,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
             else if (property.name == nameof(behavioralCloning.demoPath))
             {
-                DrawPropertyWithFilePanel(property, ref behavioralCloning.demoPath, "Select demo file", "demo");
+                DrawDemoPathProperty(property, behavioralCloning);
             }
             else
                 DrawProperty(property);
