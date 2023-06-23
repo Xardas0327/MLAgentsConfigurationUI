@@ -82,6 +82,36 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
+        void DrawPropertyWithFilePanel(SerializedProperty property, ref string path, string title, string extension)
+        {
+            if (property.depth == 0)
+            {
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.PropertyField(property, true);
+                FilePanelButton(ref path, title, extension);
+                EditorGUILayout.EndHorizontal();
+            }
+            else
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * property.depth));
+                EditorGUILayout.PropertyField(property, true);
+                FilePanelButton(ref path, title, extension);
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        private void FilePanelButton(ref string path, string title, string extension)
+        {
+            if(GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
+            {
+                string newPath = EditorUtility.OpenFilePanel(title, Application.dataPath, extension);
+
+                if(newPath != path && !string.IsNullOrEmpty(newPath))
+                    path = newPath;
+            }
+        }
+
         bool DrawFoldout(SerializedProperty property)
         {
             if (!showPropertiesOfObject.ContainsKey(property.propertyPath))
@@ -216,8 +246,8 @@ namespace Xardas.MLAgents.Configuration.Inspector
                     DrawObject(
                         property,
                         typeof(GailIntrinsicReward),
-                        behavior.rewardSignals.gail.networkSettings,
-                        DrawRewardProperties);
+                        behavior.rewardSignals.gail,
+                        DrawRewardGailProperties);
             }
             //Rnd
             else if (property.name == nameof(behavior.rewardSignals.rnd))
@@ -243,6 +273,20 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 DrawProperty(property);
         }
 
+        void DrawRewardGailProperties(SerializedProperty property, GailIntrinsicReward gail)
+        {
+            if (property.type == typeof(NetworkSettings).Name)
+            {
+                DrawObject(property, typeof(NetworkSettings), gail.networkSettings, DrawNetworkSettingsProperties);
+            }
+            else if (property.name == nameof(gail.demoPath))
+            {
+                DrawPropertyWithFilePanel(property, ref gail.demoPath, "Select demo file", "demo");
+            }
+            else
+                DrawProperty(property);
+        }
+
         void DrawBehavioralCloningProperties(SerializedProperty property, BehavioralCloning behavioralCloning)
         {
             if (property.name == nameof(behavioralCloning.batchSize))
@@ -254,6 +298,10 @@ namespace Xardas.MLAgents.Configuration.Inspector
             {
                 if (behavioralCloning.overwriteNumEpoch)
                     DrawProperty(property);
+            }
+            else if (property.name == nameof(behavioralCloning.demoPath))
+            {
+                DrawPropertyWithFilePanel(property, ref behavioralCloning.demoPath, "Select demo file", "demo");
             }
             else
                 DrawProperty(property);

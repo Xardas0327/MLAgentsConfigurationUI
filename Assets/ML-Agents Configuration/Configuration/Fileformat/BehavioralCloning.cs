@@ -72,7 +72,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             }
 
             if (string.IsNullOrEmpty(demoPath))
-                throw new System.Exception($"The {ConfigText.demoPath} can't be empty in {ConfigText.behavioralCloning}.");
+                Debug.LogWarning($"The {ConfigText.demoPath} can't be empty in {ConfigText.behavioralCloning}.");
         }
 
         public YamlObject ToYaml()

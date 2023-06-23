@@ -1,4 +1,6 @@
+using Google.Protobuf;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -39,7 +41,10 @@ namespace Xardas.MLAgents.Configuration
 
         private static void OpenFileBrower()
         {
-            ConfigurationSettings.Instance.YamlFolderPath = EditorUtility.OpenFolderPanel("Select Yaml folder", "", "");
+            string newPath = EditorUtility.OpenFolderPanel("Select Yaml folder", "", "");
+
+            if (newPath != ConfigurationSettings.Instance.YamlFolderPath && !string.IsNullOrEmpty(newPath))
+                ConfigurationSettings.Instance.YamlFolderPath = newPath;
 
             GUIUtility.systemCopyBuffer = "I want to put this string on the clipboard.";
         }

@@ -35,7 +35,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
             Init(yaml);
 
             if (string.IsNullOrEmpty(demoPath))
-                throw new System.Exception($"The {ConfigText.demoPath} can't be empty in {ConfigText.gailReward}.");
+                Debug.LogWarning($"The {ConfigText.demoPath} shouldn't be empty in {ConfigText.gailReward}.");
         }
 
         protected virtual void Init(YamlObject yaml)
