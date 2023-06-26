@@ -76,5 +76,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 
             return yaml;
         }
+
+        public virtual bool IsValid()
+        {
+            return networkSettings.IsValid();
+        }
     }
 }

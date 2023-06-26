@@ -9,10 +9,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     public class SelfPlay
     {
         [Tooltip(ConfigTooltip.saveSteps)]
+        [Min(1)]
         public uint saveSteps = 20000;
         [Tooltip(ConfigTooltip.overwriteTeamChange)]
         public bool overwriteTeamChange = false;
         [Tooltip(ConfigTooltip.teamChange)]
+        [Min(1)]
         public uint teamChange; //default = 5 * save_steps
         [Tooltip(ConfigTooltip.swapSteps)]
         public uint swapSteps = 10000;
@@ -87,6 +89,16 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.elements.Add(new YamlValue(ConfigText.initialElo, initialElo));
 
             return yaml;
+        }
+
+        public bool IsValid()
+        {
+            var teamChangeNumber = overwriteTeamChange ? teamChange : DefaultTeamChange;
+
+            if (teamChangeNumber % saveSteps != 0)
+                Debug.LogWarning($"The save steps should be multiple times than team change.");
+
+            return true;
         }
     }
 }

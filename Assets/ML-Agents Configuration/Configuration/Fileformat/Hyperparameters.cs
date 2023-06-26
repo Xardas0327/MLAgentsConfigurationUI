@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Threading;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
@@ -15,10 +14,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         [Min(0)]
         public float learningRate = 0.0003f;
         [Tooltip(ConfigTooltip.batchSize)]
+        [Min(1)]
         public uint batchSize = 512;
         [Tooltip(ConfigTooltip.overwriteBufferSize)]
         public bool overwriteBufferSize = false;
         [Tooltip(ConfigTooltip.bufferSize)]
+        [Min(1)]
         public uint bufferSize = 10240; //default = 10240 for PPO and 50000 for SAC
         [Tooltip(ConfigTooltip.overwriteLearningRateSchedule)]
         public bool overwriteLearningRateSchedule = false;
@@ -235,6 +236,20 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             }
 
             return yaml;
+        }
+
+        public bool IsValid(TrainerType trainerType)
+        {
+            uint buffer;
+            if(!overwriteBufferSize)
+                buffer = trainerType == TrainerType.sac ? defaultSACBufferSize : defaultPPOBufferSize;
+            else
+                buffer = bufferSize;
+
+            if (buffer % batchSize != 0)
+                Debug.LogWarning($"The batch size should always be multiple times smaller than buffer size.");
+
+            return true;
         }
     }
 }

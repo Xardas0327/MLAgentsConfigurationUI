@@ -16,13 +16,18 @@ namespace Xardas.MLAgents.Configuration.Inspector
 
         public override void OnInspectorGUI()
         {
-            DrawIspector();
+            var behavior = (Behavior)target;
+            DrawIspector(behavior);
+
+            GUILayout.Space(20);
+            if (GUILayout.Button("Validation"))
+            {
+                behavior.IsValid();
+            }
         }
 
-        void DrawIspector()
+        void DrawIspector(Behavior behavior)
         {
-            var behavior = (Behavior)target;
-
             using (new LocalizationGroup(target))
             {
                 EditorGUI.BeginChangeCheck();

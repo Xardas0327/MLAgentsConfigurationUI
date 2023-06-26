@@ -101,5 +101,18 @@ namespace Xardas.MLAgents.Configuration.Fileformat.Reward
 
             return yaml;
         }
+
+        public bool IsValid()
+        {
+            bool isValid = networkSettings.IsValid();
+
+            if(string.IsNullOrEmpty(demoPath))
+            {
+                Debug.LogError("The demo path is required, it can't be empty.");
+                isValid = false;
+            }
+
+            return isValid;
+        }
     }
 }
