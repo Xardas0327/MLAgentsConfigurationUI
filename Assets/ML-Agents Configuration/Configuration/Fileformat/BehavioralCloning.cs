@@ -95,5 +95,15 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             return yaml;
         }
+
+        public bool IsValid()
+        {
+            bool isValid = !string.IsNullOrEmpty(demoPath);
+
+            if (!isValid)
+                Debug.LogError("The demo path is required, it can't be empty.");
+
+            return isValid;
+        }
     }
 }

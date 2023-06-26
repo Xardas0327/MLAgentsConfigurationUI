@@ -7,5 +7,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         void LoadData(YamlObject yaml);
 
         YamlObject ToYaml();
+
+        bool IsValid();
     }
 }

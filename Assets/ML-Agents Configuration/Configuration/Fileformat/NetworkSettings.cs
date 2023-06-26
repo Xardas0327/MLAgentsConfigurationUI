@@ -105,5 +105,16 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             }
             return yaml;
         }
+
+        public bool IsValid()
+        {
+            if (isUseMemory && memory.memorySize % 2 != 0)
+            {
+                Debug.LogError("The memory size must be divisible by 2.");
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -89,5 +89,29 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             return yaml;
         }
+
+        public bool IsValid()
+        {
+            bool isValid = true;
+
+            //ExtrinsicReward doesn't have isvalid
+
+            if(isUseCuriosity)
+            {
+                isValid &= curiosity.IsValid();
+            }
+
+            if (isUseGail)
+            {
+                isValid &= gail.IsValid();
+            }
+
+            if (isUseRnd)
+            {
+                isValid &= rnd.IsValid();
+            }
+
+            return isValid;
+        }
     }
 }

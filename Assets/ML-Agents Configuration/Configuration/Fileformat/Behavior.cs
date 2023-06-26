@@ -156,5 +156,23 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
             return yaml;
         }
+
+        public bool IsValid()
+        {
+            bool isValid = hyperparameters.IsValid(trainerType)
+                && networkSettings.IsValid()
+                && rewardSignals.IsValid();
+
+            if(isUseBehavioralCloning)
+                isValid &= behavioralCloning.IsValid();
+
+            if(isUseSelfPlay)
+                isValid &= selfPlay.IsValid();
+
+            if (isValid)
+                Debug.Log("It looks a valid behavior file.");
+
+            return isValid;
+        }
     }
 }
