@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;
@@ -19,3 +20,4 @@ namespace Xardas.MLAgents.Configuration.Inspector
         }
     }
 }
+#endif

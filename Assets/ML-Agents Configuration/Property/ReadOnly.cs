@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 
 namespace Xardas.MLAgents.Property
@@ -7,3 +8,4 @@ namespace Xardas.MLAgents.Property
 
     }
 }
+#endif

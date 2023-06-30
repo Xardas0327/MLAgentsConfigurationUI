@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.IO;
 
 namespace Xardas.MLAgents.Configuration
@@ -8,3 +9,4 @@ namespace Xardas.MLAgents.Configuration
         public readonly static string FilesPath = Path.Combine(SettingsPath, "Files");
     }
 }
+#endif
