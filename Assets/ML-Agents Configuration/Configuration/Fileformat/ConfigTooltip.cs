@@ -9,6 +9,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string maxSteps = "Total number of steps that must be taken in the environment before ending the training process.\nTypical range: 5e5 - 1e7";
         public const string keepCheckpoints = "The maximum number of model checkpoints to keep.";
         public const string checkpointInterval = "The number of experiences collected between each checkpoint by the trainer.";
+        public const string initPath = "Initialize trainer from a previously saved model. Note that the prior run should have used the same trainer configurations as the current run, and have been saved with the same version of ML-Agents.";
         public const string threaded = "Allow environments to step while updating the model.\nLeave setting to false when using self-play.";
 
         //Hyperparameters

@@ -13,6 +13,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string maxSteps = "max_steps";
         public const string keepCheckpoints = "keep_checkpoints";
         public const string checkpointInterval = "checkpoint_interval";
+        public const string initPath = "init_path";
         public const string threaded = "threaded";
         public const string environmentParameters = "environment_parameters";
 

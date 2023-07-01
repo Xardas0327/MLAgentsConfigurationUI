@@ -6,7 +6,7 @@ using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
-    public class EnvironmentParameters : ScriptableObject, ConfigFile
+    public class EnvironmentParameters : ScriptableObject, IConfigFile
     {
         public List<SimpleValue> simpleValues = new();
         public List<UniformSampler> uniformSamplers = new();
