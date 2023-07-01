@@ -61,6 +61,10 @@ namespace Xardas.MLAgents.Configuration.Inspector
                             if (behavior.isUseSelfPlay)
                                 DrawObject(iterator, typeof(SelfPlay), behavior.selfPlay, DrawSelfPlayProperties);
                         }
+                        else if (iterator.name == nameof(behavior.initPath))
+                        {
+                            DrawInitPathProperty(iterator, behavior);
+                        }
                         else
                             DrawProperty(iterator);
                     }
@@ -101,6 +105,24 @@ namespace Xardas.MLAgents.Configuration.Inspector
 
                     if (newPath != demoPathObject.DemoPath && !string.IsNullOrEmpty(newPath))
                         demoPathObject.DemoPath = newPath;
+                };
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        void DrawInitPathProperty(SerializedProperty property, IInitPathObject initPathObject)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * property.depth));
+            EditorGUILayout.PropertyField(property, true);
+            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    string newPath = EditorUtility.OpenFilePanel("Select init file", Application.dataPath, "pt");
+
+                    if (newPath != initPathObject.InitPath && !string.IsNullOrEmpty(newPath))
+                        initPathObject.InitPath = newPath;
                 };
             }
             EditorGUILayout.EndHorizontal();

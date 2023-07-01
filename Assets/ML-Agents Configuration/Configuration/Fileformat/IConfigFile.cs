@@ -2,7 +2,7 @@ using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
-    public interface ConfigFile
+    public interface IConfigFile
     {
         void LoadData(YamlObject yaml);
 

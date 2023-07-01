@@ -6,7 +6,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 {
     public enum TrainerType { ppo, sac, poca }
 
-    public class Behavior : ScriptableObject, ConfigFile
+    public class Behavior : ScriptableObject, IConfigFile, IInitPathObject
     {
         [Tooltip(ConfigTooltip.behaviorName)]
         public string behaviorName;
@@ -21,8 +21,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public uint keepCheckpoints = 5;
         [Tooltip(ConfigTooltip.checkpointInterval)]
         public uint checkpointInterval = 500000;
-        // We don't care with it, because we can use it as CLI param.
-        //public string init_path
+        [Tooltip(ConfigTooltip.initPath)]
+        public string initPath;
         [Tooltip(ConfigTooltip.threaded)]
         public bool threaded = false;
         public Hyperparameters hyperparameters = new Hyperparameters(TrainerType.ppo);
@@ -33,6 +33,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public BehavioralCloning behavioralCloning = null;
         public bool isUseSelfPlay = false;
         public SelfPlay selfPlay = null;
+
+        public string InitPath { get => initPath; set => initPath = value; }
 
         public void LoadData(YamlObject yaml)
         {
@@ -67,6 +69,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             break;
                         case ConfigText.checkpointInterval:
                             UInt32.TryParse(value, out checkpointInterval);
+                            break;
+                        case ConfigText.initPath:
+                            initPath = yamlValue.value; // we have to have the original string.
                             break;
                         case ConfigText.threaded:
                             if (value == "true")
@@ -127,6 +132,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.elements.Add(new YamlValue(ConfigText.keepCheckpoints, keepCheckpoints));
             yaml.elements.Add(new YamlValue(ConfigText.checkpointInterval, checkpointInterval));
             yaml.elements.Add(new YamlValue(ConfigText.threaded, threaded));
+
+            if(!string.IsNullOrEmpty(initPath))
+                yaml.elements.Add(new YamlValue(ConfigText.initPath, initPath));
 
             var hp = hyperparameters.ToYaml(trainerType);
             hp.parent = yaml;
