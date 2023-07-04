@@ -1,6 +1,6 @@
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
+namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameter
 {
     public abstract class EnvParam
     {

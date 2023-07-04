@@ -1,4 +1,4 @@
-namespace Xardas.MLAgents.Configuration.Fileformat
+namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
 {
     public interface IDemoPathObject
     {

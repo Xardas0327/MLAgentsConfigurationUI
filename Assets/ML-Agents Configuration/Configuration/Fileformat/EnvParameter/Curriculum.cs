@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
+namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameter
 {
 
     [Serializable]

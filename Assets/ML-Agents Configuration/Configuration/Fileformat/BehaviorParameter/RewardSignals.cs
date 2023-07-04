@@ -1,8 +1,8 @@
-using Xardas.MLAgents.Yaml;
-using Xardas.MLAgents.Configuration.Fileformat.Reward;
 using System;
+using Xardas.MLAgents.Yaml;
+using Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter.Reward;
 
-namespace Xardas.MLAgents.Configuration.Fileformat
+namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
 {
     [Serializable]
     public class RewardSignals

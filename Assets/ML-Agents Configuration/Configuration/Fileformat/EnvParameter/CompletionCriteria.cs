@@ -3,7 +3,7 @@ using System.Globalization;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
+namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameter
 {
     public enum CompletionCriteriaMeasure { progress, reward, Elo}
 

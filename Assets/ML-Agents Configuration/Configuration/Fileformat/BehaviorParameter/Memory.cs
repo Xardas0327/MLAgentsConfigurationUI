@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.Fileformat
+namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
 {
 
     [Serializable]

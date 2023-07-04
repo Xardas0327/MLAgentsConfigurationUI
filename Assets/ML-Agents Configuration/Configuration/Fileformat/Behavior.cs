@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
+using Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {

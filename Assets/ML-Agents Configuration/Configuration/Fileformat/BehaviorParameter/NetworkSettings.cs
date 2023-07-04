@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.Fileformat
+namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
 {
     public enum VisEncodeType { simple, nature_cnn, resnet, match3, fully_connected }
     public enum ConditioningType { none, hyper }

@@ -3,7 +3,7 @@ using System.Globalization;
 using System;
 using UnityEngine;
 
-namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
+namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameter
 {
 
     [Serializable]

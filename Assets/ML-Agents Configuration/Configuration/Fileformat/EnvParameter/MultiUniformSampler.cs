@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameters
+namespace Xardas.MLAgents.Configuration.Fileformat.EnvParameter
 {
     [Serializable]
     public struct MultiUniformSamplerValue

@@ -1,7 +1,7 @@
 using System;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.Fileformat.Reward
+namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter.Reward
 {
     [Serializable]
     public class RndIntrinsicReward : CuriosityIntrinsicReward

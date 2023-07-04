@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat.EnvParameters;
 using Xardas.MLAgents.Yaml;
+using Xardas.MLAgents.Configuration.Fileformat.EnvParameter;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
