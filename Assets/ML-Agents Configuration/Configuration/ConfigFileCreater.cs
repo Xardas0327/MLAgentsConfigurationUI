@@ -37,6 +37,14 @@ namespace Xardas.MLAgents.Configuration
                 {
                     switch (yamlObject.name)
                     {
+                        case ConfigText.torchSettings:
+                            var torchSettings = ScriptableObject.CreateInstance<TorchSettings>();
+                            torchSettings.LoadData(yamlObject);
+
+                            var torchSettingsFileName = "TorchSettings" + fileExtension;
+                            string torchSettingsFilePath = Path.Combine(path, torchSettingsFileName);
+                            CreateAsset(torchSettings, torchSettingsFilePath);
+                            break;
                         case ConfigText.defaultSettings:
                             defaultBehavior = yamlObject;
                             break;

@@ -102,5 +102,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string minLessonLength = "The minimum number of episodes that should be completed before the lesson can change.";
         public const string signalSmoothing = "Whether to weight the current progress measure by previous values.";
         public const string requireReset = "Whether changing lesson requires the environment to reset.";
+
+        //Torch Configuration
+        public const string device = "Settings for the default torch.device used in training.";
     }
 }

@@ -13,6 +13,7 @@ namespace Xardas.MLAgents.Configuration
         const string fileExtension = ".yaml";
 
         string fileName;
+        TorchSettings torchSettings;
         List<Behavior> behaviors = new();
         EnvironmentParameters environmentParameters;
 
@@ -35,11 +36,17 @@ namespace Xardas.MLAgents.Configuration
             GUILayout.Space(20);
 
             fileName = EditorGUILayout.TextField("File's name", fileName);
+            GUILayout.Space(10);
+
+            EditorGUILayout.LabelField("Settings");
+            torchSettings =
+                (TorchSettings)EditorGUILayout.ObjectField("Torch Settings", torchSettings, typeof(TorchSettings), false);
+
             GUILayout.Space(5);
             DrawBehaviors();
             GUILayout.Space(5);
             environmentParameters = 
-                (EnvironmentParameters)EditorGUILayout.ObjectField("EnvironmentParameters", environmentParameters, typeof(EnvironmentParameters), false);
+                (EnvironmentParameters)EditorGUILayout.ObjectField("Environment Parameters", environmentParameters, typeof(EnvironmentParameters), false);
             GUILayout.Space(5);
 
             var isEmptyYamlFolderPath = string.IsNullOrEmpty(ConfigurationSettings.Instance.YamlFolderPath);
@@ -119,6 +126,14 @@ namespace Xardas.MLAgents.Configuration
         private YamlElement GenerateYamlFromFiles()
         {
             var yaml = new YamlObject();
+
+            if (torchSettings != null && torchSettings.isUse)
+            {
+                var torchSettingsYaml = torchSettings.ToYaml();
+                torchSettingsYaml.parent = yaml;
+                yaml.elements.Add(torchSettingsYaml);
+            }
+
 
             var behaviorsYaml = new YamlObject()
             {

@@ -105,5 +105,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string minLessonLength = "min_lesson_length";
         public const string signalSmoothing = "signal_smoothing";
         public const string requireReset = "require_reset";
+
+        //Torch Configuration
+        public const string torchSettings = "torch_settings";
+        public const string device = "device";
     }
 }
