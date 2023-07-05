@@ -17,7 +17,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public YamlObject ToYaml()
         {
-            if (!torchSettings.isUseDevice)
+            if (!isUse)
                 return null;
 
             return torchSettings.ToYaml();

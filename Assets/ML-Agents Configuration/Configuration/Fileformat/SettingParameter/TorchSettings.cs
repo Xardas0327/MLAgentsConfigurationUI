@@ -8,7 +8,7 @@ namespace Xardas.MLAgents.Configuration.SettingParameter
     public enum DeviceType { cpu, cuda, cuda0 /*cuda:0*/}
 
     [Serializable]
-    public class TorchSettings
+    public class TorchSettings : ISettings
     {
         public bool isUseDevice;
         [Tooltip(ConfigTooltip.device)]
@@ -49,9 +49,11 @@ namespace Xardas.MLAgents.Configuration.SettingParameter
             var yaml = new YamlObject();
             yaml.name = ConfigText.torchSettings;
 
-            string deviceText = device == DeviceType.cuda0 ? "cuda:0" : device.ToString();
-
-            yaml.elements.Add(new YamlValue(ConfigText.device, deviceText));
+            if(isUseDevice)
+            {
+                string deviceText = device == DeviceType.cuda0 ? "cuda:0" : device.ToString();
+                yaml.elements.Add(new YamlValue(ConfigText.device, deviceText));
+            }
 
             return yaml;
         }

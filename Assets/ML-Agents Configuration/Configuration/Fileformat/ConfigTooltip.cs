@@ -103,7 +103,20 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string signalSmoothing = "Whether to weight the current progress measure by previous values.";
         public const string requireReset = "Whether changing lesson requires the environment to reset.";
 
-        //Torch Configuration
+        //Environment settings
+        public const string envPath = "Path to the Unity executable to train.";
+        public const string envArgs = "Arguments passed to the Unity executable.";
+        public const string basePort = "The starting port for environment communication.";
+        public const string numEnvs = "The number of concurrent Unity environment instances to collect experiences from when training.";
+        public const string seed = "A number to use as a seed for the random number generator used by the training code.";
+        public const string maxLifetimeRestarts = "The max number of times a single Unity executable can crash over its lifetime before ml-agents exits.";
+        public const string restartsRateLimitN = "The maximum number of times a single Unity executable can crash over a period of time.";
+        public const string restartsRateLimitPeriodS = "The period of time restarts rate limit n applies to.";
+
+        //Engine settings
+        //Checkpoint settings
+
+        //Torch settings
         public const string device = "Settings for the default torch.device used in training.";
     }
 }

@@ -106,7 +106,21 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string signalSmoothing = "signal_smoothing";
         public const string requireReset = "require_reset";
 
-        //Torch Configuration
+        //Environment settings
+        public const string environmentSettings = "env_settings";
+        public const string envPath = "env_path";
+        public const string envArgs = "env_args";
+        public const string basePort = "base_port";
+        public const string numEnvs = "num_envs";
+        public const string seed = "seed";
+        public const string maxLifetimeRestarts = "max_lifetime_restarts";
+        public const string restartsRateLimitN = "restarts_rate_limit_n";
+        public const string restartsRateLimitPeriodS = "restarts_rate_limit_period_s";
+
+        //Engine settings
+        //Checkpoint settings
+
+        //Torch settings
         public const string torchSettings = "torch_settings";
         public const string device = "device";
     }
