@@ -114,6 +114,14 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string restartsRateLimitPeriodS = "The period of time restarts rate limit n applies to.";
 
         //Engine settings
+        public const string width = "The width of the executable window of the environment(s) in pixels (ignored for editor training).";
+        public const string height = "The height of the executable window of the environment(s) in pixels (ignored for editor training)";
+        public const string qualityLevel = "The quality level of the environment(s).\nEquivalent to calling QualitySettings.SetQualityLevel in Unity.";
+        public const string timeScale = "The time scale of the Unity environment(s).\nEquivalent to setting Time.timeScale in Unity.";
+        public const string targetFrameRate = "The target frame rate of the Unity environment(s).\nEquivalent to setting Application.targetFrameRate in Unity.";
+        public const string captureFrameRate = "The capture frame rate of the Unity environment(s).\nEquivalent to setting Time.captureFramerate in Unity.";
+        public const string noGraphics = "Whether to run the Unity executable in no-graphics mode (i.e. without initializing the graphics driver.\nUse this only if your agents don't use visual observations.";
+
         //Checkpoint settings
 
         //Torch settings

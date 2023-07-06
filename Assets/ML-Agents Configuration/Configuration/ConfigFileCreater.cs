@@ -15,11 +15,7 @@ namespace Xardas.MLAgents.Configuration
 
         public static void CreateBasicBehavior(string path)
         {
-            var file = ScriptableObject.CreateInstance<Behavior>();
-            var fileName = "Behavior" + fileExtension;
-            string filePath = Path.Combine(path, fileName);
-
-            CreateAsset(file, filePath);
+            CreateAsset<Behavior>(path, "Behavior", null);
         }
 
         public static void CreateFiles(string path, YamlElement yaml)
@@ -38,20 +34,13 @@ namespace Xardas.MLAgents.Configuration
                     switch (yamlObject.name)
                     {
                         case ConfigText.environmentSettings:
-                            var environmentSettings = ScriptableObject.CreateInstance<EnvironmentSettings>();
-                            environmentSettings.LoadData(yamlObject);
-
-                            var environmentSettingsFileName = "EnvironmentSettings" + fileExtension;
-                            string environmentSettingsFilePath = Path.Combine(path, environmentSettingsFileName);
-                            CreateAsset(environmentSettings, environmentSettingsFilePath);
+                            CreateAsset<EnvironmentSettings>(path, "EnvironmentSettings", yamlObject);
+                            break;
+                        case ConfigText.engineSettings:
+                            CreateAsset<EngineSettings>(path, "EngineSettings", yamlObject);
                             break;
                         case ConfigText.torchSettings:
-                            var torchSettings = ScriptableObject.CreateInstance<TorchSettings>();
-                            torchSettings.LoadData(yamlObject);
-
-                            var torchSettingsFileName = "TorchSettings" + fileExtension;
-                            string torchSettingsFilePath = Path.Combine(path, torchSettingsFileName);
-                            CreateAsset(torchSettings, torchSettingsFilePath);
+                            CreateAsset<TorchSettings>(path, "TorchSettings", yamlObject);
                             break;
                         case ConfigText.defaultSettings:
                             defaultBehavior = yamlObject;
@@ -63,12 +52,7 @@ namespace Xardas.MLAgents.Configuration
                             behaviorYamls = yamlObject.elements;
                             break;
                         case ConfigText.environmentParameters:
-                            var envParams = ScriptableObject.CreateInstance<EnvironmentParameters>();
-                            envParams.LoadData(yamlObject);
-
-                            var envParamsFileName = "EnvironmentParameters" + fileExtension;
-                            string envParamsFilePath = Path.Combine(path, envParamsFileName);
-                            CreateAsset(envParams, envParamsFilePath);
+                            CreateAsset<EnvironmentParameters>(path, "EnvironmentParameters", yamlObject);
                             break;
                     }
                 }
@@ -81,22 +65,27 @@ namespace Xardas.MLAgents.Configuration
             {
                 if (behaviorYaml is YamlObject behaviorYamlObject)
                 {
-                    var behavior = ScriptableObject.CreateInstance<Behavior>();
-                    behavior.LoadData(YamlObject.Merge(defaultBehavior, behaviorYamlObject));
-
-                    var behaviorFileName = behaviorYamlObject.name + fileExtension;
-                    string behaviorFilePath = Path.Combine(path, behaviorFileName);
-                    CreateAsset(behavior, behaviorFilePath);
+                    CreateAsset<Behavior>(
+                        path, 
+                        behaviorYamlObject.name, 
+                        YamlObject.Merge(defaultBehavior, behaviorYamlObject)
+                    );
                 }
             }
         }
 
-        private static void CreateAsset(ScriptableObject asset, string path)
+        private static void CreateAsset<T>(string path, string fileName, YamlObject yamlObject) where T : ConfigFile
         {
-            AssetDatabase.CreateAsset(asset, path);
+            var configFile = ScriptableObject.CreateInstance<T>();
+
+            if(yamlObject != null)
+                configFile.LoadData(yamlObject);
+
+            string filePath = Path.Combine(path, fileName + fileExtension);
+            AssetDatabase.CreateAsset(configFile, filePath);
             AssetDatabase.SaveAssets();
 
-            Debug.Log("Asset is created: " + path);
+            Debug.Log("Asset is created: " + filePath);
         }
     }
 }

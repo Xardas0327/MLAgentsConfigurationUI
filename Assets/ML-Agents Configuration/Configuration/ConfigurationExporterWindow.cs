@@ -14,6 +14,7 @@ namespace Xardas.MLAgents.Configuration
 
         string fileName;
         EnvironmentSettings environmentSettings;
+        EngineSettings engineSettings;
         TorchSettings torchSettings;
         List<Behavior> behaviors = new();
         EnvironmentParameters environmentParameters;
@@ -42,6 +43,8 @@ namespace Xardas.MLAgents.Configuration
             EditorGUILayout.LabelField("Settings");
             environmentSettings =
                 (EnvironmentSettings)EditorGUILayout.ObjectField("Environment Settings", environmentSettings, typeof(EnvironmentSettings), false);
+            engineSettings =
+                (EngineSettings)EditorGUILayout.ObjectField("Engine Settings", engineSettings, typeof(EngineSettings), false);
             torchSettings =
                 (TorchSettings)EditorGUILayout.ObjectField("Torch Settings", torchSettings, typeof(TorchSettings), false);
 
@@ -95,6 +98,9 @@ namespace Xardas.MLAgents.Configuration
         private void Clear()
         {
             fileName = "";
+            environmentSettings = null;
+            engineSettings = null;
+            torchSettings = null;
             behaviors = new List<Behavior>();
             environmentParameters = null;
 
@@ -135,6 +141,13 @@ namespace Xardas.MLAgents.Configuration
                 var environmentSettingsYaml = environmentSettings.ToYaml();
                 environmentSettingsYaml.parent = yaml;
                 yaml.elements.Add(environmentSettingsYaml);
+            }
+
+            if (engineSettings != null && engineSettings.isUse)
+            {
+                var engineSettingsYaml = engineSettings.ToYaml();
+                engineSettingsYaml.parent = yaml;
+                yaml.elements.Add(engineSettingsYaml);
             }
 
             if (torchSettings != null && torchSettings.isUse)

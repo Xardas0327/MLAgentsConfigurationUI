@@ -1,5 +1,3 @@
-using UnityEngine;
-using Xardas.MLAgents.Configuration.SettingParameter;
 using Xardas.MLAgents.Yaml;
 using EnvironmentSetting = Xardas.MLAgents.Configuration.SettingParameter.EnvironmentSettings;
 

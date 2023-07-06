@@ -118,6 +118,15 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string restartsRateLimitPeriodS = "restarts_rate_limit_period_s";
 
         //Engine settings
+        public const string engineSettings = "engine_settings";
+        public const string width = "width";
+        public const string height = "height";
+        public const string qualityLevel = "quality_level";
+        public const string timeScale = "time_scale";
+        public const string targetFrameRate = "target_frame_rate";
+        public const string captureFrameRate = "capture_frame_rate";
+        public const string noGraphics = "no_graphics";
+        
         //Checkpoint settings
 
         //Torch settings

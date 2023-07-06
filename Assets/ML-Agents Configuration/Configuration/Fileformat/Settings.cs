@@ -1,18 +1,15 @@
-using UnityEngine;
 using Xardas.MLAgents.Configuration.SettingParameter;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
-    public abstract class Settings<T> : ScriptableObject, IConfigFile where T : ISettings
+    public abstract class Settings<T> : ConfigFile where T : ISettings
     {
         public T settings;
 
         public bool isUse => settings == null ? false : settings.IsUse;
 
-        public abstract void LoadData(YamlObject yaml);
-
-        public YamlObject ToYaml()
+        public override YamlObject ToYaml()
         {
             if (!isUse)
                 return null;
@@ -20,7 +17,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             return settings.ToYaml();
         }
 
-        public bool IsValid()
+        public override bool IsValid()
         {
             return settings != null;
         }
