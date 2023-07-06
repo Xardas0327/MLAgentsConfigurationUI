@@ -10,9 +10,9 @@ namespace Xardas.MLAgents.Configuration.Inspector
         protected override void DrawProperty(SerializedProperty property)
         {
             var settings = (TorchSettings)target;
-            if (property.name == nameof(settings.torchSettings.device))
+            if (property.name == nameof(settings.settings.device))
             {
-                DrawPropertyWithTickBox(ref settings.torchSettings.isUseDevice, property);
+                DrawPropertyWithTickBox(ref settings.settings.isUseDevice, property);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
     {
         protected override void DrawProperty(SerializedProperty property)
         {
-            var settings = ((EnvironmentSettings)target).environmentSettings;
+            var settings = ((EnvironmentSettings)target).settings;
             if (property.name == nameof(settings.envPath))
             {
                 DrawPropertyWithTickBox(ref settings.isUseEnvPath, property);
