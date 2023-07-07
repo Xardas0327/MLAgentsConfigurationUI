@@ -11,7 +11,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             DrawInspector();
         }
 
-        void DrawInspector()
+        protected void DrawInspector()
         {
             using (new LocalizationGroup(target))
             {

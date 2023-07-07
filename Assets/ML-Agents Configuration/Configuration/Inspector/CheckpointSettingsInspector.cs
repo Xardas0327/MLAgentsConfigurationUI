@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;
 
 namespace Xardas.MLAgents.Configuration.Inspector
@@ -7,6 +8,17 @@ namespace Xardas.MLAgents.Configuration.Inspector
     [CustomEditor(typeof(CheckpointSettings))]
     public class CheckpointSettingsInspector : SettingsInspector
     {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            GUILayout.Space(20);
+            if (GUILayout.Button("Validation"))
+            {
+                ((CheckpointSettings)target).IsValid();
+            }
+        }
+
         protected override void DrawProperty(SerializedProperty property)
         {
             var settings = ((CheckpointSettings)target).settings;

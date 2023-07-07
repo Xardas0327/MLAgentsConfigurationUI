@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;
 
 namespace Xardas.MLAgents.Configuration.Inspector
@@ -7,6 +8,17 @@ namespace Xardas.MLAgents.Configuration.Inspector
     [CustomEditor(typeof(EnvironmentSettings))]
     public class EnvironmentSettingsInspector : SettingsInspector
     {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            GUILayout.Space(20);
+            if (GUILayout.Button("Validation"))
+            {
+                ((EnvironmentSettings)target).IsValid();
+            }
+        }
+
         protected override void DrawProperty(SerializedProperty property)
         {
             var settings = ((EnvironmentSettings)target).settings;
