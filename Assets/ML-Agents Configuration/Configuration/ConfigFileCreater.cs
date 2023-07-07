@@ -39,6 +39,9 @@ namespace Xardas.MLAgents.Configuration
                         case ConfigText.engineSettings:
                             CreateAsset<EngineSettings>(path, "EngineSettings", yamlObject);
                             break;
+                        case ConfigText.checkpointSettings:
+                            CreateAsset<CheckpointSettings>(path, "CheckpointSettings", yamlObject);
+                            break;
                         case ConfigText.torchSettings:
                             CreateAsset<TorchSettings>(path, "TorchSettings", yamlObject);
                             break;

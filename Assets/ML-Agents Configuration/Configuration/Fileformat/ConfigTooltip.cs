@@ -123,6 +123,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string noGraphics = "Whether to run the Unity executable in no-graphics mode (i.e. without initializing the graphics driver.\nUse this only if your agents don't use visual observations.";
 
         //Checkpoint settings
+        public const string runId = "The identifier for the training run.";
+        public const string initializeFrom = "Specify a previously saved run ID from which to initialize the model from.";
+        public const string resume = "Whether to resume training from a checkpoint.";
+        public const string force = "Whether to force-overwrite this run-id's existing summary and model data.";
+        public const string inference = "Whether to run in Python inference mode (i.e. no training).\nUse with resume to load a model trained with an existing run ID.";
 
         //Torch settings
         public const string device = "Settings for the default torch.device used in training.";

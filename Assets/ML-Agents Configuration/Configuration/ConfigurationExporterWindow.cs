@@ -15,6 +15,7 @@ namespace Xardas.MLAgents.Configuration
         string fileName;
         EnvironmentSettings environmentSettings;
         EngineSettings engineSettings;
+        CheckpointSettings checkpointSettings;
         TorchSettings torchSettings;
         List<Behavior> behaviors = new();
         EnvironmentParameters environmentParameters;
@@ -45,6 +46,8 @@ namespace Xardas.MLAgents.Configuration
                 (EnvironmentSettings)EditorGUILayout.ObjectField("Environment Settings", environmentSettings, typeof(EnvironmentSettings), false);
             engineSettings =
                 (EngineSettings)EditorGUILayout.ObjectField("Engine Settings", engineSettings, typeof(EngineSettings), false);
+            checkpointSettings =
+                (CheckpointSettings)EditorGUILayout.ObjectField("Checkpoint Settings", checkpointSettings, typeof(CheckpointSettings), false);
             torchSettings =
                 (TorchSettings)EditorGUILayout.ObjectField("Torch Settings", torchSettings, typeof(TorchSettings), false);
 
@@ -100,6 +103,7 @@ namespace Xardas.MLAgents.Configuration
             fileName = "";
             environmentSettings = null;
             engineSettings = null;
+            checkpointSettings = null;
             torchSettings = null;
             behaviors = new List<Behavior>();
             environmentParameters = null;
@@ -148,6 +152,13 @@ namespace Xardas.MLAgents.Configuration
                 var engineSettingsYaml = engineSettings.ToYaml();
                 engineSettingsYaml.parent = yaml;
                 yaml.elements.Add(engineSettingsYaml);
+            }
+
+            if (checkpointSettings != null && checkpointSettings.isUse)
+            {
+                var checkpointSettingsYaml = checkpointSettings.ToYaml();
+                checkpointSettingsYaml.parent = yaml;
+                yaml.elements.Add(checkpointSettingsYaml);
             }
 
             if (torchSettings != null && torchSettings.isUse)

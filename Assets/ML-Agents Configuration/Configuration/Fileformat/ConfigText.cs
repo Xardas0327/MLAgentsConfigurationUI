@@ -126,8 +126,16 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string targetFrameRate = "target_frame_rate";
         public const string captureFrameRate = "capture_frame_rate";
         public const string noGraphics = "no_graphics";
-        
+
         //Checkpoint settings
+        public const string checkpointSettings = "checkpoint_settings";
+        public const string runId = "run_id";
+        public const string initializeFrom = "initialize_from";
+        public const string loadModel = "load_model";
+        public const string resume = "resume";
+        public const string force = "force";
+        public const string trainModel = "train_model";
+        public const string inference = "inference";
 
         //Torch settings
         public const string torchSettings = "torch_settings";
