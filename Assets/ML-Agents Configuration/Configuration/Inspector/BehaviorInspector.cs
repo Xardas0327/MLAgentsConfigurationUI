@@ -5,7 +5,8 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;
-using Xardas.MLAgents.Configuration.Fileformat.Reward;
+using Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter;
+using Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter.Reward;
 
 namespace Xardas.MLAgents.Configuration.Inspector
 {

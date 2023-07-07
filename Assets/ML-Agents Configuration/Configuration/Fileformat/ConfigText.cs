@@ -105,5 +105,40 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string minLessonLength = "min_lesson_length";
         public const string signalSmoothing = "signal_smoothing";
         public const string requireReset = "require_reset";
+
+        //Environment settings
+        public const string environmentSettings = "env_settings";
+        public const string envPath = "env_path";
+        public const string envArgs = "env_args";
+        public const string basePort = "base_port";
+        public const string numEnvs = "num_envs";
+        public const string seed = "seed";
+        public const string maxLifetimeRestarts = "max_lifetime_restarts";
+        public const string restartsRateLimitN = "restarts_rate_limit_n";
+        public const string restartsRateLimitPeriodS = "restarts_rate_limit_period_s";
+
+        //Engine settings
+        public const string engineSettings = "engine_settings";
+        public const string width = "width";
+        public const string height = "height";
+        public const string qualityLevel = "quality_level";
+        public const string timeScale = "time_scale";
+        public const string targetFrameRate = "target_frame_rate";
+        public const string captureFrameRate = "capture_frame_rate";
+        public const string noGraphics = "no_graphics";
+
+        //Checkpoint settings
+        public const string checkpointSettings = "checkpoint_settings";
+        public const string runId = "run_id";
+        public const string initializeFrom = "initialize_from";
+        public const string loadModel = "load_model";
+        public const string resume = "resume";
+        public const string force = "force";
+        public const string trainModel = "train_model";
+        public const string inference = "inference";
+
+        //Torch settings
+        public const string torchSettings = "torch_settings";
+        public const string device = "device";
     }
 }

@@ -102,5 +102,34 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string minLessonLength = "The minimum number of episodes that should be completed before the lesson can change.";
         public const string signalSmoothing = "Whether to weight the current progress measure by previous values.";
         public const string requireReset = "Whether changing lesson requires the environment to reset.";
+
+        //Environment settings
+        public const string envPath = "Path to the Unity executable to train.";
+        public const string envArgs = "Arguments passed to the Unity executable.";
+        public const string basePort = "The starting port for environment communication.";
+        public const string numEnvs = "The number of concurrent Unity environment instances to collect experiences from when training.";
+        public const string seed = "A number to use as a seed for the random number generator used by the training code.";
+        public const string maxLifetimeRestarts = "The max number of times a single Unity executable can crash over its lifetime before ml-agents exits.";
+        public const string restartsRateLimitN = "The maximum number of times a single Unity executable can crash over a period of time.";
+        public const string restartsRateLimitPeriodS = "The period of time restarts rate limit n applies to.";
+
+        //Engine settings
+        public const string width = "The width of the executable window of the environment(s) in pixels (ignored for editor training).";
+        public const string height = "The height of the executable window of the environment(s) in pixels (ignored for editor training)";
+        public const string qualityLevel = "The quality level of the environment(s).\nEquivalent to calling QualitySettings.SetQualityLevel in Unity.";
+        public const string timeScale = "The time scale of the Unity environment(s).\nEquivalent to setting Time.timeScale in Unity.";
+        public const string targetFrameRate = "The target frame rate of the Unity environment(s).\nEquivalent to setting Application.targetFrameRate in Unity.";
+        public const string captureFrameRate = "The capture frame rate of the Unity environment(s).\nEquivalent to setting Time.captureFramerate in Unity.";
+        public const string noGraphics = "Whether to run the Unity executable in no-graphics mode (i.e. without initializing the graphics driver.\nUse this only if your agents don't use visual observations.";
+
+        //Checkpoint settings
+        public const string runId = "The identifier for the training run.";
+        public const string initializeFrom = "Specify a previously saved run ID from which to initialize the model from.";
+        public const string resume = "Whether to resume training from a checkpoint.";
+        public const string force = "Whether to force-overwrite this run-id's existing summary and model data.";
+        public const string inference = "Whether to run in Python inference mode (i.e. no training).\nUse with resume to load a model trained with an existing run ID.";
+
+        //Torch settings
+        public const string device = "Settings for the default torch.device used in training.";
     }
 }

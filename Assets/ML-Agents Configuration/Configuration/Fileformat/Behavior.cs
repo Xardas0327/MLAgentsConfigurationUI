@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
+using Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
     public enum TrainerType { ppo, sac, poca }
 
-    public class Behavior : ScriptableObject, IConfigFile, IInitPathObject
+    public class Behavior : ConfigFile, IInitPathObject
     {
         [Tooltip(ConfigTooltip.behaviorName)]
         public string behaviorName;
@@ -36,7 +37,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public string InitPath { get => initPath; set => initPath = value; }
 
-        public void LoadData(YamlObject yaml)
+        public override void LoadData(YamlObject yaml)
         {
             behaviorName = yaml.name;
             //Firstly the YamlValue only
@@ -118,7 +119,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                     hyperparameters.numEpoch);
         }
 
-        public YamlObject ToYaml()
+        public override YamlObject ToYaml()
         {
             var yaml = new YamlObject()
             {
@@ -165,7 +166,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             return yaml;
         }
 
-        public bool IsValid()
+        public override bool IsValid()
         {
             bool isValid = hyperparameters.IsValid(trainerType)
                 && networkSettings.IsValid()

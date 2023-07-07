@@ -13,6 +13,10 @@ namespace Xardas.MLAgents.Configuration
         const string fileExtension = ".yaml";
 
         string fileName;
+        EnvironmentSettings environmentSettings;
+        EngineSettings engineSettings;
+        CheckpointSettings checkpointSettings;
+        TorchSettings torchSettings;
         List<Behavior> behaviors = new();
         EnvironmentParameters environmentParameters;
 
@@ -35,11 +39,23 @@ namespace Xardas.MLAgents.Configuration
             GUILayout.Space(20);
 
             fileName = EditorGUILayout.TextField("File's name", fileName);
+            GUILayout.Space(10);
+
+            EditorGUILayout.LabelField("Settings");
+            environmentSettings =
+                (EnvironmentSettings)EditorGUILayout.ObjectField("Environment Settings", environmentSettings, typeof(EnvironmentSettings), false);
+            engineSettings =
+                (EngineSettings)EditorGUILayout.ObjectField("Engine Settings", engineSettings, typeof(EngineSettings), false);
+            checkpointSettings =
+                (CheckpointSettings)EditorGUILayout.ObjectField("Checkpoint Settings", checkpointSettings, typeof(CheckpointSettings), false);
+            torchSettings =
+                (TorchSettings)EditorGUILayout.ObjectField("Torch Settings", torchSettings, typeof(TorchSettings), false);
+
             GUILayout.Space(5);
             DrawBehaviors();
             GUILayout.Space(5);
             environmentParameters = 
-                (EnvironmentParameters)EditorGUILayout.ObjectField("EnvironmentParameters", environmentParameters, typeof(EnvironmentParameters), false);
+                (EnvironmentParameters)EditorGUILayout.ObjectField("Environment Parameters", environmentParameters, typeof(EnvironmentParameters), false);
             GUILayout.Space(5);
 
             var isEmptyYamlFolderPath = string.IsNullOrEmpty(ConfigurationSettings.Instance.YamlFolderPath);
@@ -85,6 +101,10 @@ namespace Xardas.MLAgents.Configuration
         private void Clear()
         {
             fileName = "";
+            environmentSettings = null;
+            engineSettings = null;
+            checkpointSettings = null;
+            torchSettings = null;
             behaviors = new List<Behavior>();
             environmentParameters = null;
 
@@ -119,6 +139,34 @@ namespace Xardas.MLAgents.Configuration
         private YamlElement GenerateYamlFromFiles()
         {
             var yaml = new YamlObject();
+
+            if (environmentSettings != null && environmentSettings.isUse)
+            {
+                var environmentSettingsYaml = environmentSettings.ToYaml();
+                environmentSettingsYaml.parent = yaml;
+                yaml.elements.Add(environmentSettingsYaml);
+            }
+
+            if (engineSettings != null && engineSettings.isUse)
+            {
+                var engineSettingsYaml = engineSettings.ToYaml();
+                engineSettingsYaml.parent = yaml;
+                yaml.elements.Add(engineSettingsYaml);
+            }
+
+            if (checkpointSettings != null && checkpointSettings.isUse)
+            {
+                var checkpointSettingsYaml = checkpointSettings.ToYaml();
+                checkpointSettingsYaml.parent = yaml;
+                yaml.elements.Add(checkpointSettingsYaml);
+            }
+
+            if (torchSettings != null && torchSettings.isUse)
+            {
+                var torchSettingsYaml = torchSettings.ToYaml();
+                torchSettingsYaml.parent = yaml;
+                yaml.elements.Add(torchSettingsYaml);
+            }
 
             var behaviorsYaml = new YamlObject()
             {

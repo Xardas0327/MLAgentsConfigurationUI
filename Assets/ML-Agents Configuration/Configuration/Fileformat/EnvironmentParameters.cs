@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat.EnvParameters;
 using Xardas.MLAgents.Yaml;
+using Xardas.MLAgents.Configuration.Fileformat.EnvParameter;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
-    public class EnvironmentParameters : ScriptableObject, IConfigFile
+    public class EnvironmentParameters : ConfigFile
     {
         public List<SimpleValue> simpleValues = new();
         public List<UniformSampler> uniformSamplers = new();
@@ -29,7 +29,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             }
         }
 
-        public void LoadData(YamlObject yaml)
+        public override void LoadData(YamlObject yaml)
         {
             if (yaml.name != ConfigText.environmentParameters || yaml.elements.Count < 1)
                 throw new System.Exception($"The {ConfigText.environmentParameters} is not right.");
@@ -68,7 +68,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             }
         }
 
-        public YamlObject ToYaml()
+        public override YamlObject ToYaml()
         {
             var yaml = new YamlObject();
             yaml.name = ConfigText.environmentParameters;
@@ -101,7 +101,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.elements.Add(yamlElement);
         }
 
-        public bool IsValid()
+        public override bool IsValid()
         {
             bool isValid = CheckNames() 
                 && CheckUniformSampler()
