@@ -15,7 +15,7 @@ namespace Xardas.MLAgents.Configuration
         string fileData = null;
         Vector2 fileDataScrollPos;
 
-        bool IsLoaded => filePath != null;
+        bool IsLoaded => !string.IsNullOrEmpty(filePath);
 
         [MenuItem("Window/ML-Agents/Config Importer")]
         public static void ShowWindow()
@@ -26,26 +26,27 @@ namespace Xardas.MLAgents.Configuration
         private void OnGUI()
         {
             GUILayout.Space(30);
-            EditorGUILayout.BeginHorizontal();
 
             EditorGUI.BeginDisabledGroup(!isEditableFileName);
-            fileName = EditorGUILayout.TextField("File's name", fileName);
+            fileName = EditorGUILayout.TextField("File", fileName);
             EditorGUI.EndDisabledGroup();
+            GUILayout.Space(5);
 
-            if (GUILayout.Button("Open", GUILayout.Width(100)))
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Open"))
                 OpenFile();
 
             EditorGUI.BeginDisabledGroup(!IsLoaded);
-            if (GUILayout.Button("Copy", GUILayout.Width(100)))
+            if (GUILayout.Button("Copy"))
                 Copy();
-            if (GUILayout.Button("Delete", GUILayout.Width(100)))
+            if (GUILayout.Button("Delete"))
                 Delete();
-            if (GUILayout.Button("Clear", GUILayout.Width(100)))
+            if (GUILayout.Button("Clear"))
                 Clear();
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
-            GUILayout.Space(5);
+            GUILayout.Space(10);
 
             EditorGUI.BeginDisabledGroup(!IsLoaded);
             if (GUILayout.Button("Create Asset file"))
@@ -88,7 +89,7 @@ namespace Xardas.MLAgents.Configuration
         private void Clear()
         {
             fileName = "";
-            isEditableFileName = true;
+            isEditableFileName = false;
             filePath = null;
             fileData = null;
         }
