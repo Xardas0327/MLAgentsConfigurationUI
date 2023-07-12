@@ -17,6 +17,7 @@ namespace Xardas.MLAgents.Configuration
 
         private static string filePath => Path.Combine(Paths.SettingsPath, settingsFileName);
 
+        //TODO: it is useless, it should be removed
         public string YamlFolderPath
         {
             get { return yamlFolderPath; }

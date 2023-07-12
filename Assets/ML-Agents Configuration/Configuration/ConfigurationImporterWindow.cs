@@ -139,8 +139,8 @@ namespace Xardas.MLAgents.Configuration
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
-                    Clear();
                     Debug.Log("File is deleted: " + filePath);
+                    Clear();
                 }
             }
         }

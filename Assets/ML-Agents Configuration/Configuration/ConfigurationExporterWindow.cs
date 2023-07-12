@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;
@@ -10,9 +9,8 @@ namespace Xardas.MLAgents.Configuration
 {
     public class ConfigurationExporterWindow : EditorWindow
     {
-        const string fileExtension = ".yaml";
+        const string fileExtension = "yaml";
 
-        string fileName;
         EnvironmentSettings environmentSettings;
         EngineSettings engineSettings;
         CheckpointSettings checkpointSettings;
@@ -38,9 +36,6 @@ namespace Xardas.MLAgents.Configuration
 
             GUILayout.Space(20);
 
-            fileName = EditorGUILayout.TextField("File's name", fileName);
-            GUILayout.Space(10);
-
             EditorGUILayout.LabelField("Settings");
             environmentSettings =
                 (EnvironmentSettings)EditorGUILayout.ObjectField("Environment Settings", environmentSettings, typeof(EnvironmentSettings), false);
@@ -58,16 +53,8 @@ namespace Xardas.MLAgents.Configuration
                 (EnvironmentParameters)EditorGUILayout.ObjectField("Environment Parameters", environmentParameters, typeof(EnvironmentParameters), false);
             GUILayout.Space(5);
 
-            var isEmptyYamlFolderPath = string.IsNullOrEmpty(ConfigurationSettings.Instance.YamlFolderPath);
-            EditorGUI.BeginDisabledGroup(isEmptyYamlFolderPath);
-            if (isEmptyYamlFolderPath)
-                EditorGUILayout.LabelField("You have to set the Yaml Folder Path in Project Settings");
-
-            GUILayout.Space(5);
-
             if (GUILayout.Button("Create Yaml file"))
                 CreateYaml();
-            EditorGUI.EndDisabledGroup();
 
         }
 
@@ -100,7 +87,6 @@ namespace Xardas.MLAgents.Configuration
 
         private void Clear()
         {
-            fileName = "";
             environmentSettings = null;
             engineSettings = null;
             checkpointSettings = null;
@@ -113,27 +99,14 @@ namespace Xardas.MLAgents.Configuration
 
         private void CreateYaml()
         {
-            if (string.IsNullOrEmpty(fileName))
-                throw new System.Exception("It has to have a file name.");
-
             if (behaviors == null || behaviors.Count < 1)
                 throw new System.Exception("The behaviors can't be empty.");
 
-            if (!Directory.Exists(ConfigurationSettings.Instance.YamlFolderPath))
-                Directory.CreateDirectory(ConfigurationSettings.Instance.YamlFolderPath);
+            var path =EditorUtility.SaveFilePanel("Save YAML file", Application.dataPath, "", fileExtension);
+            if(string.IsNullOrEmpty(path))
+                return;
 
-            string fullFilePath = Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension);
-
-            if(File.Exists(fullFilePath))
-            {
-                if (EditorUtility.DisplayDialog("Warning!",
-                $"The {fileName} file already exists. Do you want to overwrite it?", "Yes", "No"))
-                {
-                    CreateFile(fullFilePath);
-                }
-            }
-            else
-                CreateFile(fullFilePath);
+            CreateFile(path);
         }
 
         private YamlElement GenerateYamlFromFiles()
