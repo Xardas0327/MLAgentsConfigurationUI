@@ -8,14 +8,14 @@ namespace Xardas.MLAgents.Configuration
 {
     public class ConfigurationImporterWindow : EditorWindow
     {
-        const string fileExtension = ".yaml";
-        string[] filesInTheFolder;
-        int selectedFileIndex = 0;
+        const string fileExtension = "yaml";
         string fileName;
-        bool isLoaded = false;
         bool isEditableFileName = false;
+        string filePath = null;
         string fileData = null;
         Vector2 fileDataScrollPos;
+
+        bool IsLoaded => filePath != null;
 
         [MenuItem("Window/ML-Agents/Config Importer")]
         public static void ShowWindow()
@@ -25,30 +25,17 @@ namespace Xardas.MLAgents.Configuration
 
         private void OnGUI()
         {
-            LoadFileNames();
-
-            GUILayout.Space(10);
-
-            EditorGUILayout.BeginHorizontal();
-            selectedFileIndex = EditorGUILayout.Popup("Files", selectedFileIndex, filesInTheFolder);
-            if (GUILayout.Button("Load file", GUILayout.Width(100)))
-                LoadFile();
-            EditorGUILayout.EndHorizontal();
-            if(isLoaded)
-            {
-                EditorGUILayout.LabelField("The file is loaded.");
-                GUILayout.Space(10);
-            }
-            else
-                GUILayout.Space(30);
-
+            GUILayout.Space(30);
             EditorGUILayout.BeginHorizontal();
 
             EditorGUI.BeginDisabledGroup(!isEditableFileName);
             fileName = EditorGUILayout.TextField("File's name", fileName);
             EditorGUI.EndDisabledGroup();
 
-            EditorGUI.BeginDisabledGroup(!isLoaded);
+            if (GUILayout.Button("Open", GUILayout.Width(100)))
+                OpenFile();
+
+            EditorGUI.BeginDisabledGroup(!IsLoaded);
             if (GUILayout.Button("Copy", GUILayout.Width(100)))
                 Copy();
             if (GUILayout.Button("Delete", GUILayout.Width(100)))
@@ -60,7 +47,7 @@ namespace Xardas.MLAgents.Configuration
             EditorGUILayout.EndHorizontal();
             GUILayout.Space(5);
 
-            EditorGUI.BeginDisabledGroup(!isLoaded);
+            EditorGUI.BeginDisabledGroup(!IsLoaded);
             if (GUILayout.Button("Create Asset file"))
                 CreateAsset();
             EditorGUI.EndDisabledGroup();
@@ -77,75 +64,32 @@ namespace Xardas.MLAgents.Configuration
             }
         }
 
-        private void LoadFileNames()
+        private void OpenFile()
         {
-            var fileNames = GetFileNames();
-            if(filesInTheFolder == null || filesInTheFolder.Length != fileNames.Length)
+            var newFilePath = EditorUtility.OpenFilePanel("Select YAML file", Application.dataPath, fileExtension);
+            if (!string.IsNullOrEmpty(newFilePath) && newFilePath != filePath)
             {
-                selectedFileIndex = GetIndex(fileNames, fileName + fileExtension);
-                if(selectedFileIndex < 0)
-                    Clear();
+                filePath = newFilePath;
+                SetFileName(filePath);
+                fileData = File.ReadAllText(filePath);
+
+                isEditableFileName = false;
             }
-            filesInTheFolder = fileNames;
         }
 
-        private int GetIndex(string[] fileNames, string fileName)
+        private void SetFileName(string path)
         {
-            for(int i = 0; i < fileNames.Length; ++i)
-            {
-                if (fileNames[i] == fileName)
-                    return i;
-            }
-
-            return -1;
-        }
-
-        private string[] GetFileNames()
-        {
-            if (string.IsNullOrEmpty(ConfigurationSettings.Instance.YamlFolderPath))
-            {
-                var empty = new string[1];
-                empty[0] = "";
-                return empty;
-            }
-
-
-            var info = new DirectoryInfo(ConfigurationSettings.Instance.YamlFolderPath);
-            var fileInfo = info.GetFiles("*" + fileExtension);
-
-            var fileNames = new string[fileInfo.Length + 1];
-            fileNames[0] = "";
-            for (var i =0; i < fileInfo.Length; ++i)
-            {
-                fileNames[i+1] = fileInfo[i].Name;
-            }
-
-            return fileNames;
-        }
-
-        private void LoadFile()
-        {
-            if (selectedFileIndex >= filesInTheFolder.Length || selectedFileIndex == 0)
-                return;
-
-            fileName = filesInTheFolder[selectedFileIndex];
-            if (fileName.EndsWith(fileExtension))
-                fileName = fileName.Substring(0, fileName.Length - fileExtension.Length);
-
-            fileData = File.ReadAllText(
-                Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension)
-                );
-
-            isEditableFileName = false;
-            isLoaded = true;
+            fileName = Path.GetFileName(path);
+            var extension = "." + fileExtension;
+            if (fileName.EndsWith(extension))
+                fileName = fileName.Substring(0, fileName.Length - extension.Length);
         }
 
         private void Clear()
         {
-            selectedFileIndex = 0;
             fileName = "";
-            isLoaded = false;
             isEditableFileName = true;
+            filePath = null;
             fileData = null;
         }
 
@@ -156,7 +100,7 @@ namespace Xardas.MLAgents.Configuration
 
         private void CreateAsset()
         {
-            if (!isLoaded)
+            if (!IsLoaded)
                 throw new System.Exception("There is no loaded file.");
 
             if (string.IsNullOrEmpty(fileName))
@@ -188,13 +132,10 @@ namespace Xardas.MLAgents.Configuration
 
         private void Delete()
         {
-            var fullFileName = fileName + fileExtension;
+            var fullFileName = fileName + "." + fileExtension;
             if(EditorUtility.DisplayDialog("Delete config file",
                 $"Are you sure you want to delete the {fullFileName} config file?", "Yes", "No"))
             {
-                string filePath = ConfigurationSettings.Instance.YamlFolderPath
-                    + Path.DirectorySeparatorChar + fullFileName;
-
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
