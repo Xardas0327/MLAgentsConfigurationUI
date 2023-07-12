@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
+using Unity.MLAgents;
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;
@@ -13,12 +14,7 @@ namespace Xardas.MLAgents.Configuration
     {
         const string fileExtension = ".asset";
 
-        public static void CreateBasicBehavior(string path)
-        {
-            CreateAsset<Behavior>(path, "Behavior", null);
-        }
-
-        public static void CreateFiles(string path, YamlElement yaml)
+        public static void CreateFiles(string path, YamlElement yaml, HashSet<string> filter = null)
         {
             var yamlFile = yaml as YamlObject;
             if (yamlFile == null
@@ -34,16 +30,20 @@ namespace Xardas.MLAgents.Configuration
                     switch (yamlObject.name)
                     {
                         case ConfigText.environmentSettings:
-                            CreateAsset<EnvironmentSettings>(path, "EnvironmentSettings", yamlObject);
+                            if(IsImportable(filter, ConfigText.environmentSettings))
+                                CreateAsset<EnvironmentSettings>(path, "EnvironmentSettings", yamlObject);
                             break;
                         case ConfigText.engineSettings:
-                            CreateAsset<EngineSettings>(path, "EngineSettings", yamlObject);
+                            if(IsImportable(filter, ConfigText.engineSettings))
+                                CreateAsset<EngineSettings>(path, "EngineSettings", yamlObject);
                             break;
                         case ConfigText.checkpointSettings:
-                            CreateAsset<CheckpointSettings>(path, "CheckpointSettings", yamlObject);
+                            if (IsImportable(filter, ConfigText.checkpointSettings))
+                                CreateAsset<CheckpointSettings>(path, "CheckpointSettings", yamlObject);
                             break;
                         case ConfigText.torchSettings:
-                            CreateAsset<TorchSettings>(path, "TorchSettings", yamlObject);
+                            if (IsImportable(filter, ConfigText.torchSettings))
+                                CreateAsset<TorchSettings>(path, "TorchSettings", yamlObject);
                             break;
                         case ConfigText.defaultSettings:
                             defaultBehavior = yamlObject;
@@ -55,26 +55,32 @@ namespace Xardas.MLAgents.Configuration
                             behaviorYamls = yamlObject.elements;
                             break;
                         case ConfigText.environmentParameters:
-                            CreateAsset<EnvironmentParameters>(path, "EnvironmentParameters", yamlObject);
+                            if (IsImportable(filter, ConfigText.environmentParameters))
+                                CreateAsset<EnvironmentParameters>(path, "EnvironmentParameters", yamlObject);
                             break;
                     }
                 }
             }
 
-            if(behaviorYamls == null)
-                throw new System.Exception("The yaml file has to have a behavior.");
-
-            foreach (var behaviorYaml in behaviorYamls)
+            if (IsImportable(filter, ConfigText.behaviors) && behaviorYamls != null)
             {
-                if (behaviorYaml is YamlObject behaviorYamlObject)
+                foreach (var behaviorYaml in behaviorYamls)
                 {
-                    CreateAsset<Behavior>(
-                        path, 
-                        behaviorYamlObject.name, 
-                        YamlObject.Merge(defaultBehavior, behaviorYamlObject)
-                    );
+                    if (behaviorYaml is YamlObject behaviorYamlObject)
+                    {
+                        CreateAsset<Behavior>(
+                            path,
+                            behaviorYamlObject.name,
+                            YamlObject.Merge(defaultBehavior, behaviorYamlObject)
+                        );
+                    }
                 }
             }
+        }
+
+        private static bool IsImportable(HashSet<string> filter, string text)
+        {
+            return filter == null || filter.Count == 0 || filter.Contains(text);
         }
 
         private static void CreateAsset<T>(string path, string fileName, YamlObject yamlObject) where T : ConfigFile

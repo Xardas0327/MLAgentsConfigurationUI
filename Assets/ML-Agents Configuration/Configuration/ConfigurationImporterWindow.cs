@@ -1,7 +1,10 @@
 #if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Xardas.MLAgents.Configuration.Fileformat;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration
@@ -14,6 +17,19 @@ namespace Xardas.MLAgents.Configuration
         string filePath = null;
         string fileData = null;
         Vector2 fileDataScrollPos;
+
+        //DropDown
+        const string everythingText = "Everything";
+        HashSet<string> selectedImportTypes = new HashSet<string>();
+        readonly HashSet<string> importTypes = new HashSet<string>()
+        {
+            ConfigText.behaviors,
+            ConfigText.checkpointSettings,
+            ConfigText.engineSettings,
+            ConfigText.environmentParameters,
+            ConfigText.environmentSettings,
+            ConfigText.torchSettings
+        };
 
         bool IsLoaded => !string.IsNullOrEmpty(filePath);
 
@@ -49,8 +65,11 @@ namespace Xardas.MLAgents.Configuration
             GUILayout.Space(10);
 
             EditorGUI.BeginDisabledGroup(!IsLoaded);
-            if (GUILayout.Button("Create Asset file"))
-                CreateAsset();
+            CreateDropDown();
+            GUILayout.Space(5);
+
+            if (GUILayout.Button("Create Asset file(s)"))
+                CreateAssets();
             EditorGUI.EndDisabledGroup();
 
             if (!string.IsNullOrEmpty(fileData))
@@ -92,6 +111,7 @@ namespace Xardas.MLAgents.Configuration
             isEditableFileName = false;
             filePath = null;
             fileData = null;
+            selectedImportTypes.Clear();
         }
 
         private void Copy()
@@ -99,7 +119,7 @@ namespace Xardas.MLAgents.Configuration
             isEditableFileName = true;
         }
 
-        private void CreateAsset()
+        private void CreateAssets()
         {
             if (!IsLoaded)
                 throw new System.Exception("There is no loaded file.");
@@ -128,7 +148,7 @@ namespace Xardas.MLAgents.Configuration
         private void CreateFiles(string folderPath)
         {
             var yaml = YamlFile.ConvertStringToObject(fileData);
-            ConfigFileCreater.CreateFiles(folderPath, yaml);
+            ConfigFileCreater.CreateFiles(folderPath, yaml, selectedImportTypes);
         }
 
         private void Delete()
@@ -144,6 +164,40 @@ namespace Xardas.MLAgents.Configuration
                     Clear();
                 }
             }
+        }
+
+        private void CreateDropDown()
+        {
+            GUILayout.Label("Import");
+            var label = selectedImportTypes.Count > 0 ? String.Join(", ", selectedImportTypes) : everythingText;
+            if (EditorGUILayout.DropdownButton(new GUIContent(label), FocusType.Passive))
+            {
+                GenericMenu menu = new GenericMenu();
+                menu.AddItem(new GUIContent(everythingText), selectedImportTypes.Count == 0, DropDownClick, everythingText);
+                foreach (var type in importTypes)
+                {
+                    menu.AddItem(new GUIContent(type), selectedImportTypes.Contains(type), DropDownClick, type);
+                }
+                menu.ShowAsContext();
+            }
+        }
+
+        private void DropDownClick(object userData)
+        {
+            var text = (string)userData;
+            if(text == everythingText)
+            {
+                selectedImportTypes.Clear();
+                return;
+            }
+
+            if(selectedImportTypes.Contains(text))
+                selectedImportTypes.Remove(text);
+            else
+                selectedImportTypes.Add(text);
+
+            if (selectedImportTypes.Count == importTypes.Count)
+                selectedImportTypes.Clear();
         }
     }
 }
