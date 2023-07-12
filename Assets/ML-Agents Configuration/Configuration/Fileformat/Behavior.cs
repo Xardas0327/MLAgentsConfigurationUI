@@ -7,6 +7,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 {
     public enum TrainerType { ppo, sac, poca }
 
+    [CreateAssetMenu(fileName = "Behavior", menuName = "ML-Agents Config files/Behavior")]
     public class Behavior : ConfigFile, IInitPathObject
     {
         [Tooltip(ConfigTooltip.behaviorName)]
@@ -168,7 +169,15 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         public override bool IsValid()
         {
-            bool isValid = hyperparameters.IsValid(trainerType)
+            bool isValid = true;
+
+            if (string.IsNullOrEmpty(behaviorName))
+            {
+                Debug.LogError("The behavior name can't be empty.");
+                isValid = false;
+            }
+
+            isValid &= hyperparameters.IsValid(trainerType)
                 && networkSettings.IsValid()
                 && rewardSignals.IsValid();
 

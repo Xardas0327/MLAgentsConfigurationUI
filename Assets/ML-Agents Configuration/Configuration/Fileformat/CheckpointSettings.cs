@@ -4,6 +4,7 @@ using CheckpointSetting = Xardas.MLAgents.Configuration.SettingParameter.Checkpo
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
+    [CreateAssetMenu(fileName = "CheckpointSettings", menuName = "ML-Agents Config files/Checkpoint Settings")]
     public class CheckpointSettings : Settings<CheckpointSetting>
     {
         public override void LoadData(YamlObject yaml)

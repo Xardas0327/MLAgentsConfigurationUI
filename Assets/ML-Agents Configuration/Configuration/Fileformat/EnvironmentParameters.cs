@@ -6,6 +6,7 @@ using Xardas.MLAgents.Configuration.Fileformat.EnvParameter;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
+    [CreateAssetMenu(fileName = "EnvironmentParameters", menuName = "ML-Agents Config files/Environment Parameters")]
     public class EnvironmentParameters : ConfigFile
     {
         public List<SimpleValue> simpleValues = new();

@@ -48,21 +48,22 @@ namespace Xardas.MLAgents.Configuration
             fileName = EditorGUILayout.TextField("File's name", fileName);
             EditorGUI.EndDisabledGroup();
 
-            if(GUILayout.Button("New", GUILayout.Width(100)))
-                CreateNewFile();
-
             EditorGUI.BeginDisabledGroup(!isLoaded);
             if (GUILayout.Button("Copy", GUILayout.Width(100)))
                 Copy();
             if (GUILayout.Button("Delete", GUILayout.Width(100)))
                 Delete();
+            if (GUILayout.Button("Clear", GUILayout.Width(100)))
+                Clear();
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
             GUILayout.Space(5);
 
+            EditorGUI.BeginDisabledGroup(!isLoaded);
             if (GUILayout.Button("Create Asset file"))
                 CreateAsset();
+            EditorGUI.EndDisabledGroup();
 
             if (!string.IsNullOrEmpty(fileData))
             {
@@ -83,7 +84,7 @@ namespace Xardas.MLAgents.Configuration
             {
                 selectedFileIndex = GetIndex(fileNames, fileName + fileExtension);
                 if(selectedFileIndex < 0)
-                    CreateNewFile();
+                    Clear();
             }
             filesInTheFolder = fileNames;
         }
@@ -139,7 +140,7 @@ namespace Xardas.MLAgents.Configuration
             isLoaded = true;
         }
 
-        private void CreateNewFile()
+        private void Clear()
         {
             selectedFileIndex = 0;
             fileName = "";
@@ -155,6 +156,9 @@ namespace Xardas.MLAgents.Configuration
 
         private void CreateAsset()
         {
+            if (!isLoaded)
+                throw new System.Exception("There is no loaded file.");
+
             if (string.IsNullOrEmpty(fileName))
                 throw new System.Exception("It has to have a file name.");
 
@@ -178,16 +182,8 @@ namespace Xardas.MLAgents.Configuration
 
         private void CreateFiles(string folderPath)
         {
-
-            if (isLoaded)
-            {
-                var yaml = YamlFile.ConvertStringToObject(fileData);
-                ConfigFileCreater.CreateFiles(folderPath, yaml);
-            }
-            else
-            {
-                ConfigFileCreater.CreateBasicBehavior(folderPath);
-            }
+            var yaml = YamlFile.ConvertStringToObject(fileData);
+            ConfigFileCreater.CreateFiles(folderPath, yaml);
         }
 
         private void Delete()
@@ -202,7 +198,7 @@ namespace Xardas.MLAgents.Configuration
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
-                    CreateNewFile();
+                    Clear();
                     Debug.Log("File is deleted: " + filePath);
                 }
             }
