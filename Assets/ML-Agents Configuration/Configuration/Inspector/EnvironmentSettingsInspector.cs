@@ -1,11 +1,11 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat;
+using Xardas.MLAgents.Configuration.SettingParameter;
 
 namespace Xardas.MLAgents.Configuration.Inspector
 {
-    [CustomEditor(typeof(EnvironmentSettings))]
+    [CustomEditor(typeof(Fileformat.EnvironmentSettings))]
     public class EnvironmentSettingsInspector : SettingsInspector
     {
         public override void OnInspectorGUI()
@@ -15,16 +15,16 @@ namespace Xardas.MLAgents.Configuration.Inspector
             GUILayout.Space(20);
             if (GUILayout.Button("Validation"))
             {
-                ((EnvironmentSettings)target).IsValid();
+                ((Fileformat.EnvironmentSettings)target).IsValid();
             }
         }
 
         protected override void DrawProperty(SerializedProperty property)
         {
-            var settings = ((EnvironmentSettings)target).settings;
+            var settings = ((Fileformat.EnvironmentSettings)target).settings;
             if (property.name == nameof(settings.envPath))
             {
-                DrawPropertyWithTickBox(ref settings.isUseEnvPath, property);
+                DrawEnvPathProperty(ref settings.isUseEnvPath, property, settings);
             }
             else if (property.name == nameof(settings.envArgs))
             {
@@ -54,6 +54,25 @@ namespace Xardas.MLAgents.Configuration.Inspector
             {
                 DrawPropertyWithTickBox(ref settings.isUseRestartsRateLimitPeriodS, property);
             }
+        }
+        protected void DrawEnvPathProperty(ref bool active, SerializedProperty property, IEnvPathObject envPathObject)
+        {
+            EditorGUILayout.BeginHorizontal();
+            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
+            EditorGUI.BeginDisabledGroup(!active);
+            EditorGUILayout.PropertyField(property, true);
+            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    string newPath = EditorUtility.OpenFolderPanel("Select a build", Application.dataPath, "");
+
+                    if (newPath != envPathObject.EnvPath && !string.IsNullOrEmpty(newPath))
+                        envPathObject.EnvPath = newPath;
+                };
+            }
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.EndHorizontal();
         }
     }
 }
