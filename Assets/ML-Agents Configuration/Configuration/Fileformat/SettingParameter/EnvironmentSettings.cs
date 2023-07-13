@@ -6,7 +6,7 @@ using Xardas.MLAgents.Yaml;
 namespace Xardas.MLAgents.Configuration.SettingParameter
 {
     [Serializable]
-    public class EnvironmentSettings : ISettings
+    public class EnvironmentSettings : ISettings, IEnvPathObject
     {
         public bool isUseEnvPath;
         [Tooltip(ConfigTooltip.envPath)]
@@ -48,6 +48,11 @@ namespace Xardas.MLAgents.Configuration.SettingParameter
             || isUseBasePort || isUseNumEnvs
             || isUseSeed || isUseMaxLifetimeRestarts
             || isUseRestartsRateLimitN || isUseRestartsRateLimitPeriodS;
+
+        public string EnvPath { 
+            get => envPath; 
+            set => envPath = value; 
+        }
 
         public EnvironmentSettings() { }
         public EnvironmentSettings(YamlObject yaml) 

@@ -1,21 +1,37 @@
 #if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Xardas.MLAgents.Configuration.Fileformat;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration
 {
     public class ConfigurationImporterWindow : EditorWindow
     {
-        const string fileExtension = ".yaml";
-        string[] filesInTheFolder;
-        int selectedFileIndex = 0;
+        const string fileExtension = "yaml";
         string fileName;
-        bool isLoaded = false;
         bool isEditableFileName = false;
+        string filePath = null;
         string fileData = null;
         Vector2 fileDataScrollPos;
+
+        //DropDown
+        const string everythingText = "Everything";
+        HashSet<string> selectedImportTypes = new HashSet<string>();
+        readonly HashSet<string> importTypes = new HashSet<string>()
+        {
+            ConfigText.behaviors,
+            ConfigText.checkpointSettings,
+            ConfigText.engineSettings,
+            ConfigText.environmentParameters,
+            ConfigText.environmentSettings,
+            ConfigText.torchSettings
+        };
+
+        bool IsLoaded => !string.IsNullOrEmpty(filePath);
 
         [MenuItem("Window/ML-Agents/Config Importer")]
         public static void ShowWindow()
@@ -25,44 +41,36 @@ namespace Xardas.MLAgents.Configuration
 
         private void OnGUI()
         {
-            LoadFileNames();
-
-            GUILayout.Space(10);
-
-            EditorGUILayout.BeginHorizontal();
-            selectedFileIndex = EditorGUILayout.Popup("Files", selectedFileIndex, filesInTheFolder);
-            if (GUILayout.Button("Load file", GUILayout.Width(100)))
-                LoadFile();
-            EditorGUILayout.EndHorizontal();
-            if(isLoaded)
-            {
-                EditorGUILayout.LabelField("The file is loaded.");
-                GUILayout.Space(10);
-            }
-            else
-                GUILayout.Space(30);
-
-            EditorGUILayout.BeginHorizontal();
+            GUILayout.Space(30);
 
             EditorGUI.BeginDisabledGroup(!isEditableFileName);
-            fileName = EditorGUILayout.TextField("File's name", fileName);
+            fileName = EditorGUILayout.TextField("File", fileName);
             EditorGUI.EndDisabledGroup();
+            GUILayout.Space(5);
 
-            if(GUILayout.Button("New", GUILayout.Width(100)))
-                CreateNewFile();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Open"))
+                OpenFile();
 
-            EditorGUI.BeginDisabledGroup(!isLoaded);
-            if (GUILayout.Button("Copy", GUILayout.Width(100)))
+            EditorGUI.BeginDisabledGroup(!IsLoaded);
+            if (GUILayout.Button("Copy"))
                 Copy();
-            if (GUILayout.Button("Delete", GUILayout.Width(100)))
+            if (GUILayout.Button("Delete"))
                 Delete();
+            if (GUILayout.Button("Clear"))
+                Clear();
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
+            GUILayout.Space(10);
+
+            EditorGUI.BeginDisabledGroup(!IsLoaded);
+            CreateDropDown();
             GUILayout.Space(5);
 
-            if (GUILayout.Button("Create Asset file"))
-                CreateAsset();
+            if (GUILayout.Button("Create Asset file(s)"))
+                CreateAssets();
+            EditorGUI.EndDisabledGroup();
 
             if (!string.IsNullOrEmpty(fileData))
             {
@@ -76,76 +84,34 @@ namespace Xardas.MLAgents.Configuration
             }
         }
 
-        private void LoadFileNames()
+        private void OpenFile()
         {
-            var fileNames = GetFileNames();
-            if(filesInTheFolder == null || filesInTheFolder.Length != fileNames.Length)
+            var newFilePath = EditorUtility.OpenFilePanel("Select YAML file", Application.dataPath, fileExtension);
+            if (!string.IsNullOrEmpty(newFilePath) && newFilePath != filePath)
             {
-                selectedFileIndex = GetIndex(fileNames, fileName + fileExtension);
-                if(selectedFileIndex < 0)
-                    CreateNewFile();
+                filePath = newFilePath;
+                SetFileName(filePath);
+                fileData = File.ReadAllText(filePath);
+
+                isEditableFileName = false;
             }
-            filesInTheFolder = fileNames;
         }
 
-        private int GetIndex(string[] fileNames, string fileName)
+        private void SetFileName(string path)
         {
-            for(int i = 0; i < fileNames.Length; ++i)
-            {
-                if (fileNames[i] == fileName)
-                    return i;
-            }
-
-            return -1;
+            fileName = Path.GetFileName(path);
+            var extension = "." + fileExtension;
+            if (fileName.EndsWith(extension))
+                fileName = fileName.Substring(0, fileName.Length - extension.Length);
         }
 
-        private string[] GetFileNames()
+        private void Clear()
         {
-            if (string.IsNullOrEmpty(ConfigurationSettings.Instance.YamlFolderPath))
-            {
-                var empty = new string[1];
-                empty[0] = "";
-                return empty;
-            }
-
-
-            var info = new DirectoryInfo(ConfigurationSettings.Instance.YamlFolderPath);
-            var fileInfo = info.GetFiles("*" + fileExtension);
-
-            var fileNames = new string[fileInfo.Length + 1];
-            fileNames[0] = "";
-            for (var i =0; i < fileInfo.Length; ++i)
-            {
-                fileNames[i+1] = fileInfo[i].Name;
-            }
-
-            return fileNames;
-        }
-
-        private void LoadFile()
-        {
-            if (selectedFileIndex >= filesInTheFolder.Length || selectedFileIndex == 0)
-                return;
-
-            fileName = filesInTheFolder[selectedFileIndex];
-            if (fileName.EndsWith(fileExtension))
-                fileName = fileName.Substring(0, fileName.Length - fileExtension.Length);
-
-            fileData = File.ReadAllText(
-                Path.Combine(ConfigurationSettings.Instance.YamlFolderPath, fileName + fileExtension)
-                );
-
-            isEditableFileName = false;
-            isLoaded = true;
-        }
-
-        private void CreateNewFile()
-        {
-            selectedFileIndex = 0;
             fileName = "";
-            isLoaded = false;
-            isEditableFileName = true;
+            isEditableFileName = false;
+            filePath = null;
             fileData = null;
+            selectedImportTypes.Clear();
         }
 
         private void Copy()
@@ -153,8 +119,11 @@ namespace Xardas.MLAgents.Configuration
             isEditableFileName = true;
         }
 
-        private void CreateAsset()
+        private void CreateAssets()
         {
+            if (!IsLoaded)
+                throw new System.Exception("There is no loaded file.");
+
             if (string.IsNullOrEmpty(fileName))
                 throw new System.Exception("It has to have a file name.");
 
@@ -178,34 +147,57 @@ namespace Xardas.MLAgents.Configuration
 
         private void CreateFiles(string folderPath)
         {
-
-            if (isLoaded)
-            {
-                var yaml = YamlFile.ConvertStringToObject(fileData);
-                ConfigFileCreater.CreateFiles(folderPath, yaml);
-            }
-            else
-            {
-                ConfigFileCreater.CreateBasicBehavior(folderPath);
-            }
+            var yaml = YamlFile.ConvertStringToObject(fileData);
+            ConfigFileCreater.CreateFiles(folderPath, yaml, selectedImportTypes);
         }
 
         private void Delete()
         {
-            var fullFileName = fileName + fileExtension;
+            var fullFileName = fileName + "." + fileExtension;
             if(EditorUtility.DisplayDialog("Delete config file",
                 $"Are you sure you want to delete the {fullFileName} config file?", "Yes", "No"))
             {
-                string filePath = ConfigurationSettings.Instance.YamlFolderPath
-                    + Path.DirectorySeparatorChar + fullFileName;
-
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
-                    CreateNewFile();
                     Debug.Log("File is deleted: " + filePath);
+                    Clear();
                 }
             }
+        }
+
+        private void CreateDropDown()
+        {
+            GUILayout.Label("Import");
+            var label = selectedImportTypes.Count > 0 ? String.Join(", ", selectedImportTypes) : everythingText;
+            if (EditorGUILayout.DropdownButton(new GUIContent(label), FocusType.Passive))
+            {
+                GenericMenu menu = new GenericMenu();
+                menu.AddItem(new GUIContent(everythingText), selectedImportTypes.Count == 0, DropDownClick, everythingText);
+                foreach (var type in importTypes)
+                {
+                    menu.AddItem(new GUIContent(type), selectedImportTypes.Contains(type), DropDownClick, type);
+                }
+                menu.ShowAsContext();
+            }
+        }
+
+        private void DropDownClick(object userData)
+        {
+            var text = (string)userData;
+            if(text == everythingText)
+            {
+                selectedImportTypes.Clear();
+                return;
+            }
+
+            if(selectedImportTypes.Contains(text))
+                selectedImportTypes.Remove(text);
+            else
+                selectedImportTypes.Add(text);
+
+            if (selectedImportTypes.Count == importTypes.Count)
+                selectedImportTypes.Clear();
         }
     }
 }

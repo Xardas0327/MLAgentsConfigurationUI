@@ -4,6 +4,7 @@ using EnvironmentSetting = Xardas.MLAgents.Configuration.SettingParameter.Enviro
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {
+    [CreateAssetMenu(fileName = "EnvironmentSettings", menuName = "ML-Agents Config files/Environment Settings")]
     public class EnvironmentSettings : Settings<EnvironmentSetting>
     {
         public override void LoadData(YamlObject yaml)
