@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using System.IO;
 
-namespace Xardas.MLAgents.Configuration
+namespace Xardas.MLAgents
 {
     public static class Paths
     {
