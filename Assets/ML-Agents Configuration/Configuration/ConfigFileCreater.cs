@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
-using Unity.MLAgents;
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;

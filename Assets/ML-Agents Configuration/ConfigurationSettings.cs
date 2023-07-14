@@ -1,34 +1,33 @@
-#if UNITY_EDITOR
+#if UNITY_EDITOR_WIN
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Property;
 
-namespace Xardas.MLAgents.Configuration
+namespace Xardas.MLAgents
 {
     class ConfigurationSettings : ScriptableObject
     {
         private const string settingsFileName = "ML-Agents Configuration.asset";
 
         [SerializeField]
-        [Tooltip("You have to modify this in Project Settings! This won't be save here!")]
+        [Tooltip("You have to modify this in Project Settings!")]
         [ReadOnly]
-        private string yamlFolderPath;
+        private string pythonVirtualEnvironment;
 
         private static string filePath => Path.Combine(Paths.SettingsPath, settingsFileName);
 
-        //TODO: it is useless, it should be removed
-        public string YamlFolderPath
+        public string PythonVirtualEnvironment
         {
-            get { return yamlFolderPath; }
+            get { return pythonVirtualEnvironment; }
             set
             {
-                if(yamlFolderPath == value)
+                if (pythonVirtualEnvironment == value)
                     return;
 
                 AssetDatabase.DeleteAsset(filePath);
                 instance = CreateObject();
-                instance.yamlFolderPath = value;
+                instance.pythonVirtualEnvironment = value;
                 AssetDatabase.CreateAsset(instance, filePath);
                 AssetDatabase.SaveAssets();
             }
@@ -50,7 +49,7 @@ namespace Xardas.MLAgents.Configuration
                 if (instance == null)
                 {
                     instance = CreateObject();
-                    instance.yamlFolderPath = "";
+                    instance.pythonVirtualEnvironment = "";
                     AssetDatabase.CreateAsset(instance, filePath);
                     AssetDatabase.SaveAssets();
                 }
