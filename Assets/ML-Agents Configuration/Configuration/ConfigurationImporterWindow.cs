@@ -12,6 +12,8 @@ namespace Xardas.MLAgents.Configuration
     public class ConfigurationImporterWindow : EditorWindow
     {
         const string fileExtension = "yaml";
+        //For MacOS
+        const string fileExtension2 = "yml";
         string fileName;
         bool isEditableFileName = false;
         string filePath = null;
@@ -101,6 +103,10 @@ namespace Xardas.MLAgents.Configuration
         {
             fileName = Path.GetFileName(path);
             var extension = "." + fileExtension;
+            if (fileName.EndsWith(extension))
+                fileName = fileName.Substring(0, fileName.Length - extension.Length);
+
+            extension = "." + fileExtension2;
             if (fileName.EndsWith(extension))
                 fileName = fileName.Substring(0, fileName.Length - extension.Length);
         }
