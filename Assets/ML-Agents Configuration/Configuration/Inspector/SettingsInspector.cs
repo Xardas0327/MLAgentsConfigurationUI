@@ -49,7 +49,6 @@ namespace Xardas.MLAgents.Configuration.Inspector
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndHorizontal();
         }
-
     }
 }
 #endif
