@@ -1,9 +1,8 @@
 using System;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.SettingParameter
+namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 {
     [Serializable]
     public class EngineSettings : ISettings
@@ -29,6 +28,7 @@ namespace Xardas.MLAgents.Configuration.SettingParameter
 
         public bool isUseTargetFrameRate;
         [Tooltip(ConfigTooltip.targetFrameRate)]
+        [Min(-1)]
         public int targetFrameRate = -1;
 
         public bool isUseCaptureFrameRate;

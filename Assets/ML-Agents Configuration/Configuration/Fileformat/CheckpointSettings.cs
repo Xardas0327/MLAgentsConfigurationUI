@@ -1,6 +1,6 @@
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
-using CheckpointSetting = Xardas.MLAgents.Configuration.SettingParameter.CheckpointSettings;
+using CheckpointSetting = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.CheckpointSettings;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {

@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.SettingParameter;
+using Xardas.MLAgents.Configuration.Fileformat.SettingParameter;
 
 namespace Xardas.MLAgents.Configuration.Inspector
 {

@@ -1,6 +1,6 @@
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
-using EnvironmentSetting = Xardas.MLAgents.Configuration.SettingParameter.EnvironmentSettings;
+using EnvironmentSetting = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.EnvironmentSettings;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {

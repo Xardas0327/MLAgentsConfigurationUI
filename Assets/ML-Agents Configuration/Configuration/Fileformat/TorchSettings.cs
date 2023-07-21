@@ -1,6 +1,6 @@
 using UnityEngine;
 using Xardas.MLAgents.Yaml;
-using TorchSetting = Xardas.MLAgents.Configuration.SettingParameter.TorchSettings;
+using TorchSetting = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.TorchSettings;
 
 namespace Xardas.MLAgents.Configuration.Fileformat
 {

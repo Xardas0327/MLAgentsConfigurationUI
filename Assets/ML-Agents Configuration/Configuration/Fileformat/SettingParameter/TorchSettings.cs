@@ -1,15 +1,16 @@
 using System;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.SettingParameter
+namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 {
     public enum DeviceType { cpu, cuda, cuda0 /*cuda:0*/}
 
     [Serializable]
     public class TorchSettings : ISettings
     {
+        public const string Cuda0Text = "cuda:0";
+
         public bool isUseDevice;
         [Tooltip(ConfigTooltip.device)]
         public DeviceType device;
@@ -36,7 +37,7 @@ namespace Xardas.MLAgents.Configuration.SettingParameter
                                 device = DeviceType.cpu;
                             else if (value == "cuda")
                                 device = DeviceType.cuda;
-                            else if (value == "cuda:0")
+                            else if (value == Cuda0Text)
                                 device = DeviceType.cuda0;
                             break;
                     }
@@ -51,7 +52,7 @@ namespace Xardas.MLAgents.Configuration.SettingParameter
 
             if(isUseDevice)
             {
-                string deviceText = device == DeviceType.cuda0 ? "cuda:0" : device.ToString();
+                string deviceText = device == DeviceType.cuda0 ? Cuda0Text : device.ToString();
                 yaml.elements.Add(new YamlValue(ConfigText.device, deviceText));
             }
 

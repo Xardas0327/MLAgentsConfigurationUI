@@ -1,10 +1,9 @@
 using System;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat;
 using Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.SettingParameter
+namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 {
     [Serializable]
     public class CheckpointSettings : ISettings, IInitPathObject

@@ -136,6 +136,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string deterministic = "Whether to select actions deterministically in policy. `dist.mean` for continuous action space, and `dist.argmax` for deterministic action space.";
         public const string numAreas = "The number of parallel training areas in each Unity environment instance.";
         public const string debug = "Whether to enable debug-level logging for some parts of the code.";
-        public const string resultsDir = "Results base directory.\nIf it is not a full path, it will be in the current unity project main folder.";
+        public const string resultsDir = "Results base directory.";
     }
 }
