@@ -45,11 +45,11 @@ namespace Xardas.MLAgents.Cli
             if (GUILayout.Button("Clear"))
                 Clear();
 
+            GUILayout.Label("The CLI will start in the current unity project main folder.");
             var pythoEnvtext = !string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment)
                 ? "A Python Virtual Environment has set in Project Settings."
                 : "A Python Virtual Environment has not set in Project Settings.";
             GUILayout.Label(pythoEnvtext);
-            GUILayout.Label("The CLI will start in the current unity project main folder.");
             GUILayout.Space(25);
 
             DrawYamlFileDialog();

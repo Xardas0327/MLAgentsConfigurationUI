@@ -2,7 +2,6 @@
 using UnityEditor;
 using UnityEngine;
 using Xardas.MLAgents.Configuration.Fileformat;
-using Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter;
 
 namespace Xardas.MLAgents.Configuration.Inspector
 {
@@ -29,7 +28,14 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
             else if (property.name == nameof(settings.initializeFrom))
             {
-                DrawInitPathProperty(ref settings.isUseInitializeFrom, property, settings);
+                var pathWrapper = new PathWrapper<Fileformat.SettingParameter.CheckpointSettings>(
+                    settings, 
+                    (cs) => cs.initializeFrom, 
+                    (cs, path) => cs.initializeFrom = path
+                );
+                DrawFilePanelProperty(
+                    ref settings.isUseInitializeFrom, property, pathWrapper, "Select init file", "pt"
+               );
             }
             else if (property.name == nameof(settings.loadModel))
             {
@@ -51,26 +57,6 @@ namespace Xardas.MLAgents.Configuration.Inspector
             {
                 DrawPropertyWithTickBox(ref settings.isUseInference, property);
             }
-        }
-
-        protected void DrawInitPathProperty(ref bool active, SerializedProperty property, IInitPathObject initPathObject)
-        {
-            EditorGUILayout.BeginHorizontal();
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-            EditorGUILayout.PropertyField(property, true);
-            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
-            {
-                EditorApplication.delayCall += () =>
-                {
-                    string newPath = EditorUtility.OpenFilePanel("Select init file", Application.dataPath, "pt");
-
-                    if (newPath != initPathObject.InitPath && !string.IsNullOrEmpty(newPath))
-                        initPathObject.InitPath = newPath;
-                };
-            }
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
         }
     }
 

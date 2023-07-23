@@ -6,7 +6,7 @@ using Xardas.MLAgents.Yaml;
 namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter.Reward
 {
     [Serializable]
-    public class GailIntrinsicReward : IDemoPathObject
+    public class GailIntrinsicReward
     {
         [Tooltip(ConfigTooltip.gailStrength)]
         [Min(0f)]
@@ -24,8 +24,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter.Reward
         public bool useActions = false;
         [Tooltip(ConfigTooltip.gailUseVail)]
         public bool useVail = false;
-
-        public string DemoPath { get => demoPath; set => demoPath = value; }
 
         public GailIntrinsicReward() { }
 

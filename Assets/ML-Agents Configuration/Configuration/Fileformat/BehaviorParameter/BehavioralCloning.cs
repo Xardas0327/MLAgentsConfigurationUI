@@ -6,7 +6,7 @@ using Xardas.MLAgents.Yaml;
 namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
 {
     [Serializable]
-    public class BehavioralCloning : IDemoPathObject
+    public class BehavioralCloning
     {
         [Tooltip(ConfigTooltip.behavioralCloningDemoPath)]
         public string demoPath;
@@ -25,8 +25,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
         public uint numEpoch;//if not specified, it will default to the numEpoch of the trainer.
         [Tooltip(ConfigTooltip.behavioralCloningSamplesPerUpdate)]
         public uint samplesPerUpdate = 0;
-
-        public string DemoPath { get => demoPath; set => demoPath = value; }
 
         public BehavioralCloning(uint defaultBatchSize, uint defaultNumEpoch) 
         {
