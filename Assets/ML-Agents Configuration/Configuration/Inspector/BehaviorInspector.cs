@@ -19,7 +19,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
         public override void OnInspectorGUI()
         {
             var behavior = (Behavior)target;
-            DrawIspector(behavior);
+            DrawInspector(behavior);
 
             GUILayout.Space(20);
             if (GUILayout.Button("Validation"))
@@ -28,7 +28,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawIspector(Behavior behavior)
+        void DrawInspector(Behavior behavior)
         {
             using (new LocalizationGroup(target))
             {
@@ -64,7 +64,8 @@ namespace Xardas.MLAgents.Configuration.Inspector
                         }
                         else if (iterator.name == nameof(behavior.initPath))
                         {
-                            DrawInitPathProperty(iterator, behavior);
+                            var pathWrapper = new PathWrapper<Behavior>(behavior, (b) => b.initPath, (b, path) => b.initPath = path);
+                            DrawFilePanelProperty(iterator, pathWrapper, "Select init file", "pt");
                         }
                         else
                             DrawProperty(iterator);
@@ -93,7 +94,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawDemoPathProperty(SerializedProperty property, IDemoPathObject demoPathObject)
+        void DrawFilePanelProperty<T>(SerializedProperty property, PathWrapper<T> pathObject, string title, string extension)
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * property.depth));
@@ -102,28 +103,10 @@ namespace Xardas.MLAgents.Configuration.Inspector
             {
                 EditorApplication.delayCall += () =>
                 {
-                    string newPath = EditorUtility.OpenFilePanel("Select demo file", Application.dataPath, "demo");
+                    string newPath = EditorUtility.OpenFilePanel(title, Application.dataPath, extension);
 
-                    if (newPath != demoPathObject.DemoPath && !string.IsNullOrEmpty(newPath))
-                        demoPathObject.DemoPath = newPath;
-                };
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-
-        void DrawInitPathProperty(SerializedProperty property, IInitPathObject initPathObject)
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * property.depth));
-            EditorGUILayout.PropertyField(property, true);
-            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
-            {
-                EditorApplication.delayCall += () =>
-                {
-                    string newPath = EditorUtility.OpenFilePanel("Select init file", Application.dataPath, "pt");
-
-                    if (newPath != initPathObject.InitPath && !string.IsNullOrEmpty(newPath))
-                        initPathObject.InitPath = newPath;
+                    if (newPath != pathObject.Path && !string.IsNullOrEmpty(newPath))
+                        pathObject.Path = newPath;
                 };
             }
             EditorGUILayout.EndHorizontal();
@@ -298,7 +281,8 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
             else if (property.name == nameof(gail.demoPath))
             {
-                DrawDemoPathProperty(property, gail);
+                var pathWrapper = new PathWrapper<GailIntrinsicReward>(gail, (g) => g.demoPath, (g, path) => g.demoPath = path);
+                DrawFilePanelProperty(property, pathWrapper, "Select demo file", "demo");
             }
             else
                 DrawProperty(property);
@@ -318,7 +302,8 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
             else if (property.name == nameof(behavioralCloning.demoPath))
             {
-                DrawDemoPathProperty(property, behavioralCloning);
+                var pathWrapper = new PathWrapper<BehavioralCloning>(behavioralCloning, (bc) => bc.demoPath, (bc, path) => bc.demoPath = path);
+                DrawFilePanelProperty(property, pathWrapper, "Select demo file", "demo");
             }
             else
                 DrawProperty(property);

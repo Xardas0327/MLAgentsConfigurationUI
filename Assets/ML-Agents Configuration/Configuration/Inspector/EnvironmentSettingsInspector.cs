@@ -1,7 +1,9 @@
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.SettingParameter;
+using Xardas.MLAgents.Configuration.Fileformat;
+using Xardas.MLAgents.Configuration.Fileformat.SettingParameter;
 
 namespace Xardas.MLAgents.Configuration.Inspector
 {
@@ -24,7 +26,12 @@ namespace Xardas.MLAgents.Configuration.Inspector
             var settings = ((Fileformat.EnvironmentSettings)target).settings;
             if (property.name == nameof(settings.envPath))
             {
-                DrawEnvPathProperty(ref settings.isUseEnvPath, property, settings);
+                var pathWrapper = new PathWrapper<Fileformat.SettingParameter.EnvironmentSettings>(
+                    settings, 
+                    (s) => s.envPath, 
+                    (s, path) => s.envPath = path
+                );
+                DrawFolderPanelProperty(ref settings.isUseEnvPath, property, pathWrapper, "Select a build folder");
             }
             else if (property.name == nameof(settings.envArgs))
             {
@@ -54,25 +61,6 @@ namespace Xardas.MLAgents.Configuration.Inspector
             {
                 DrawPropertyWithTickBox(ref settings.isUseRestartsRateLimitPeriodS, property);
             }
-        }
-        protected void DrawEnvPathProperty(ref bool active, SerializedProperty property, IEnvPathObject envPathObject)
-        {
-            EditorGUILayout.BeginHorizontal();
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-            EditorGUILayout.PropertyField(property, true);
-            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
-            {
-                EditorApplication.delayCall += () =>
-                {
-                    string newPath = EditorUtility.OpenFolderPanel("Select a build", Application.dataPath, "");
-
-                    if (newPath != envPathObject.EnvPath && !string.IsNullOrEmpty(newPath))
-                        envPathObject.EnvPath = newPath;
-                };
-            }
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
         }
     }
 }

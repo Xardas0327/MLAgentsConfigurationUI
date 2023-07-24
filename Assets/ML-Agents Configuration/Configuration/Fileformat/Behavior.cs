@@ -8,7 +8,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
     public enum TrainerType { ppo, sac, poca }
 
     [CreateAssetMenu(fileName = "Behavior", menuName = "ML-Agents Config files/Behavior")]
-    public class Behavior : ConfigFile, IInitPathObject
+    public class Behavior : ConfigFile
     {
         [Tooltip(ConfigTooltip.behaviorName)]
         public string behaviorName;
@@ -35,8 +35,6 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public BehavioralCloning behavioralCloning = null;
         public bool isUseSelfPlay = false;
         public SelfPlay selfPlay = null;
-
-        public string InitPath { get => initPath; set => initPath = value; }
 
         public override void LoadData(YamlObject yaml)
         {

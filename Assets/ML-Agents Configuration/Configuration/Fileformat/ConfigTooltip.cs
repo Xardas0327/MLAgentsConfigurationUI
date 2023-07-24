@@ -131,5 +131,11 @@ namespace Xardas.MLAgents.Configuration.Fileformat
 
         //Torch settings
         public const string device = "Settings for the default torch.device used in training.";
+
+        //CLI Settings
+        public const string deterministic = "Whether to select actions deterministically in policy. `dist.mean` for continuous action space, and `dist.argmax` for deterministic action space.";
+        public const string numAreas = "The number of parallel training areas in each Unity environment instance.";
+        public const string debug = "Whether to enable debug-level logging for some parts of the code.";
+        public const string resultsDir = "Results base directory.";
     }
 }

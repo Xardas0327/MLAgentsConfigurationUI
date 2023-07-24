@@ -1,4 +1,4 @@
-using Xardas.MLAgents.Configuration.SettingParameter;
+using Xardas.MLAgents.Configuration.Fileformat.SettingParameter;
 using Xardas.MLAgents.Yaml;
 
 namespace Xardas.MLAgents.Configuration.Fileformat

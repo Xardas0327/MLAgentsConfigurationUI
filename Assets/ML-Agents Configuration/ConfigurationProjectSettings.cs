@@ -19,7 +19,10 @@ namespace Xardas.MLAgents
 
                     GUILayout.BeginHorizontal();
                     EditorGUI.BeginDisabledGroup(true);
-                    EditorGUILayout.TextField("Python Virtual Env", ConfigurationSettings.Instance.PythonVirtualEnvironment);
+                    EditorGUILayout.TextField(
+                        new GUIContent("Python Virtual Env", "Please add the activate file from your python virtual environment"), 
+                        ConfigurationSettings.Instance.PythonVirtualEnvironment
+                    );
                     EditorGUI.EndDisabledGroup();
 
                     if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))

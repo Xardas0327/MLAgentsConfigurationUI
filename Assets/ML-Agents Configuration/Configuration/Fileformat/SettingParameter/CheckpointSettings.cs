@@ -1,13 +1,11 @@
 using System;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat;
-using Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.SettingParameter
+namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 {
     [Serializable]
-    public class CheckpointSettings : ISettings, IInitPathObject
+    public class CheckpointSettings : ISettings
     {
         public bool isUseRunId;
         [Tooltip(ConfigTooltip.runId)]
@@ -40,12 +38,6 @@ namespace Xardas.MLAgents.Configuration.SettingParameter
             || isUseInitializeFrom || isUseLoadModel
             || isUseResume || isUseForce
             || isUseTrainModel || isUseInference;
-
-        public string InitPath
-        {
-            get => initializeFrom;
-            set => initializeFrom = value;
-        }
 
         public CheckpointSettings() { }
 

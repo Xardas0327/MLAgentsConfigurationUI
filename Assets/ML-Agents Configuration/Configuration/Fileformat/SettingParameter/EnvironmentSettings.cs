@@ -1,12 +1,11 @@
 using System;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat;
 using Xardas.MLAgents.Yaml;
 
-namespace Xardas.MLAgents.Configuration.SettingParameter
+namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 {
     [Serializable]
-    public class EnvironmentSettings : ISettings, IEnvPathObject
+    public class EnvironmentSettings : ISettings
     {
         public bool isUseEnvPath;
         [Tooltip(ConfigTooltip.envPath)]
@@ -48,11 +47,6 @@ namespace Xardas.MLAgents.Configuration.SettingParameter
             || isUseBasePort || isUseNumEnvs
             || isUseSeed || isUseMaxLifetimeRestarts
             || isUseRestartsRateLimitN || isUseRestartsRateLimitPeriodS;
-
-        public string EnvPath { 
-            get => envPath; 
-            set => envPath = value; 
-        }
 
         public EnvironmentSettings() { }
         public EnvironmentSettings(YamlObject yaml) 

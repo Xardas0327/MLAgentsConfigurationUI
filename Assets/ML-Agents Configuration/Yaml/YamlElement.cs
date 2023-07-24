@@ -9,7 +9,7 @@ namespace Xardas.MLAgents.Yaml
         public abstract YamlElement Copy();
     }
 
-    public enum YamlObjectType { Simple, List}
+    public enum YamlObjectType { Object, List}
 
     public class YamlObject : YamlElement
     {

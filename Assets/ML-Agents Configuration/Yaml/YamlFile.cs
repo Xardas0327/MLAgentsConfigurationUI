@@ -156,7 +156,7 @@ namespace Xardas.MLAgents.Yaml
 
                 switch(yamlObject.type)
                 {
-                    case YamlObjectType.Simple:
+                    case YamlObjectType.Object:
                         foreach (var element in yamlObject.elements)
                         {
                             ConvertToText(element, text, deep);
