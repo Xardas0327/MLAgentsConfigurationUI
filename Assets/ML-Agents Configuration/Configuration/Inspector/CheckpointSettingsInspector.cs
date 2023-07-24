@@ -34,7 +34,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
                     (cs, path) => cs.initializeFrom = path
                 );
                 DrawFilePanelProperty(
-                    ref settings.isUseInitializeFrom, property, pathWrapper, "Select init file", "pt"
+                    ref settings.isUseInitializeFrom, property, pathWrapper, "Select a checkpoint file", "pt"
                );
             }
             else if (property.name == nameof(settings.loadModel))

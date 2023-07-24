@@ -31,7 +31,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
                     (s) => s.envPath, 
                     (s, path) => s.envPath = path
                 );
-                DrawFolderPanelProperty(ref settings.isUseEnvPath, property, pathWrapper, "Select a build");
+                DrawFolderPanelProperty(ref settings.isUseEnvPath, property, pathWrapper, "Select a build folder");
             }
             else if (property.name == nameof(settings.envArgs))
             {

@@ -168,11 +168,19 @@ namespace Xardas.MLAgents.Cli
                     ref cliSettings.debug,
                     1);
 
-                DrawFieldWithTickBox(
+                var pathWrapper = new PathWrapper<CliSettings>(
+                    cliSettings, 
+                    (cs) => cs.resultsDir, 
+                    (cs, path) => cs.resultsDir = path
+                );
+
+                DrawFolderPanelProperty(
                     ref cliSettings.isUseResultsDir,
                     new GUIContent("Result Directory", ConfigTooltip.resultsDir),
-                    ref cliSettings.resultsDir,
-                    1);
+                    pathWrapper,
+                    "Select result folder",
+                    1
+                );
             }
             GUILayout.Space(5);
         }
@@ -182,11 +190,19 @@ namespace Xardas.MLAgents.Cli
             showEnvironmentSettings = EditorGUILayout.Foldout(showEnvironmentSettings, new GUIContent("Environment Settings"));
             if (showEnvironmentSettings)
             {
-                DrawFieldWithTickBox(
+                var pathWrapper = new PathWrapper<EnvironmentSettings>(
+                    environmentSettings,
+                    (es) => es.envPath,
+                    (es, path) => es.envPath = path
+                );
+
+                DrawFolderPanelProperty(
                     ref environmentSettings.isUseEnvPath,
                     new GUIContent("Env Path", ConfigTooltip.envPath),
-                    ref environmentSettings.envPath,
-                    1);
+                    pathWrapper,
+                    "Select a build folder",
+                    1
+                );
 
                 DrawFieldWithTickBox(
                     ref environmentSettings.isUseEnvArgs,
@@ -305,11 +321,21 @@ namespace Xardas.MLAgents.Cli
                     ref checkpointSettings.runId,
                     1);
 
-                DrawFieldWithTickBox(
+                var pathWrapper = new PathWrapper<CheckpointSettings>(
+                    checkpointSettings,
+                    (cs) => cs.initializeFrom,
+                    (cs, path) => cs.initializeFrom = path
+                );
+
+                DrawFilePanelProperty(
                     ref checkpointSettings.isUseInitializeFrom,
                     new GUIContent("Initialize From", ConfigTooltip.initializeFrom),
-                    ref checkpointSettings.initializeFrom,
-                    1);
+                    pathWrapper,
+                    "Select a checkpoint file", 
+                    "pt",
+                    1
+                );
+
 
                 DrawFieldWithTickBox(
                     ref checkpointSettings.isUseResume,
@@ -421,6 +447,52 @@ namespace Xardas.MLAgents.Cli
             active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
             EditorGUI.BeginDisabledGroup(!active);
             value = (DeviceType)EditorGUILayout.EnumPopup(label, value);
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.EndHorizontal();
+        }
+
+        protected void DrawFolderPanelProperty<T>(ref bool active, GUIContent label, PathWrapper<T> pathObject, string folderPanelTitle, uint deep = 0)
+        {
+            EditorGUILayout.BeginHorizontal();
+            if (deep > 0)
+                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
+
+            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
+            EditorGUI.BeginDisabledGroup(!active);
+            EditorGUILayout.TextField(label, pathObject.Path);
+            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    string newPath = EditorUtility.OpenFolderPanel(folderPanelTitle, Application.dataPath, "");
+
+                    if (newPath != pathObject.Path && !string.IsNullOrEmpty(newPath))
+                        pathObject.Path = newPath;
+                };
+            }
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.EndHorizontal();
+        }
+
+        protected void DrawFilePanelProperty<T>(ref bool active, GUIContent label, PathWrapper<T> pathObject, string filePanelTitle, string extension, uint deep = 0)
+        {
+            EditorGUILayout.BeginHorizontal();
+            if (deep > 0)
+                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
+
+            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
+            EditorGUI.BeginDisabledGroup(!active);
+            EditorGUILayout.TextField(label, pathObject.Path);
+            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    string newPath = EditorUtility.OpenFilePanel(filePanelTitle, Application.dataPath, extension);
+
+                    if (newPath != pathObject.Path && !string.IsNullOrEmpty(newPath))
+                        pathObject.Path = newPath;
+                };
+            }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndHorizontal();
         }
