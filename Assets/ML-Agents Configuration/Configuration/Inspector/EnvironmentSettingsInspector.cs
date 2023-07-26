@@ -1,9 +1,6 @@
 #if UNITY_EDITOR
-using System;
 using UnityEditor;
 using UnityEngine;
-using Xardas.MLAgents.Configuration.Fileformat;
-using Xardas.MLAgents.Configuration.Fileformat.SettingParameter;
 
 namespace Xardas.MLAgents.Configuration.Inspector
 {
@@ -31,35 +28,40 @@ namespace Xardas.MLAgents.Configuration.Inspector
                     (s) => s.envPath, 
                     (s, path) => s.envPath = path
                 );
-                DrawFolderPanelProperty(ref settings.isUseEnvPath, property, pathWrapper, "Select a build folder");
+                DrawFolderPanelProperty(
+                    ref settings.isUseEnvPath,
+                    new GUIContent(property.displayName, property.tooltip), 
+                    pathWrapper, 
+                    "Select a build folder"
+               );
             }
             else if (property.name == nameof(settings.envArgs))
             {
-                DrawPropertyWithTickBox(ref settings.isUseEnvArgs, property);
+                DrawFieldWithTickBox(ref settings.isUseEnvArgs, property);
             }
             else if (property.name == nameof(settings.basePort))
             {
-                DrawPropertyWithTickBox(ref settings.isUseBasePort, property);
+                DrawFieldWithTickBox(ref settings.isUseBasePort, property);
             }
             else if (property.name == nameof(settings.numEnvs))
             {
-                DrawPropertyWithTickBox(ref settings.isUseNumEnvs, property);
+                DrawFieldWithTickBox(ref settings.isUseNumEnvs, property);
             }
             else if (property.name == nameof(settings.seed))
             {
-                DrawPropertyWithTickBox(ref settings.isUseSeed, property);
+                DrawFieldWithTickBox(ref settings.isUseSeed, property);
             }
             else if (property.name == nameof(settings.maxLifetimeRestarts))
             {
-                DrawPropertyWithTickBox(ref settings.isUseMaxLifetimeRestarts, property);
+                DrawFieldWithTickBox(ref settings.isUseMaxLifetimeRestarts, property);
             }
             else if (property.name == nameof(settings.restartsRateLimitN))
             {
-                DrawPropertyWithTickBox(ref settings.isUseRestartsRateLimitN, property);
+                DrawFieldWithTickBox(ref settings.isUseRestartsRateLimitN, property);
             }
             else if (property.name == nameof(settings.restartsRateLimitPeriodS))
             {
-                DrawPropertyWithTickBox(ref settings.isUseRestartsRateLimitPeriodS, property);
+                DrawFieldWithTickBox(ref settings.isUseRestartsRateLimitPeriodS, property);
             }
         }
     }
