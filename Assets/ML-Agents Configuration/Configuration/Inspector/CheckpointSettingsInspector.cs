@@ -24,7 +24,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             var settings = ((CheckpointSettings)target).settings;
             if (property.name == nameof(settings.runId))
             {
-                DrawPropertyWithTickBox(ref settings.isUseRunId, property);
+                DrawFieldWithTickBox(ref settings.isUseRunId, property);
             }
             else if (property.name == nameof(settings.initializeFrom))
             {
@@ -34,28 +34,32 @@ namespace Xardas.MLAgents.Configuration.Inspector
                     (cs, path) => cs.initializeFrom = path
                 );
                 DrawFilePanelProperty(
-                    ref settings.isUseInitializeFrom, property, pathWrapper, "Select a checkpoint file", "pt"
+                    ref settings.isUseInitializeFrom,
+                    new GUIContent(property.displayName, property.tooltip), 
+                    pathWrapper, 
+                    "Select a checkpoint file", 
+                    "pt"
                );
             }
             else if (property.name == nameof(settings.loadModel))
             {
-                DrawPropertyWithTickBox(ref settings.isUseLoadModel, property);
+                DrawFieldWithTickBox(ref settings.isUseLoadModel, property);
             }
             else if (property.name == nameof(settings.resume))
             {
-                DrawPropertyWithTickBox(ref settings.isUseResume, property);
+                DrawFieldWithTickBox(ref settings.isUseResume, property);
             }
             else if (property.name == nameof(settings.force))
             {
-                DrawPropertyWithTickBox(ref settings.isUseForce, property);
+                DrawFieldWithTickBox(ref settings.isUseForce, property);
             }
             else if (property.name == nameof(settings.trainModel))
             {
-                DrawPropertyWithTickBox(ref settings.isUseTrainModel, property);
+                DrawFieldWithTickBox(ref settings.isUseTrainModel, property);
             }
             else if (property.name == nameof(settings.inference))
             {
-                DrawPropertyWithTickBox(ref settings.isUseInference, property);
+                DrawFieldWithTickBox(ref settings.isUseInference, property);
             }
         }
     }

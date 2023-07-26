@@ -42,25 +42,25 @@ namespace Xardas.MLAgents.Configuration.Inspector
                     {
                         if (iterator.type == typeof(Hyperparameters).Name)
                         {
-                            DrawObject(iterator, typeof(Hyperparameters), behavior, DrawHyperparametersProperties);
+                            DrawObject(iterator, typeof(Hyperparameters), behavior, DrawHyperparametersField);
                         }
                         else if (iterator.type == typeof(NetworkSettings).Name)
                         {
-                            DrawObject(iterator, typeof(NetworkSettings), behavior.networkSettings, DrawNetworkSettingsProperties);
+                            DrawObject(iterator, typeof(NetworkSettings), behavior.networkSettings, DrawNetworkSettingsField);
                         }
                         else if (iterator.type == typeof(RewardSignals).Name)
                         {
-                            DrawObject(iterator, typeof(RewardSignals), behavior, DrawRewardSignalsProperties);
+                            DrawObject(iterator, typeof(RewardSignals), behavior, DrawRewardSignalsField);
                         }
                         else if (iterator.type == typeof(BehavioralCloning).Name)
                         {
                             if (behavior.isUseBehavioralCloning)
-                                DrawObject(iterator, typeof(BehavioralCloning), behavior.behavioralCloning, DrawBehavioralCloningProperties);
+                                DrawObject(iterator, typeof(BehavioralCloning), behavior.behavioralCloning, DrawBehavioralCloningField);
                         }
                         else if (iterator.type == typeof(SelfPlay).Name)
                         {
                             if (behavior.isUseSelfPlay)
-                                DrawObject(iterator, typeof(SelfPlay), behavior.selfPlay, DrawSelfPlayProperties);
+                                DrawObject(iterator, typeof(SelfPlay), behavior.selfPlay, DrawSelfPlayField);
                         }
                         else if (iterator.name == nameof(behavior.initPath))
                         {
@@ -68,7 +68,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
                             DrawFilePanelProperty(iterator, pathWrapper, "Select init file", "pt");
                         }
                         else
-                            DrawProperty(iterator);
+                            DrawField(iterator);
                     }
 
                     enterChildren = false;
@@ -79,7 +79,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawProperty(SerializedProperty property)
+        void DrawField(SerializedProperty property)
         {
             if (property.depth == 0)
             {
@@ -162,7 +162,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             }
         }
 
-        void DrawHyperparametersProperties(SerializedProperty property, Behavior behavior)
+        void DrawHyperparametersField(SerializedProperty property, Behavior behavior)
         {
             bool isPpoAndPocaSpecific = Hyperparameters.OnlyPpoAndPocaFields.Contains(property.name);
             bool isSacSpecific = Hyperparameters.OnlySacFields.Contains(property.name);
@@ -173,15 +173,15 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 if (property.name == nameof(behavior.hyperparameters.bufferSize))
                 {
                     if (behavior.hyperparameters.overwriteBufferSize)
-                        DrawProperty(property);
+                        DrawField(property);
                 }
                 else if(property.name == nameof(behavior.hyperparameters.learningRateSchedule))
                 {
                     if (behavior.hyperparameters.overwriteLearningRateSchedule)
-                        DrawProperty(property);
+                        DrawField(property);
                 }
                 else
-                    DrawProperty(property);
+                    DrawField(property);
             }
             //PPO OR POCA
             else if ((behavior.trainerType == TrainerType.ppo || behavior.trainerType == TrainerType.poca) && isPpoAndPocaSpecific)
@@ -189,15 +189,15 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 if (property.name == nameof(behavior.hyperparameters.betaSchedule))
                 {
                     if (behavior.hyperparameters.overwriteBetaSchedule)
-                        DrawProperty(property);
+                        DrawField(property);
                 }
                 else if (property.name == nameof(behavior.hyperparameters.epsilonSchedule))
                 {
                     if (behavior.hyperparameters.overwriteEpsilonSchedule)
-                        DrawProperty(property);
+                        DrawField(property);
                 }
                 else
-                    DrawProperty(property);
+                    DrawField(property);
             }
             // SAC
             else if (behavior.trainerType == TrainerType.sac && isSacSpecific)
@@ -205,29 +205,29 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 if (property.name == nameof(behavior.hyperparameters.rewardSignalNumUpdate))
                 {
                     if (behavior.hyperparameters.overwriteRewardSignalNumUpdate)
-                        DrawProperty(property);
+                        DrawField(property);
                 }
                 else
-                    DrawProperty(property);
+                    DrawField(property);
             }
         }
 
-        void DrawNetworkSettingsProperties(SerializedProperty property, NetworkSettings networkSettings)
+        void DrawNetworkSettingsField(SerializedProperty property, NetworkSettings networkSettings)
         {
             if (property.name != nameof(networkSettings.memory)
                             || networkSettings.isUseMemory)
             {
-                DrawProperty(property);
+                DrawField(property);
             }
         }
 
-        void DrawRewardSignalsProperties(SerializedProperty property, Behavior behavior)
+        void DrawRewardSignalsField(SerializedProperty property, Behavior behavior)
         {
             //Extrinsic
             if (property.name == nameof(behavior.rewardSignals.extrinsic))
             {
                 if (behavior.rewardSignals.isUseExtrinsic)
-                    DrawObject(property, typeof(ExtrinsicReward), (NetworkSettings)null, DrawRewardProperties);
+                    DrawObject(property, typeof(ExtrinsicReward), (NetworkSettings)null, DrawRewardField);
             }
             //Curiosity
             else if (property.name == nameof(behavior.rewardSignals.curiosity))
@@ -237,7 +237,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
                         property,
                         typeof(CuriosityIntrinsicReward),
                         behavior.rewardSignals.curiosity.networkSettings,
-                        DrawRewardProperties);
+                        DrawRewardField);
             }
             //Gail
             else if (property.name == nameof(behavior.rewardSignals.gail))
@@ -247,7 +247,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
                         property,
                         typeof(GailIntrinsicReward),
                         behavior.rewardSignals.gail,
-                        DrawRewardGailProperties);
+                        DrawRewardGailField);
             }
             //Rnd
             else if (property.name == nameof(behavior.rewardSignals.rnd))
@@ -257,27 +257,27 @@ namespace Xardas.MLAgents.Configuration.Inspector
                         property,
                         typeof(RndIntrinsicReward),
                         behavior.rewardSignals.rnd.networkSettings,
-                        DrawRewardProperties);
+                        DrawRewardField);
             }
             else
             {
-                DrawProperty(property);
+                DrawField(property);
             }
         }
 
-        void DrawRewardProperties(SerializedProperty property, NetworkSettings networkSettings)
+        void DrawRewardField(SerializedProperty property, NetworkSettings networkSettings)
         {
             if (property.type == typeof(NetworkSettings).Name)
-                DrawObject(property, typeof(NetworkSettings), networkSettings, DrawNetworkSettingsProperties);
+                DrawObject(property, typeof(NetworkSettings), networkSettings, DrawNetworkSettingsField);
             else
-                DrawProperty(property);
+                DrawField(property);
         }
 
-        void DrawRewardGailProperties(SerializedProperty property, GailIntrinsicReward gail)
+        void DrawRewardGailField(SerializedProperty property, GailIntrinsicReward gail)
         {
             if (property.type == typeof(NetworkSettings).Name)
             {
-                DrawObject(property, typeof(NetworkSettings), gail.networkSettings, DrawNetworkSettingsProperties);
+                DrawObject(property, typeof(NetworkSettings), gail.networkSettings, DrawNetworkSettingsField);
             }
             else if (property.name == nameof(gail.demoPath))
             {
@@ -285,20 +285,20 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 DrawFilePanelProperty(property, pathWrapper, "Select demo file", "demo");
             }
             else
-                DrawProperty(property);
+                DrawField(property);
         }
 
-        void DrawBehavioralCloningProperties(SerializedProperty property, BehavioralCloning behavioralCloning)
+        void DrawBehavioralCloningField(SerializedProperty property, BehavioralCloning behavioralCloning)
         {
             if (property.name == nameof(behavioralCloning.batchSize))
             {
                 if (behavioralCloning.overwriteBatchSize)
-                    DrawProperty(property);
+                    DrawField(property);
             }
             else if (property.name == nameof(behavioralCloning.numEpoch))
             {
                 if (behavioralCloning.overwriteNumEpoch)
-                    DrawProperty(property);
+                    DrawField(property);
             }
             else if (property.name == nameof(behavioralCloning.demoPath))
             {
@@ -306,15 +306,15 @@ namespace Xardas.MLAgents.Configuration.Inspector
                 DrawFilePanelProperty(property, pathWrapper, "Select demo file", "demo");
             }
             else
-                DrawProperty(property);
+                DrawField(property);
         }
 
-        void DrawSelfPlayProperties(SerializedProperty property, SelfPlay selfPlay)
+        void DrawSelfPlayField(SerializedProperty property, SelfPlay selfPlay)
         {
             if (property.name != nameof(selfPlay.teamChange)
                             || selfPlay.overwriteTeamChange)
             {
-                DrawProperty(property);
+                DrawField(property);
             }
         }
     }

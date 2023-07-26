@@ -1,6 +1,4 @@
 #if UNITY_EDITOR_WIN
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using UnityEditor;
@@ -11,14 +9,12 @@ using EnvironmentSettings = Xardas.MLAgents.Configuration.Fileformat.SettingPara
 using EngineSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.EngineSettings;
 using CheckpointSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.CheckpointSettings;
 using TorchSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.TorchSettings;
-using DeviceType = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.DeviceType;
+using Xardas.MLAgents.Configuration.Inspector;
 
 namespace Xardas.MLAgents.Cli
 {
     public class CliWindow : EditorWindow
     {
-        private const float depthSize = 15;
-
         private string yamlFilePath = "";
         private CliSettings cliSettings = new();
         private EnvironmentSettings environmentSettings = new();
@@ -149,20 +145,20 @@ namespace Xardas.MLAgents.Cli
             showCliSettings = EditorGUILayout.Foldout(showCliSettings, new GUIContent("CLI Settings"));
             if (showCliSettings)
             {
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref cliSettings.isUseDeterministic,
                     new GUIContent("Deterministic", ConfigTooltip.deterministic),
                     ref cliSettings.deterministic,
                     1);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref cliSettings.isUseNumAreas,
                     new GUIContent("Num Areas", ConfigTooltip.numAreas),
                     ref cliSettings.numAreas,
                     1,
                     Min1Condition);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref cliSettings.isUseDebug,
                     new GUIContent("Debug", ConfigTooltip.debug),
                     ref cliSettings.debug,
@@ -174,7 +170,7 @@ namespace Xardas.MLAgents.Cli
                     (cs, path) => cs.resultsDir = path
                 );
 
-                DrawFolderPanelProperty(
+                SettingsInspector.DrawFolderPanelProperty(
                     ref cliSettings.isUseResultsDir,
                     new GUIContent("Result Directory", ConfigTooltip.resultsDir),
                     pathWrapper,
@@ -196,7 +192,7 @@ namespace Xardas.MLAgents.Cli
                     (es, path) => es.envPath = path
                 );
 
-                DrawFolderPanelProperty(
+                SettingsInspector.DrawFolderPanelProperty(
                     ref environmentSettings.isUseEnvPath,
                     new GUIContent("Env Path", ConfigTooltip.envPath),
                     pathWrapper,
@@ -204,45 +200,45 @@ namespace Xardas.MLAgents.Cli
                     1
                 );
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref environmentSettings.isUseEnvArgs,
                     new GUIContent("Env Args", ConfigTooltip.envArgs),
                     ref environmentSettings.envArgs,
                     1);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref environmentSettings.isUseBasePort,
                     new GUIContent("Base Port", ConfigTooltip.basePort),
                     ref environmentSettings.basePort,
                     1);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref environmentSettings.isUseNumEnvs,
                     new GUIContent("Num Envs", ConfigTooltip.numEnvs),
                     ref environmentSettings.numEnvs,
                     1);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref environmentSettings.isUseSeed,
                     new GUIContent("Seed", ConfigTooltip.seed),
                     ref environmentSettings.seed,
                     1);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref environmentSettings.isUseMaxLifetimeRestarts,
                     new GUIContent("Max Lifetime Restarts", ConfigTooltip.maxLifetimeRestarts),
                     ref environmentSettings.maxLifetimeRestarts,
                     1,
                     MinMinus1Condition);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref environmentSettings.isUseRestartsRateLimitN,
                     new GUIContent("Restarts Rate Limit N", ConfigTooltip.restartsRateLimitN),
                     ref environmentSettings.restartsRateLimitN,
                     1,
                     MinMinus1Condition);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref environmentSettings.isUseRestartsRateLimitPeriodS,
                     new GUIContent("Restarts Rate Limit Period", ConfigTooltip.restartsRateLimitPeriodS),
                     ref environmentSettings.restartsRateLimitPeriodS,
@@ -256,48 +252,48 @@ namespace Xardas.MLAgents.Cli
             showEngineSettings = EditorGUILayout.Foldout(showEngineSettings, new GUIContent("Engine Settings"));
             if (showEngineSettings)
             {
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref engineSettings.isUseWidth,
                     new GUIContent("Width", ConfigTooltip.width),
                     ref engineSettings.width,
                     1,
                     Min1Condition);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref engineSettings.isUseHeight,
                     new GUIContent("Height", ConfigTooltip.height),
                     ref engineSettings.height,
                     1,
                     Min1Condition);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref engineSettings.isUseQualityLevel,
                     new GUIContent("Quality Level", ConfigTooltip.qualityLevel),
                     ref engineSettings.qualityLevel,
                     1,
                     Min1Condition);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref engineSettings.isUseTimeScale,
                     new GUIContent("Time Scale", ConfigTooltip.timeScale),
                     ref engineSettings.timeScale,
                     1);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref engineSettings.isUseTargetFrameRate,
                     new GUIContent("Target Frame Rate", ConfigTooltip.targetFrameRate),
                     ref engineSettings.targetFrameRate,
                     1,
                     MinMinus1Condition);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref engineSettings.isUseCaptureFrameRate,
                     new GUIContent("Capture Frame Rate", ConfigTooltip.captureFrameRate),
                     ref engineSettings.captureFrameRate,
                     1,
                     Min1Condition);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref engineSettings.isUseNoGraphics,
                     new GUIContent("No Graphics", ConfigTooltip.noGraphics),
                     ref engineSettings.noGraphics,
@@ -315,7 +311,7 @@ namespace Xardas.MLAgents.Cli
 
             if (showCheckpointSettings)
             {
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref checkpointSettings.isUseRunId,
                     new GUIContent("Run id", ConfigTooltip.runId),
                     ref checkpointSettings.runId,
@@ -327,7 +323,7 @@ namespace Xardas.MLAgents.Cli
                     (cs, path) => cs.initializeFrom = path
                 );
 
-                DrawFilePanelProperty(
+                SettingsInspector.DrawFilePanelProperty(
                     ref checkpointSettings.isUseInitializeFrom,
                     new GUIContent("Initialize From", ConfigTooltip.initializeFrom),
                     pathWrapper,
@@ -337,19 +333,19 @@ namespace Xardas.MLAgents.Cli
                 );
 
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref checkpointSettings.isUseResume,
                     new GUIContent("Resume", ConfigTooltip.resume),
                     ref checkpointSettings.resume,
                     1);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref checkpointSettings.isUseForce,
                     new GUIContent("Force", ConfigTooltip.force),
                     ref checkpointSettings.force,
                     1);
 
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref checkpointSettings.isUseInference,
                     new GUIContent("Inference", ConfigTooltip.inference),
                     ref checkpointSettings.inference,
@@ -363,138 +359,13 @@ namespace Xardas.MLAgents.Cli
             showTorchSettings = EditorGUILayout.Foldout(showTorchSettings, new GUIContent("Torch Settings"));
             if (showTorchSettings)
             {
-                DrawFieldWithTickBox(
+                SettingsInspector.DrawFieldWithTickBox(
                     ref torchSettings.isUseDevice,
                     new GUIContent("Device", ConfigTooltip.device),
                     ref torchSettings.device,
                     1);
             }
             GUILayout.Space(5);
-        }
-
-        private void DrawFieldWithTickBox(ref bool active, GUIContent label, ref bool value, uint deep = 0)
-        {
-            EditorGUILayout.BeginHorizontal();
-            if(deep > 0)
-                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
-
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-            value = EditorGUILayout.Toggle(label, value);
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void DrawFieldWithTickBox(ref bool active, GUIContent label, ref uint value, uint deep = 0, Func<int, uint> condition = null)
-        {
-            EditorGUILayout.BeginHorizontal();
-            if (deep > 0)
-                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
-
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-
-            var temp = EditorGUILayout.IntField(label, (int)value);
-            if (condition == null)
-            {
-                if (temp < 0)
-                    temp = 0;
-                value = (uint)temp;
-            }
-            else
-                value = condition(temp);
-
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void DrawFieldWithTickBox(ref bool active, GUIContent label, ref int value, uint deep = 0, Func<int, int> condition = null)
-        {
-            EditorGUILayout.BeginHorizontal();
-            if (deep > 0)
-                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
-
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-
-            var temp = EditorGUILayout.IntField(label, (int)value);
-            if (condition != null)
-                value = condition(temp);
-
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void DrawFieldWithTickBox(ref bool active, GUIContent label, ref string value, uint deep = 0)
-        {
-            EditorGUILayout.BeginHorizontal();
-            if (deep > 0)
-                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
-
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-            value = EditorGUILayout.TextField(label, value);
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void DrawFieldWithTickBox(ref bool active, GUIContent label, ref DeviceType value, uint deep = 0)
-        {
-            EditorGUILayout.BeginHorizontal();
-            if (deep > 0)
-                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
-
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-            value = (DeviceType)EditorGUILayout.EnumPopup(label, value);
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
-        }
-
-        protected void DrawFolderPanelProperty<T>(ref bool active, GUIContent label, PathWrapper<T> pathObject, string folderPanelTitle, uint deep = 0)
-        {
-            EditorGUILayout.BeginHorizontal();
-            if (deep > 0)
-                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
-
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-            EditorGUILayout.TextField(label, pathObject.Path);
-            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
-            {
-                EditorApplication.delayCall += () =>
-                {
-                    string newPath = EditorUtility.OpenFolderPanel(folderPanelTitle, Application.dataPath, "");
-
-                    if (newPath != pathObject.Path && !string.IsNullOrEmpty(newPath))
-                        pathObject.Path = newPath;
-                };
-            }
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
-        }
-
-        protected void DrawFilePanelProperty<T>(ref bool active, GUIContent label, PathWrapper<T> pathObject, string filePanelTitle, string extension, uint deep = 0)
-        {
-            EditorGUILayout.BeginHorizontal();
-            if (deep > 0)
-                EditorGUILayout.LabelField("", GUILayout.MaxWidth(depthSize * deep));
-
-            active = EditorGUILayout.Toggle(active, GUILayout.MaxWidth(15));
-            EditorGUI.BeginDisabledGroup(!active);
-            EditorGUILayout.TextField(label, pathObject.Path);
-            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
-            {
-                EditorApplication.delayCall += () =>
-                {
-                    string newPath = EditorUtility.OpenFilePanel(filePanelTitle, Application.dataPath, extension);
-
-                    if (newPath != pathObject.Path && !string.IsNullOrEmpty(newPath))
-                        pathObject.Path = newPath;
-                };
-            }
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
         }
 
         private uint Min1Condition(int v)

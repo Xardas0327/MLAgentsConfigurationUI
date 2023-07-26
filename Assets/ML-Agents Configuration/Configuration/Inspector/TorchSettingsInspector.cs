@@ -12,7 +12,7 @@ namespace Xardas.MLAgents.Configuration.Inspector
             var settings = (TorchSettings)target;
             if (property.name == nameof(settings.settings.device))
             {
-                DrawPropertyWithTickBox(ref settings.settings.isUseDevice, property);
+                DrawFieldWithTickBox(ref settings.settings.isUseDevice, property);
             }
         }
     }
