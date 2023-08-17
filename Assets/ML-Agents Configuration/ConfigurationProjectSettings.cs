@@ -1,4 +1,4 @@
-#if UNITY_EDITOR_WIN
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_OSX
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

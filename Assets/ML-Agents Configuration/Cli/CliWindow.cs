@@ -1,4 +1,4 @@
-#if UNITY_EDITOR_WIN
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_OSX
 using System.Diagnostics;
 using System.Text;
 using UnityEditor;
@@ -10,6 +10,7 @@ using EngineSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 using CheckpointSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.CheckpointSettings;
 using TorchSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.TorchSettings;
 using Xardas.MLAgents.Configuration.Inspector;
+using System.IO;
 
 namespace Xardas.MLAgents.Cli
 {
@@ -80,14 +81,50 @@ namespace Xardas.MLAgents.Cli
 
         private void Run()
         {
-            if(string.IsNullOrEmpty(yamlFilePath))
-                throw new System.Exception("There is no selected Yaml file.");
+           // if (string.IsNullOrEmpty(yamlFilePath))
+           //     throw new System.Exception("There is no selected Yaml file.");
 
-            ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe");
-            startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            startInfo.Arguments = GetCmdArguments();
+            //ProcessStartInfo startInfo = new ProcessStartInfo("/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal");
+            //startInfo.WindowStyle = ProcessWindowStyle.Normal;
+            //startInfo.Arguments = GetCmdArguments();
 
-            Process.Start(startInfo);
+            //Process.Start(startInfo);
+
+            string shellScriptFileName = "test.sh";
+
+            using (StreamWriter file = new StreamWriter(shellScriptFileName, false))
+            {
+                file.WriteLine("#!/bin/sh");
+                file.WriteLine("echo Hello World");
+                file.WriteLine("sleep 1");
+                file.WriteLine("echo Good bye");
+            }
+
+            System.Diagnostics.Process chmod = new System.Diagnostics.Process
+            {
+                StartInfo = {
+                    FileName = @"/bin/bash",
+                    Arguments = string.Format("-c \"chmod 777 {0}\"", shellScriptFileName),
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            chmod.Start();
+            chmod.WaitForExit();
+
+            System.Diagnostics.Process runProc = new System.Diagnostics.Process
+            {
+                StartInfo = {
+                    FileName = @"/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
+                    Arguments = Application.dataPath + "/../"+ shellScriptFileName,
+                    UseShellExecute = false,
+                    CreateNoWindow = false,
+                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal
+                }
+            };
+
+            runProc.Start();
         }
 
         private string GetCmdArguments()
