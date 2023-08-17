@@ -81,10 +81,11 @@ namespace Xardas.MLAgents.Cli
 
         private void Run()
         {
-           // if (string.IsNullOrEmpty(yamlFilePath))
-           //     throw new System.Exception("There is no selected Yaml file.");
+            if (string.IsNullOrEmpty(yamlFilePath))
+                throw new System.Exception("There is no selected Yaml file.");
 
-            //ProcessStartInfo startInfo = new ProcessStartInfo("/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal");
+            //Windows
+            //ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe");
             //startInfo.WindowStyle = ProcessWindowStyle.Normal;
             //startInfo.Arguments = GetCmdArguments();
 
@@ -95,9 +96,11 @@ namespace Xardas.MLAgents.Cli
             using (StreamWriter file = new StreamWriter(shellScriptFileName, false))
             {
                 file.WriteLine("#!/bin/sh");
-                file.WriteLine("echo Hello World");
-                file.WriteLine("sleep 1");
-                file.WriteLine("echo Good bye");
+                file.WriteLine($"cd {Application.dataPath}/../");
+                if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
+                    file.WriteLine("source " +ConfigurationSettings.Instance.PythonVirtualEnvironment);
+
+                file.WriteLine($"mlagents-learn \"{yamlFilePath}\" " + GetMLagentsLearnArguments());
             }
 
             System.Diagnostics.Process chmod = new System.Diagnostics.Process
@@ -113,7 +116,7 @@ namespace Xardas.MLAgents.Cli
             chmod.Start();
             chmod.WaitForExit();
 
-            System.Diagnostics.Process runProc = new System.Diagnostics.Process
+            Process runProc = new Process
             {
                 StartInfo = {
                     FileName = @"/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
@@ -123,8 +126,10 @@ namespace Xardas.MLAgents.Cli
                     WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal
                 }
             };
-
             runProc.Start();
+
+            //we should delete this file
+            //File.Delete(Application.dataPath + "/../" + shellScriptFileName);
         }
 
         private string GetCmdArguments()
