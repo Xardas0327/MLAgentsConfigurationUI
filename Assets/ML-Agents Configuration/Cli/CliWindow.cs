@@ -94,9 +94,9 @@ namespace Xardas.MLAgents.Cli
 #elif UNITY_EDITOR_OSX
             startInfo.FileName = @"/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal";
             startInfo.Arguments = CreateShellScriptForMac();
+            startInfo.UseShellExecute = false;
 #endif
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = false;
 
             Process.Start(startInfo);
