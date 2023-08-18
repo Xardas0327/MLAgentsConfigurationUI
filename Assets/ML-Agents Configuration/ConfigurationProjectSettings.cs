@@ -29,7 +29,7 @@ namespace Xardas.MLAgents
                         OpenFileBrower();
                     GUILayout.EndHorizontal();
 #if UNITY_EDITOR_OSX
-                    EditorGUILayout.TextField(
+                    ConfigurationSettings.Instance.MacCLI = EditorGUILayout.TextField(
                         new GUIContent("Mac CLI", "Please add path of the terinal"),
                         ConfigurationSettings.Instance.MacCLI
                     );
