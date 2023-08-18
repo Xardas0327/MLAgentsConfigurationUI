@@ -67,4 +67,5 @@ crashlytics-build.properties
 
 ProjectSettings/GvhProjectSettings.xml
 
-
+# ML Agents Shell Script File
+[Mm]lAgentsCommand.sh

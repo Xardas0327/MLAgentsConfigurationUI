@@ -1,4 +1,4 @@
-#if UNITY_EDITOR_WIN
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_OSX
 using System.Diagnostics;
 using System.Text;
 using UnityEditor;
@@ -10,6 +10,7 @@ using EngineSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 using CheckpointSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.CheckpointSettings;
 using TorchSettings = Xardas.MLAgents.Configuration.Fileformat.SettingParameter.TorchSettings;
 using Xardas.MLAgents.Configuration.Inspector;
+using System.IO;
 
 namespace Xardas.MLAgents.Cli
 {
@@ -23,11 +24,14 @@ namespace Xardas.MLAgents.Cli
         private TorchSettings torchSettings = new();
 
         //Foldout
-        bool showCliSettings;
-        bool showEnvironmentSettings;
-        bool showEngineSettings;
-        bool showCheckpointSettings;
-        bool showTorchSettings;
+        private bool showCliSettings;
+        private bool showEnvironmentSettings;
+        private bool showEngineSettings;
+        private bool showCheckpointSettings;
+        private bool showTorchSettings;
+
+        //CLI
+        private const string shellScriptFileName = "mlAgentsCommand.sh";
 
         [MenuItem("Window/ML-Agents/CLI")]
         public static void ShowWindow()
@@ -59,7 +63,7 @@ namespace Xardas.MLAgents.Cli
             GUILayout.Space(5);
 
             if (GUILayout.Button("Run"))
-                Run();
+                RunCLI();
         }
 
         private void Clear()
@@ -78,19 +82,28 @@ namespace Xardas.MLAgents.Cli
             showTorchSettings = false;
         }
 
-        private void Run()
+        private void RunCLI()
         {
-            if(string.IsNullOrEmpty(yamlFilePath))
+            if (string.IsNullOrEmpty(yamlFilePath))
                 throw new System.Exception("There is no selected Yaml file.");
 
-            ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe");
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+#if UNITY_EDITOR_WIN
+            startInfo.FileName = CliExtensions.defaultWindowsCLI;
+            startInfo.Arguments = GetWindowsCmdArguments();
+#elif UNITY_EDITOR_OSX
+            startInfo.FileName = ConfigurationSettings.Instance.MacCLI;
+            startInfo.Arguments = CreateShellScriptForMac();
+            startInfo.UseShellExecute = false;
+#endif
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            startInfo.Arguments = GetCmdArguments();
+            startInfo.CreateNoWindow = false;
 
             Process.Start(startInfo);
         }
 
-        private string GetCmdArguments()
+#if UNITY_EDITOR_WIN
+        private string GetWindowsCmdArguments()
         {
             var arguments = new StringBuilder();
             arguments.Append("/K \"");
@@ -105,6 +118,42 @@ namespace Xardas.MLAgents.Cli
 
             return arguments.ToString();
         }
+#endif
+
+#if UNITY_EDITOR_OSX
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>File path</returns>
+        private string CreateShellScriptForMac()
+        {
+            var shellScriptPath = Application.dataPath + "/../" + shellScriptFileName;
+            using (StreamWriter file = new StreamWriter(shellScriptPath, false))
+            {
+                file.WriteLine("#!/bin/sh");
+                file.WriteLine($"cd {Application.dataPath}/../");
+                if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
+                    file.WriteLine("source " + ConfigurationSettings.Instance.PythonVirtualEnvironment);
+
+                file.WriteLine($"mlagents-learn \"{yamlFilePath}\" " + GetMLagentsLearnArguments());
+            }
+
+            Process chmod = new Process
+            {
+                StartInfo = {
+                    FileName = @"/bin/bash",
+                    Arguments = string.Format("-c \"chmod 755 {0}\"", shellScriptPath),
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            chmod.Start();
+            chmod.WaitForExit();
+
+            return shellScriptPath;
+        }
+#endif
 
         private string GetMLagentsLearnArguments()
         {

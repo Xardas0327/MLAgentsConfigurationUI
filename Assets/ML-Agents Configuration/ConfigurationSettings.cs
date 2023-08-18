@@ -1,7 +1,8 @@
-#if UNITY_EDITOR_WIN
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_OSX
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Xardas.MLAgents.Cli;
 using Xardas.MLAgents.Property;
 
 namespace Xardas.MLAgents
@@ -11,9 +12,13 @@ namespace Xardas.MLAgents
         private const string settingsFileName = "ML-Agents Configuration.asset";
 
         [SerializeField]
-        [Tooltip("You have to modify this in Project Settings!")]
+        [Tooltip("You can modify this in Project Settings!")]
         [ReadOnly]
         private string pythonVirtualEnvironment;
+        [SerializeField]
+        [Tooltip("You can modify this in Project Settings on MAC!")]
+        [ReadOnly]
+        private string macCLI;
 
         private static string filePath => Path.Combine(Paths.SettingsPath, settingsFileName);
 
@@ -25,11 +30,21 @@ namespace Xardas.MLAgents
                 if (pythonVirtualEnvironment == value)
                     return;
 
-                AssetDatabase.DeleteAsset(filePath);
-                instance = CreateObject();
-                instance.pythonVirtualEnvironment = value;
-                AssetDatabase.CreateAsset(instance, filePath);
-                AssetDatabase.SaveAssets();
+                Instance.pythonVirtualEnvironment = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
+        public string MacCLI
+        {
+            get { return macCLI; }
+            set
+            {
+                if (macCLI == value)
+                    return;
+
+                Instance.macCLI = value;
+                EditorUtility.SetDirty(Instance);
             }
         }
 
@@ -48,18 +63,14 @@ namespace Xardas.MLAgents
                 instance = AssetDatabase.LoadAssetAtPath<ConfigurationSettings>(filePath);
                 if (instance == null)
                 {
-                    instance = CreateObject();
+                    instance = ScriptableObject.CreateInstance<ConfigurationSettings>();
                     instance.pythonVirtualEnvironment = "";
+                    instance.macCLI = CliExtensions.defaultMacCLI;
                     AssetDatabase.CreateAsset(instance, filePath);
                     AssetDatabase.SaveAssets();
                 }
                 return instance;
             }
-        }
-
-        private static ConfigurationSettings CreateObject()
-        {
-            return ScriptableObject.CreateInstance<ConfigurationSettings>();
         }
     }
 }
