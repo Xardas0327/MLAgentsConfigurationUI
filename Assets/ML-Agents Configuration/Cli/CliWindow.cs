@@ -24,11 +24,14 @@ namespace Xardas.MLAgents.Cli
         private TorchSettings torchSettings = new();
 
         //Foldout
-        bool showCliSettings;
-        bool showEnvironmentSettings;
-        bool showEngineSettings;
-        bool showCheckpointSettings;
-        bool showTorchSettings;
+        private bool showCliSettings;
+        private bool showEnvironmentSettings;
+        private bool showEngineSettings;
+        private bool showCheckpointSettings;
+        private bool showTorchSettings;
+
+        //CLI
+        private const string shellScriptFileName = "mlAgentsCommand.sh";
 
         [MenuItem("Window/ML-Agents/CLI")]
         public static void ShowWindow()
@@ -60,7 +63,7 @@ namespace Xardas.MLAgents.Cli
             GUILayout.Space(5);
 
             if (GUILayout.Button("Run"))
-                Run();
+                RunCLI();
         }
 
         private void Clear()
@@ -79,7 +82,7 @@ namespace Xardas.MLAgents.Cli
             showTorchSettings = false;
         }
 
-        private void Run()
+        private void RunCLI()
         {
             if (string.IsNullOrEmpty(yamlFilePath))
                 throw new System.Exception("There is no selected Yaml file.");
@@ -90,8 +93,6 @@ namespace Xardas.MLAgents.Cli
             //startInfo.Arguments = GetCmdArguments();
 
             //Process.Start(startInfo);
-
-            string shellScriptFileName = "test.sh";
 
             using (StreamWriter file = new StreamWriter(shellScriptFileName, false))
             {
@@ -107,7 +108,7 @@ namespace Xardas.MLAgents.Cli
             {
                 StartInfo = {
                     FileName = @"/bin/bash",
-                    Arguments = string.Format("-c \"chmod 777 {0}\"", shellScriptFileName),
+                    Arguments = string.Format("-c \"chmod 755 {0}\"", shellScriptFileName),
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
@@ -127,9 +128,6 @@ namespace Xardas.MLAgents.Cli
                 }
             };
             runProc.Start();
-
-            //we should delete this file
-            //File.Delete(Application.dataPath + "/../" + shellScriptFileName);
         }
 
         private string GetCmdArguments()
