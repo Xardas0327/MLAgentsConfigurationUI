@@ -30,10 +30,10 @@ namespace Xardas.MLAgents.Cli
         private bool showCheckpointSettings;
         private bool showTorchSettings;
 
-        //CLI
+        //Mac CLI
         private const string shellScriptFileName = "mlAgentsCommand.sh";
 
-        [MenuItem("Window/ML-Agents/CLI")]
+        [MenuItem("Window/ML-Agents/Command Line Interface")]
         public static void ShowWindow()
         {
             GetWindow<CliWindow>("ML-Agents CLI");
@@ -89,7 +89,7 @@ namespace Xardas.MLAgents.Cli
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
 #if UNITY_EDITOR_WIN
-            startInfo.FileName = CliExtensions.defaultWindowsCLI;
+            startInfo.FileName = ConfigurationSettings.Instance.WindowsCLI;
             startInfo.Arguments = GetWindowsCmdArguments();
 #elif UNITY_EDITOR_OSX
             startInfo.FileName = ConfigurationSettings.Instance.MacCLI;

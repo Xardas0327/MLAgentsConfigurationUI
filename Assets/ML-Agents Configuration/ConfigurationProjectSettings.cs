@@ -28,6 +28,14 @@ namespace Xardas.MLAgents
                     if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
                         OpenFileBrower();
                     GUILayout.EndHorizontal();
+
+#if UNITY_EDITOR_WIN
+                    ConfigurationSettings.Instance.WindowsCLI = EditorGUILayout.TextField(
+                        new GUIContent("Windows CMD", "Please add path of the CMD"),
+                        ConfigurationSettings.Instance.WindowsCLI
+                    );
+#endif
+
 #if UNITY_EDITOR_OSX
                     ConfigurationSettings.Instance.MacCLI = EditorGUILayout.TextField(
                         new GUIContent("Mac CLI", "Please add path of the terinal"),
