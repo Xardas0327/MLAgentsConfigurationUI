@@ -87,50 +87,23 @@ namespace Xardas.MLAgents.Cli
             if (string.IsNullOrEmpty(yamlFilePath))
                 throw new System.Exception("There is no selected Yaml file.");
 
-            //Windows
-            //ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe");
-            //startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            //startInfo.Arguments = GetCmdArguments();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+#if UNITY_EDITOR_WIN
+            startInfo.FileName = "cmd.exe";
+            startInfo.Arguments = GetWindowsCmdArguments();
+#elif UNITY_EDITOR_OSX
+            startInfo.FileName = @"/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal";
+            startInfo.Arguments = CreateShellScriptForMac();
+#endif
+            startInfo.WindowStyle = ProcessWindowStyle.Normal;
+            startInfo.UseShellExecute = false;
+            startInfo.CreateNoWindow = false;
 
-            //Process.Start(startInfo);
-
-            using (StreamWriter file = new StreamWriter(shellScriptFileName, false))
-            {
-                file.WriteLine("#!/bin/sh");
-                file.WriteLine($"cd {Application.dataPath}/../");
-                if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
-                    file.WriteLine("source " +ConfigurationSettings.Instance.PythonVirtualEnvironment);
-
-                file.WriteLine($"mlagents-learn \"{yamlFilePath}\" " + GetMLagentsLearnArguments());
-            }
-
-            System.Diagnostics.Process chmod = new System.Diagnostics.Process
-            {
-                StartInfo = {
-                    FileName = @"/bin/bash",
-                    Arguments = string.Format("-c \"chmod 755 {0}\"", shellScriptFileName),
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            chmod.Start();
-            chmod.WaitForExit();
-
-            Process runProc = new Process
-            {
-                StartInfo = {
-                    FileName = @"/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
-                    Arguments = Application.dataPath + "/../"+ shellScriptFileName,
-                    UseShellExecute = false,
-                    CreateNoWindow = false,
-                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal
-                }
-            };
-            runProc.Start();
+            Process.Start(startInfo);
         }
 
-        private string GetCmdArguments()
+#if UNITY_EDITOR_WIN
+        private string GetWindowsCmdArguments()
         {
             var arguments = new StringBuilder();
             arguments.Append("/K \"");
@@ -145,6 +118,42 @@ namespace Xardas.MLAgents.Cli
 
             return arguments.ToString();
         }
+#endif
+
+#if UNITY_EDITOR_OSX
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>File path</returns>
+        private string CreateShellScriptForMac()
+        {
+            var shellScriptPath = Application.dataPath + "/../" + shellScriptFileName;
+            using (StreamWriter file = new StreamWriter(shellScriptPath, false))
+            {
+                file.WriteLine("#!/bin/sh");
+                file.WriteLine($"cd {Application.dataPath}/../");
+                if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
+                    file.WriteLine("source " + ConfigurationSettings.Instance.PythonVirtualEnvironment);
+
+                file.WriteLine($"mlagents-learn \"{yamlFilePath}\" " + GetMLagentsLearnArguments());
+            }
+
+            Process chmod = new Process
+            {
+                StartInfo = {
+                    FileName = @"/bin/bash",
+                    Arguments = string.Format("-c \"chmod 755 {0}\"", shellScriptPath),
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            chmod.Start();
+            chmod.WaitForExit();
+
+            return shellScriptPath;
+        }
+#endif
 
         private string GetMLagentsLearnArguments()
         {
