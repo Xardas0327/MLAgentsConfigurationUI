@@ -89,10 +89,10 @@ namespace Xardas.MLAgents.Cli
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
 #if UNITY_EDITOR_WIN
-            startInfo.FileName = "cmd.exe";
+            startInfo.FileName = CliExtensions.defaultWindowsCLI;
             startInfo.Arguments = GetWindowsCmdArguments();
 #elif UNITY_EDITOR_OSX
-            startInfo.FileName = @"/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal";
+            startInfo.FileName = ConfigurationSettings.Instance.MacCLI;
             startInfo.Arguments = CreateShellScriptForMac();
             startInfo.UseShellExecute = false;
 #endif

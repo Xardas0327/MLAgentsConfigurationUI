@@ -28,6 +28,12 @@ namespace Xardas.MLAgents
                     if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
                         OpenFileBrower();
                     GUILayout.EndHorizontal();
+#if UNITY_EDITOR_OSX
+                    EditorGUILayout.TextField(
+                        new GUIContent("Mac CLI", "Please add path of the terinal"),
+                        ConfigurationSettings.Instance.MacCLI
+                    );
+#endif
                 },
 
                 keywords = new HashSet<string>() { "ML-Agents", "Configuration" }

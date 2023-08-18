@@ -6,6 +6,9 @@ namespace Xardas.MLAgents.Cli
 {
     public static class CliExtensions
     {
+        public const string defaultWindowsCLI = "cmd.exe";
+        public const string defaultMacCLI = @"/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal";
+
         public static string GetCliArguments(this CliSettings cliSettings)
         {
             if (!cliSettings.IsUse)
