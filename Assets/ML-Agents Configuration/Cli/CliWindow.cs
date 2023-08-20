@@ -96,7 +96,6 @@ namespace Xardas.MLAgents.Cli
             startInfo.Arguments = CreateShellScriptForMac();
             startInfo.UseShellExecute = false;
 #endif
-            startInfo.WorkingDirectory = Application.dataPath + "/../";
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
             startInfo.CreateNoWindow = false;
 
