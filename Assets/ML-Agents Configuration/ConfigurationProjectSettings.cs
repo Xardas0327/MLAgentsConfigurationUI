@@ -38,7 +38,7 @@ namespace Xardas.MLAgents
 
 #if UNITY_EDITOR_OSX
                     ConfigurationSettings.Instance.MacCLI = EditorGUILayout.TextField(
-                        new GUIContent("Mac CLI", "Please add path of the terinal"),
+                        new GUIContent("Mac Terminal", "Please add path of the terinal"),
                         ConfigurationSettings.Instance.MacCLI
                     );
 #endif
