@@ -91,7 +91,7 @@ namespace Xardas.MLAgents.Cli
             ProcessStartInfo startInfo = new ProcessStartInfo();
 #if UNITY_EDITOR_WIN
             startInfo.FileName = ConfigurationSettings.Instance.WindowsCLI;
-            startInfo.Arguments = GetWindowsCmdArguments();
+            startInfo.Arguments = "/K \"" + GetWindowsCmdCommand() + "\"";
 #elif UNITY_EDITOR_OSX
             startInfo.FileName = ConfigurationSettings.Instance.MacCLI;
             startInfo.Arguments = CreateShellScriptForMac();
@@ -107,18 +107,15 @@ namespace Xardas.MLAgents.Cli
         }
 
 #if UNITY_EDITOR_WIN
-        private string GetWindowsCmdArguments()
+        private string GetWindowsCmdCommand()
         {
             var arguments = new StringBuilder();
-            arguments.Append("/K \"");
             if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
                 arguments.Append($"\"{ConfigurationSettings.Instance.PythonVirtualEnvironment}\" && ");
 
             arguments.Append($"mlagents-learn \"{yamlFilePath}\" ");
 
             arguments.Append(GetMLagentsLearnArguments());
-
-            arguments.Append("\"");
 
             return arguments.ToString();
         }
@@ -132,28 +129,7 @@ namespace Xardas.MLAgents.Cli
         private string CreateShellScriptForMac()
         {
             var shellScriptPath = Application.dataPath + "/../" + shellScriptFileName;
-            using (StreamWriter file = new StreamWriter(shellScriptPath, false))
-            {
-                file.WriteLine("#!/bin/sh");
-                file.WriteLine($"cd {Application.dataPath}/../");
-                if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
-                    file.WriteLine("source " + ConfigurationSettings.Instance.PythonVirtualEnvironment);
-
-                file.WriteLine($"mlagents-learn \"{yamlFilePath}\" " + GetMLagentsLearnArguments());
-            }
-
-            Process chmod = new Process
-            {
-                StartInfo = {
-                    FileName = @"/bin/bash",
-                    Arguments = string.Format("-c \"chmod 755 {0}\"", shellScriptPath),
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            chmod.Start();
-            chmod.WaitForExit();
+            CreateShellScript(shellScriptPath, "#!/bin/sh");
 
             return shellScriptPath;
         }
@@ -167,9 +143,20 @@ namespace Xardas.MLAgents.Cli
         private string CreateShellScriptForLinux()
         {
             var shellScriptPath = Application.dataPath + "/../" + shellScriptFileName;
-            using (StreamWriter file = new StreamWriter(shellScriptPath, false))
+            CreateShellScript(shellScriptPath, "#!/bin/bash");
+
+            return shellScriptFileName;
+        }
+#endif
+
+#if UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX
+        private void CreateShellScript(string path, string firstLine = null)
+        {
+            using (StreamWriter file = new StreamWriter(path, false))
             {
-                file.WriteLine("#!/bin/bash");
+                if(!string.IsNullOrEmpty(firstLine))
+                    file.WriteLine(firstLine);
+
                 file.WriteLine($"cd {Application.dataPath}/../");
                 if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
                     file.WriteLine("source " + ConfigurationSettings.Instance.PythonVirtualEnvironment);
@@ -181,7 +168,7 @@ namespace Xardas.MLAgents.Cli
             {
                 StartInfo = {
                     FileName = @"/bin/bash",
-                    Arguments = string.Format("-c \"chmod 755 {0}\"", shellScriptPath),
+                    Arguments = string.Format("-c \"chmod 755 {0}\"", path),
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
@@ -189,8 +176,6 @@ namespace Xardas.MLAgents.Cli
 
             chmod.Start();
             chmod.WaitForExit();
-
-            return shellScriptFileName;
         }
 #endif
 
