@@ -1,4 +1,4 @@
-#if UNITY_EDITOR_WIN || UNITY_EDITOR_OSX
+#if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -20,9 +20,25 @@ namespace Xardas.MLAgents
         [ReadOnly]
         private string windowsCLI;
         [SerializeField]
+        [Tooltip("You can modify this in Project Settings on Windows!")]
+        [ReadOnly]
+        private string windowsArguments;
+        [SerializeField]
         [Tooltip("You can modify this in Project Settings on MAC!")]
         [ReadOnly]
         private string macCLI;
+        [SerializeField]
+        [Tooltip("You can modify this in Project Settings on MAC!")]
+        [ReadOnly]
+        private string macArguments;
+        [SerializeField]
+        [Tooltip("You can modify this in Project Settings on Linux!")]
+        [ReadOnly]
+        private string linuxCLI;
+        [SerializeField]
+        [Tooltip("You can modify this in Project Settings on Linux!")]
+        [ReadOnly]
+        private string linuxArguments;
 
         private static string filePath => Path.Combine(Paths.SettingsPath, settingsFileName);
 
@@ -52,6 +68,19 @@ namespace Xardas.MLAgents
             }
         }
 
+        public string WindowsArguments
+        {
+            get { return windowsArguments; }
+            set
+            {
+                if (windowsArguments == value)
+                    return;
+
+                Instance.windowsArguments = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
         public string MacCLI
         {
             get { return macCLI; }
@@ -61,6 +90,45 @@ namespace Xardas.MLAgents
                     return;
 
                 Instance.macCLI = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
+        public string MacArguments
+        {
+            get { return macArguments; }
+            set
+            {
+                if (macArguments == value)
+                    return;
+
+                Instance.macArguments = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
+        public string LinuxCLI
+        {
+            get { return linuxCLI; }
+            set
+            {
+                if (linuxCLI == value)
+                    return;
+
+                Instance.linuxCLI = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
+        public string LinuxArguments
+        {
+            get { return linuxArguments; }
+            set
+            {
+                if (linuxArguments == value)
+                    return;
+
+                Instance.linuxArguments = value;
                 EditorUtility.SetDirty(Instance);
             }
         }
@@ -82,8 +150,13 @@ namespace Xardas.MLAgents
                 {
                     instance = ScriptableObject.CreateInstance<ConfigurationSettings>();
                     instance.pythonVirtualEnvironment = "";
-                    instance.macCLI = CliExtensions.defaultMacCLI;
                     instance.windowsCLI = CliExtensions.defaultWindowsCLI;
+                    instance.windowsArguments = CliExtensions.defaultWindowsArguments;
+                    instance.macCLI = CliExtensions.defaultMacCLI;
+                    instance.macArguments = CliExtensions.defaultMacArguments;
+                    instance.linuxCLI = CliExtensions.defaultLinuxCLI;
+                    instance.linuxArguments = CliExtensions.defaultLinuxArguments;
+
                     AssetDatabase.CreateAsset(instance, filePath);
                     AssetDatabase.SaveAssets();
                 }

@@ -6,7 +6,15 @@ namespace Xardas.MLAgents.Cli
     public static class CliExtensions
     {
         public const string defaultWindowsCLI = "cmd.exe";
+        public const string defaultWindowsArguments = "/K \"{{commands}}\"";
+
         public const string defaultMacCLI = @"/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal";
+        public const string defaultMacArguments = "{{commands}}";
+
+        public const string defaultLinuxCLI = "gnome-terminal";
+        public const string defaultLinuxArguments = "-e \" {{commands}} \"";
+
+        public const string shellScriptFileName = "mlAgentsCommand.sh";
 
         public static string GetCliArguments(this CliSettings cliSettings)
         {

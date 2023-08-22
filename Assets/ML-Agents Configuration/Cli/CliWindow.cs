@@ -1,4 +1,4 @@
-#if UNITY_EDITOR_WIN || UNITY_EDITOR_OSX
+#if UNITY_EDITOR
 using System.Diagnostics;
 using System.Text;
 using UnityEditor;
@@ -29,9 +29,6 @@ namespace Xardas.MLAgents.Cli
         private bool showEngineSettings;
         private bool showCheckpointSettings;
         private bool showTorchSettings;
-
-        //Mac CLI
-        private const string shellScriptFileName = "mlAgentsCommand.sh";
 
         [MenuItem("Window/ML-Agents/Command Line Interface")]
         public static void ShowWindow()
@@ -88,14 +85,22 @@ namespace Xardas.MLAgents.Cli
                 throw new System.Exception("There is no selected Yaml file.");
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
+            string commands = "";
 #if UNITY_EDITOR_WIN
             startInfo.FileName = ConfigurationSettings.Instance.WindowsCLI;
-            startInfo.Arguments = GetWindowsCmdArguments();
+            startInfo.Arguments = ConfigurationSettings.Instance.WindowsArguments;
+            commands = GetWindowsCmdCommand();
 #elif UNITY_EDITOR_OSX
             startInfo.FileName = ConfigurationSettings.Instance.MacCLI;
-            startInfo.Arguments = CreateShellScriptForMac();
+            startInfo.Arguments = ConfigurationSettings.Instance.MacArguments;
             startInfo.UseShellExecute = false;
+            commands = CreateShellScriptForMac();
+#elif UNITY_EDITOR_LINUX
+            startInfo.FileName = ConfigurationSettings.Instance.LinuxCLI;
+            startInfo.Arguments = ConfigurationSettings.Instance.LinuxArguments;
+            commands = "./" + CreateShellScriptForLinux();
 #endif
+            startInfo.Arguments = startInfo.Arguments.Replace("{{commands}}", commands);
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
             startInfo.CreateNoWindow = false;
 
@@ -103,18 +108,15 @@ namespace Xardas.MLAgents.Cli
         }
 
 #if UNITY_EDITOR_WIN
-        private string GetWindowsCmdArguments()
+        private string GetWindowsCmdCommand()
         {
             var arguments = new StringBuilder();
-            arguments.Append("/K \"");
             if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
                 arguments.Append($"\"{ConfigurationSettings.Instance.PythonVirtualEnvironment}\" && ");
 
             arguments.Append($"mlagents-learn \"{yamlFilePath}\" ");
 
             arguments.Append(GetMLagentsLearnArguments());
-
-            arguments.Append("\"");
 
             return arguments.ToString();
         }
@@ -127,10 +129,35 @@ namespace Xardas.MLAgents.Cli
         /// <returns>File path</returns>
         private string CreateShellScriptForMac()
         {
-            var shellScriptPath = Application.dataPath + "/../" + shellScriptFileName;
-            using (StreamWriter file = new StreamWriter(shellScriptPath, false))
+            var shellScriptPath = Application.dataPath + "/../" + CliExtensions.shellScriptFileName;
+            CreateShellScript(shellScriptPath, "#!/bin/sh");
+
+            return shellScriptPath;
+        }
+#endif
+
+#if UNITY_EDITOR_LINUX
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>File name</returns>
+        private string CreateShellScriptForLinux()
+        {
+            var shellScriptPath = Application.dataPath + "/../" + CliExtensions.shellScriptFileName;
+            CreateShellScript(shellScriptPath, "#!/bin/bash");
+
+            return CliExtensions.shellScriptFileName;
+        }
+#endif
+
+#if UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX
+        private void CreateShellScript(string path, string firstLine = null)
+        {
+            using (StreamWriter file = new StreamWriter(path, false))
             {
-                file.WriteLine("#!/bin/sh");
+                if(!string.IsNullOrEmpty(firstLine))
+                    file.WriteLine(firstLine);
+
                 file.WriteLine($"cd {Application.dataPath}/../");
                 if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
                     file.WriteLine("source " + ConfigurationSettings.Instance.PythonVirtualEnvironment);
@@ -142,7 +169,7 @@ namespace Xardas.MLAgents.Cli
             {
                 StartInfo = {
                     FileName = @"/bin/bash",
-                    Arguments = string.Format("-c \"chmod 755 {0}\"", shellScriptPath),
+                    Arguments = string.Format("-c \"chmod 755 {0}\"", path),
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
@@ -150,8 +177,6 @@ namespace Xardas.MLAgents.Cli
 
             chmod.Start();
             chmod.WaitForExit();
-
-            return shellScriptPath;
         }
 #endif
 
