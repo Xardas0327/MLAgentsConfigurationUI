@@ -30,10 +30,6 @@ namespace Xardas.MLAgents.Cli
         private bool showCheckpointSettings;
         private bool showTorchSettings;
 
-#if UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX
-        private const string shellScriptFileName = "mlAgentsCommand.sh";
-#endif
-
         [MenuItem("Window/ML-Agents/Command Line Interface")]
         public static void ShowWindow()
         {
@@ -89,17 +85,22 @@ namespace Xardas.MLAgents.Cli
                 throw new System.Exception("There is no selected Yaml file.");
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
+            string commands = "";
 #if UNITY_EDITOR_WIN
             startInfo.FileName = ConfigurationSettings.Instance.WindowsCLI;
-            startInfo.Arguments = "/K \"" + GetWindowsCmdCommand() + "\"";
+            startInfo.Arguments = ConfigurationSettings.Instance.WindowsArguments;
+            commands = GetWindowsCmdCommand();
 #elif UNITY_EDITOR_OSX
             startInfo.FileName = ConfigurationSettings.Instance.MacCLI;
-            startInfo.Arguments = CreateShellScriptForMac();
+            startInfo.Arguments = ConfigurationSettings.Instance.MacArguments;
             startInfo.UseShellExecute = false;
+            commands = CreateShellScriptForMac();
 #elif UNITY_EDITOR_LINUX
             startInfo.FileName = ConfigurationSettings.Instance.LinuxCLI;
-            startInfo.Arguments = "-e \" ./" + CreateShellScriptForLinux() + " \"";
+            startInfo.Arguments = ConfigurationSettings.Instance.LinuxArguments;
+            commands = "./" + CreateShellScriptForLinux();
 #endif
+            startInfo.Arguments = startInfo.Arguments.Replace("{{commands}}", commands);
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
             startInfo.CreateNoWindow = false;
 
@@ -128,7 +129,7 @@ namespace Xardas.MLAgents.Cli
         /// <returns>File path</returns>
         private string CreateShellScriptForMac()
         {
-            var shellScriptPath = Application.dataPath + "/../" + shellScriptFileName;
+            var shellScriptPath = Application.dataPath + "/../" + CliExtensions.shellScriptFileName;
             CreateShellScript(shellScriptPath, "#!/bin/sh");
 
             return shellScriptPath;
@@ -142,10 +143,10 @@ namespace Xardas.MLAgents.Cli
         /// <returns>File name</returns>
         private string CreateShellScriptForLinux()
         {
-            var shellScriptPath = Application.dataPath + "/../" + shellScriptFileName;
+            var shellScriptPath = Application.dataPath + "/../" + CliExtensions.shellScriptFileName;
             CreateShellScript(shellScriptPath, "#!/bin/bash");
 
-            return shellScriptFileName;
+            return CliExtensions.shellScriptFileName;
         }
 #endif
 
