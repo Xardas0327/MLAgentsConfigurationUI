@@ -97,7 +97,7 @@ namespace Xardas.MLAgents.Cli
             startInfo.Arguments = CreateShellScriptForMac();
             startInfo.UseShellExecute = false;
 #elif UNITY_EDITOR_LINUX
-            startInfo.FileName = "gnome-terminal";
+            startInfo.FileName = ConfigurationSettings.Instance.LinuxCLI;
             startInfo.Arguments = "-e \" ./" + CreateShellScriptForLinux() + " \"";
 #endif
             startInfo.WindowStyle = ProcessWindowStyle.Normal;

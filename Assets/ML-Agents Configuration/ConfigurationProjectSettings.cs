@@ -42,6 +42,13 @@ namespace Xardas.MLAgents
                         ConfigurationSettings.Instance.MacCLI
                     );
 #endif
+
+#if UNITY_EDITOR_LINUX
+                    ConfigurationSettings.Instance.LinuxCLI = EditorGUILayout.TextField(
+                        new GUIContent("Linux Terminal", "Please add path of the terinal"),
+                        ConfigurationSettings.Instance.LinuxCLI
+                    );
+#endif
                 },
 
                 keywords = new HashSet<string>() { "ML-Agents", "Configuration" }

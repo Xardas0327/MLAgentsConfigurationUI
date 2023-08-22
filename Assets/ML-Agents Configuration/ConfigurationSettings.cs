@@ -23,6 +23,10 @@ namespace Xardas.MLAgents
         [Tooltip("You can modify this in Project Settings on MAC!")]
         [ReadOnly]
         private string macCLI;
+        [SerializeField]
+        [Tooltip("You can modify this in Project Settings on Linux!")]
+        [ReadOnly]
+        private string linuxCLI;
 
         private static string filePath => Path.Combine(Paths.SettingsPath, settingsFileName);
 
@@ -65,6 +69,19 @@ namespace Xardas.MLAgents
             }
         }
 
+        public string LinuxCLI
+        {
+            get { return linuxCLI; }
+            set
+            {
+                if (linuxCLI == value)
+                    return;
+
+                Instance.linuxCLI = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
         private static ConfigurationSettings instance;
 
         internal static ConfigurationSettings Instance
@@ -82,8 +99,9 @@ namespace Xardas.MLAgents
                 {
                     instance = ScriptableObject.CreateInstance<ConfigurationSettings>();
                     instance.pythonVirtualEnvironment = "";
-                    instance.macCLI = CliExtensions.defaultMacCLI;
                     instance.windowsCLI = CliExtensions.defaultWindowsCLI;
+                    instance.macCLI = CliExtensions.defaultMacCLI;
+                    instance.linuxCLI = CliExtensions.defaultLinuxCLI;
                     AssetDatabase.CreateAsset(instance, filePath);
                     AssetDatabase.SaveAssets();
                 }
