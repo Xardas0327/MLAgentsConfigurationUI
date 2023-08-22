@@ -1,4 +1,4 @@
-#if UNITY_EDITOR_WIN || UNITY_EDITOR_OSX
+#if UNITY_EDITOR
 using System.Diagnostics;
 using System.Text;
 using UnityEditor;
@@ -30,8 +30,9 @@ namespace Xardas.MLAgents.Cli
         private bool showCheckpointSettings;
         private bool showTorchSettings;
 
-        //Mac CLI
+#if UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX
         private const string shellScriptFileName = "mlAgentsCommand.sh";
+#endif
 
         [MenuItem("Window/ML-Agents/Command Line Interface")]
         public static void ShowWindow()
@@ -95,6 +96,9 @@ namespace Xardas.MLAgents.Cli
             startInfo.FileName = ConfigurationSettings.Instance.MacCLI;
             startInfo.Arguments = CreateShellScriptForMac();
             startInfo.UseShellExecute = false;
+#elif UNITY_EDITOR_LINUX
+            startInfo.FileName = "gnome-terminal";
+            startInfo.Arguments = "-e \" ./" + CreateShellScriptForLinux() + " \"";
 #endif
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
             startInfo.CreateNoWindow = false;
@@ -152,6 +156,41 @@ namespace Xardas.MLAgents.Cli
             chmod.WaitForExit();
 
             return shellScriptPath;
+        }
+#endif
+
+#if UNITY_EDITOR_LINUX
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>File name</returns>
+        private string CreateShellScriptForLinux()
+        {
+            var shellScriptPath = Application.dataPath + "/../" + shellScriptFileName;
+            using (StreamWriter file = new StreamWriter(shellScriptPath, false))
+            {
+                file.WriteLine("#!/bin/bash");
+                file.WriteLine($"cd {Application.dataPath}/../");
+                if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
+                    file.WriteLine("source " + ConfigurationSettings.Instance.PythonVirtualEnvironment);
+
+                file.WriteLine($"mlagents-learn \"{yamlFilePath}\" " + GetMLagentsLearnArguments());
+            }
+
+            Process chmod = new Process
+            {
+                StartInfo = {
+                    FileName = @"/bin/bash",
+                    Arguments = string.Format("-c \"chmod 755 {0}\"", shellScriptPath),
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            chmod.Start();
+            chmod.WaitForExit();
+
+            return shellScriptFileName;
         }
 #endif
 
