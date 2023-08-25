@@ -43,22 +43,22 @@ The files will be created in `Assets/ML-Agents Configuration/Files` folder. (If 
 Limit: If the yaml file has default_settings, it will be part of the Behaviors. 
 After that, if the users want to modify the same variable in the Behaviors, they have to update them one by one.
  
-![Import Image](/Images/import.png)
+<img src="/Images/import.png" alt="Import Image" width="600">
 
 ### Export
 A user can export ML-Agents Config ScriptableObjects into a yaml file.
 
-![Export Image](/Images/export.png)
+<img src="/Images/export.png" alt="Export Image" width="600">
 
 ### Run Command Line
 Firstly, it has to be configureated. It is in `Project Settings/ML-Agents Configuration`.
 If a user use `Python Virtual Environment`, they have to add the `activate` file.
 
-![Project Settings Image](/Images/projectSettings.png)
+<img src="/Images/projectSettings.png" alt="Project Settings Image" width="600">
 
 When a user want to run the `mlagents-learn` command, they have to select a yaml file and they can add the parameters of command.
 
-![Command Line Interface Image](/Images/cli.png)
+<img src="/Images/cli.png" alt="Command Line Interface Image" width="600">
 
 Note: By default, the Windows uses CMD, the MacOS uses Terminal and the Linux uses gnome-terminal.
 On MacOS and on Linux, a `mlAgentsCommand.sh` file is always generated in the project folder. 
