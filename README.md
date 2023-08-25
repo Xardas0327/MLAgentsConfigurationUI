@@ -2,9 +2,9 @@
 
 ## Introduction
 This project is a user interface for [Unity ML-Agents](https://github.com/Unity-Technologies/ml-agents).
-It helps the users, that they can create/modify a yaml file inside Unity Editor.
+It helps the users, that they can create/modify a yaml file inside Unity Editor.  
 Moreover, the users can run the `mlagents-learn` command without command line.
-Please check the `LICENSE` before you use it in `Assets/ML-Agents Configuration`.
+Please check the `LICENSE` in `Assets/ML-Agents Configuration` before you use it.
 
 ## Test Environment
 It was tested with Unity ML-Agents Release 20 only.
