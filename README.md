@@ -1,7 +1,7 @@
 # MLAgents Configuration UI
 
 ## Introduction
-This project is a user interface for Unity ML-Agents.
+This project is a user interface for [Unity ML-Agents](https://github.com/Unity-Technologies/ml-agents).
 It helps the users, that they can create/modify a yaml file inside Unity Editor.
 Moreover, the users can run the `mlagents-learn` command without command line.
 Please check the `LICENSE` before you use it in `Assets/ML-Agents Configuration`.
