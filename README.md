@@ -1,4 +1,4 @@
-# MLAgents Configuration UI
+# ML-Agents Configuration UI
 
 ## Introduction
 This project is a user interface for [Unity ML-Agents](https://github.com/Unity-Technologies/ml-agents).
