@@ -4,7 +4,7 @@
 This project is a user interface for [Unity ML-Agents](https://github.com/Unity-Technologies/ml-agents).
 It helps the users, that they can create/modify a yaml file inside Unity Editor.  
 Moreover, the users can run the `mlagents-learn` command without command line.  
-Please check the `LICENSE` in `Assets/ML-Agents Configuration` before you use it.
+Please check the `LICENSE` in `Assets/Xardas/ML-Agents Configuration` before you use it.
 
 ## Test Environment
 It was tested with Unity ML-Agents Release 20 only.
@@ -21,7 +21,7 @@ It was tested with Unity ML-Agents Release 20 only.
 There are two main folder in the Assets folder.
 1.	The `Assets/ML-Agents` is not part of the Source Code. It is just help to develop/test this UI project.
 	The folder contains the examples of [Unity ML-Agents Release 20](https://github.com/Unity-Technologies/ml-agents/tree/release_20_docs/Project/Assets/ML-Agents). 
-2.	`Assets/ML-Agents Configuration` is the Source Code of the UI.
+2.	`Assets/Xardas/ML-Agents Configuration` is the Source Code of the UI.
 
 ## Features
 <img src="/Images/actionbar.png" alt="Actionbar Image" width="600">
@@ -39,7 +39,7 @@ For example: If PPO Trainer Type is selected, the specific variables of SAC type
 
 ### Import
 A user can import any ML-Agents config yaml file from samples or their own custom project.
-The files will be created in `Assets/ML-Agents Configuration/Files` folder. (If the folder doesn't exist, it will be created.)  
+The files will be created in `Assets/Xardas/ML-Agents Configuration/Files` folder. (If the folder doesn't exist, it will be created.)  
 Limit: If the yaml file has default_settings, it will be part of the Behaviors. 
 After that, if the users want to modify the same variable in the Behaviors, they have to update them one by one.
  

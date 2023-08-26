@@ -22,7 +22,7 @@ namespace Xardas.MLAgents.Configuration
         Vector2 behaviorScrollPos;
         bool showBehaviors;
 
-        [MenuItem("Window/ML-Agents/Config Exporter")]
+        [MenuItem("Window/ML-Agents Configuration/Config Exporter")]
         public static void ShowWindow()
         {
             GetWindow<ConfigurationExporterWindow>("ML-Agents Config Exporter");
