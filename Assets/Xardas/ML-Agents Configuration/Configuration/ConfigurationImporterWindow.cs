@@ -35,7 +35,7 @@ namespace Xardas.MLAgents.Configuration
 
         bool IsLoaded => !string.IsNullOrEmpty(filePath);
 
-        [MenuItem("Window/ML-Agents/Config Importer")]
+        [MenuItem("Window/ML-Agents Configuration/Config Importer")]
         public static void ShowWindow()
         {
             GetWindow<ConfigurationImporterWindow>("ML-Agents Config Importer");

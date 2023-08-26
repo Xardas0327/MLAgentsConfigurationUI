@@ -30,7 +30,7 @@ namespace Xardas.MLAgents.Cli
         private bool showCheckpointSettings;
         private bool showTorchSettings;
 
-        [MenuItem("Window/ML-Agents/Command Line Interface")]
+        [MenuItem("Window/ML-Agents Configuration/Command Line Interface")]
         public static void ShowWindow()
         {
             GetWindow<CliWindow>("ML-Agents CLI");
