@@ -27,9 +27,10 @@ There are two main folder in the Assets folder.
 <img src="/Images/actionbar.png" alt="Actionbar Image" width="600">
 
 ### Creation
-A user can create parts of the ML-Agents config yaml file as ScriptableObject.
+The users can create parts of the ML-Agents config yaml file as ScriptableObject.
 They contains tooltips, validation. Futhermore, the users can see only the actual fields.
 For example: If PPO Trainer Type is selected, the specific variables of SAC type is not visible.
+
 
 <img src="/Images/creation.png" alt="Creation Image" width="600">
 
@@ -38,7 +39,7 @@ For example: If PPO Trainer Type is selected, the specific variables of SAC type
 <img src="/Images/checkpointSettings.png" alt="Checkpoint Settings Image" width="600">
 
 ### Import
-A user can import any ML-Agents config yaml file from samples or their own custom project.
+The users can import any ML-Agents config yaml file from samples or their own custom project.
 The files will be created in `Assets/Xardas/ML-Agents Configuration/Files` folder. (If the folder doesn't exist, it will be created.)  
 Limit: If the yaml file has default_settings, it will be part of the Behaviors. 
 After that, if the users want to modify the same variable in the Behaviors, they have to update them one by one.
@@ -46,17 +47,17 @@ After that, if the users want to modify the same variable in the Behaviors, they
 <img src="/Images/import.png" alt="Import Image" width="600">
 
 ### Export
-A user can export ML-Agents Config ScriptableObjects into a yaml file.
+The users can export ML-Agents Config ScriptableObjects into a yaml file.
 
 <img src="/Images/export.png" alt="Export Image" width="600">
 
 ### Run Command Line
 Firstly, it has to be configureated. It is in `Project Settings/ML-Agents Configuration`.
-If a user use `Python Virtual Environment`, they have to add the `activate` file.
+ If the users use `Python Virtual Environment`, they have to add the `activate` file.
 
 <img src="/Images/projectSettings.png" alt="Project Settings Image" width="600">
 
-When a user want to run the `mlagents-learn` command, they have to select a yaml file and they can add the parameters of command.
+When the users want to run the `mlagents-learn` command, they have to select a yaml file and they can add the parameters of command.
 
 <img src="/Images/cli.png" alt="Command Line Interface Image" width="600">
 
