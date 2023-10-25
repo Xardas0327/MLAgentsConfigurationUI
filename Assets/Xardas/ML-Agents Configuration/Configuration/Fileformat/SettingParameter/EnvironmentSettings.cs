@@ -24,6 +24,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
         [Min(1)]
         public uint numEnvs = 1;
 
+        public bool isUseTimeoutWait;
+        [Tooltip(ConfigTooltip.timeoutWait)]
+        public uint timeoutWait = 60;
+
         public bool isUseSeed;
         [Tooltip(ConfigTooltip.seed)]
         public int seed = -1;
@@ -44,7 +48,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 
         public bool IsUse => 
                 isUseEnvPath || isUseEnvArgs
-            || isUseBasePort || isUseNumEnvs
+            || isUseBasePort || isUseNumEnvs || isUseTimeoutWait
             || isUseSeed || isUseMaxLifetimeRestarts
             || isUseRestartsRateLimitN || isUseRestartsRateLimitPeriodS;
 
@@ -76,6 +80,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
                         case ConfigText.numEnvs:
                             UInt32.TryParse(value, out numEnvs);
                             isUseNumEnvs = true;
+                            break;
+                        case ConfigText.timeoutWait:
+                            UInt32.TryParse(value, out timeoutWait);
+                            isUseTimeoutWait = true;
                             break;
                         case ConfigText.seed:
                             Int32.TryParse(value, out seed);
@@ -117,6 +125,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat.SettingParameter
 
             if (isUseSeed)
                 yaml.elements.Add(new YamlValue(ConfigText.seed, seed));
+
+            if (isUseTimeoutWait)
+                yaml.elements.Add(new YamlValue(ConfigText.timeoutWait, timeoutWait));
 
             if (isUseMaxLifetimeRestarts)
                 yaml.elements.Add(new YamlValue(ConfigText.maxLifetimeRestarts, maxLifetimeRestarts));

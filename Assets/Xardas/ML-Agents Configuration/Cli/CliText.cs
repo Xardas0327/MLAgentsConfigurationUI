@@ -13,6 +13,7 @@ namespace Xardas.MLAgents.Cli
         public const string envArgs = "env-args";
         public const string basePort = "base-port";
         public const string numEnvs = "num-envs";
+        public const string timeoutWait = "timeout-wait";
         public const string seed = "seed";
         public const string maxLifetimeRestarts = "max-lifetime-restarts";
         public const string restartsRateLimitN = "restarts-rate-limit-n";

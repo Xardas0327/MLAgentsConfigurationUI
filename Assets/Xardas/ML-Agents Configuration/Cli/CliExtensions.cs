@@ -57,6 +57,9 @@ namespace Xardas.MLAgents.Cli
             if (environmentSettings.isUseNumEnvs)
                 arguments.Append($"--{CliText.numEnvs} {environmentSettings.numEnvs} ");
 
+            if (environmentSettings.isUseTimeoutWait)
+                arguments.Append($"--{CliText.timeoutWait} {environmentSettings.timeoutWait} ");
+
             if (environmentSettings.isUseSeed)
                 arguments.Append($"--{CliText.seed} {environmentSettings.seed} ");
 

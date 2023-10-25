@@ -47,6 +47,10 @@ namespace Xardas.MLAgents.Configuration.Inspector
             {
                 DrawFieldWithTickBox(ref settings.isUseNumEnvs, property);
             }
+            else if (property.name == nameof(settings.timeoutWait))
+            {
+                DrawFieldWithTickBox(ref settings.isUseTimeoutWait, property);
+            }
             else if (property.name == nameof(settings.seed))
             {
                 DrawFieldWithTickBox(ref settings.isUseSeed, property);
