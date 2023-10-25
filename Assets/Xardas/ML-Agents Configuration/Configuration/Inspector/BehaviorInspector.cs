@@ -67,6 +67,11 @@ namespace Xardas.MLAgents.Configuration.Inspector
                             var pathWrapper = new PathWrapper<Behavior>(behavior, (b) => b.initPath, (b, path) => b.initPath = path);
                             DrawFilePanelProperty(iterator, pathWrapper, "Select init file", "pt");
                         }
+                        else if (iterator.name == nameof(behavior.checkpointInterval))
+                        {
+                            if(!behavior.evenCheckpoints)
+                                DrawField(iterator);
+                        }
                         else
                             DrawField(iterator);
                     }

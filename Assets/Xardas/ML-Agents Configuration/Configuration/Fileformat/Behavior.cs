@@ -21,6 +21,8 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public uint maxSteps = 500000;
         [Tooltip(ConfigTooltip.keepCheckpoints)]
         public uint keepCheckpoints = 5;
+        [Tooltip(ConfigTooltip.evenCheckpoints)]
+        public bool evenCheckpoints = false;
         [Tooltip(ConfigTooltip.checkpointInterval)]
         public uint checkpointInterval = 500000;
         [Tooltip(ConfigTooltip.initPath)]
@@ -66,6 +68,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat
                             break;
                         case ConfigText.keepCheckpoints:
                             UInt32.TryParse(value, out keepCheckpoints);
+                            break;
+                        case ConfigText.evenCheckpoints:
+                            if (value == "true")
+                                evenCheckpoints = true;
                             break;
                         case ConfigText.checkpointInterval:
                             UInt32.TryParse(value, out checkpointInterval);
@@ -130,7 +136,12 @@ namespace Xardas.MLAgents.Configuration.Fileformat
             yaml.elements.Add(new YamlValue(ConfigText.timeHorizon, timeHorizon));
             yaml.elements.Add(new YamlValue(ConfigText.maxSteps, maxSteps));
             yaml.elements.Add(new YamlValue(ConfigText.keepCheckpoints, keepCheckpoints));
-            yaml.elements.Add(new YamlValue(ConfigText.checkpointInterval, checkpointInterval));
+
+            if (evenCheckpoints)
+                yaml.elements.Add(new YamlValue(ConfigText.evenCheckpoints, evenCheckpoints));
+            else
+                yaml.elements.Add(new YamlValue(ConfigText.checkpointInterval, checkpointInterval));
+
             yaml.elements.Add(new YamlValue(ConfigText.threaded, threaded));
 
             if(!string.IsNullOrEmpty(initPath))

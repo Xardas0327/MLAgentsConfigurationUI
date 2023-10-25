@@ -12,6 +12,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string timeHorizon = "time_horizon";
         public const string maxSteps = "max_steps";
         public const string keepCheckpoints = "keep_checkpoints";
+        public const string evenCheckpoints = "even_checkpoints";
         public const string checkpointInterval = "checkpoint_interval";
         public const string initPath = "init_path";
         public const string threaded = "threaded";
@@ -32,6 +33,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string epsilonSchedule = "epsilon_schedule";
         public const string lambd = "lambd";
         public const string numEpoch = "num_epoch";
+        public const string sharedCritic = "shared_critic";
 
         //Hyperparameters - SAC-specific Configurations
         public const string bufferInitSteps = "buffer_init_steps";
@@ -112,6 +114,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string envArgs = "env_args";
         public const string basePort = "base_port";
         public const string numEnvs = "num_envs";
+        public const string timeoutWait = "timeout_wait";
         public const string seed = "seed";
         public const string maxLifetimeRestarts = "max_lifetime_restarts";
         public const string restartsRateLimitN = "restarts_rate_limit_n";

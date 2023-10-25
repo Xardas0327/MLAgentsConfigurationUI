@@ -293,6 +293,12 @@ namespace Xardas.MLAgents.Cli
                     1);
 
                 SettingsInspector.DrawFieldWithTickBox(
+                    ref environmentSettings.isUseTimeoutWait,
+                    new GUIContent("Timeout Wait", ConfigTooltip.timeoutWait),
+                    ref environmentSettings.timeoutWait,
+                    1);
+
+                SettingsInspector.DrawFieldWithTickBox(
                     ref environmentSettings.isUseSeed,
                     new GUIContent("Seed", ConfigTooltip.seed),
                     ref environmentSettings.seed,

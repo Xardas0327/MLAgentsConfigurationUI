@@ -46,7 +46,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
         public float lambd = 0.95f;
         [Tooltip(ConfigTooltip.numEpoch)]
         public uint numEpoch = 3;
-        
+        [Tooltip(ConfigTooltip.sharedCritic)]
+        public bool sharedCritic = false;
+
         [Header("SAC specific")]
         [Tooltip(ConfigTooltip.bufferInitSteps)]
         public uint bufferInitSteps = 0;
@@ -78,6 +80,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
             nameof(epsilonSchedule),
             nameof(lambd),
             nameof(numEpoch),
+            nameof(sharedCritic),
         };
 
         public static readonly string[] OnlySacFields =
@@ -153,6 +156,10 @@ namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
                         case ConfigText.numEpoch:
                             UInt32.TryParse(value, out numEpoch);
                             break;
+                        case ConfigText.sharedCritic:
+                            if (value == "true")
+                                sharedCritic = true;
+                            break;
 
                         //SAC-specific Configurations
                         case ConfigText.bufferInitSteps:
@@ -222,6 +229,9 @@ namespace Xardas.MLAgents.Configuration.Fileformat.BehaviorParameter
 
                     yaml.elements.Add(new YamlValue(ConfigText.lambd, lambd));
                     yaml.elements.Add(new YamlValue(ConfigText.numEpoch, numEpoch));
+
+                    if(sharedCritic)
+                        yaml.elements.Add(new YamlValue(ConfigText.sharedCritic, sharedCritic));
                     break;
                 case TrainerType.sac:
                     yaml.elements.Add(new YamlValue(ConfigText.bufferInitSteps, bufferInitSteps));

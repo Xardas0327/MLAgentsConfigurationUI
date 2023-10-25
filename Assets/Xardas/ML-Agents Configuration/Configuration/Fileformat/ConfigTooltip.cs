@@ -8,6 +8,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string timeHorizon = "How many steps of experience to collect per-agent before adding it to the experience buffer.\nTypical range: 32 - 2048";
         public const string maxSteps = "Total number of steps that must be taken in the environment before ending the training process.\nTypical range: 5e5 - 1e7";
         public const string keepCheckpoints = "The maximum number of model checkpoints to keep.";
+        public const string evenCheckpoints = "If set to true, ignores checkpoint_interval and evenly distributes checkpoints throughout training based on keep_checkpointsand max_steps.\nAvailable from ML-Agents Release 21";
         public const string checkpointInterval = "The number of experiences collected between each checkpoint by the trainer.";
         public const string initPath = "Initialize trainer from a previously saved model. Note that the prior run should have used the same trainer configurations as the current run, and have been saved with the same version of ML-Agents.";
         public const string threaded = "Allow environments to step while updating the model.\nLeave setting to false when using self-play.";
@@ -29,6 +30,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string epsilonSchedule = "Determines how epsilon changes over time (PPO only).";
         public const string lambd = " Regularization parameter (lambda) used when calculating the Generalized Advantage Estimate.\nTypical range: 0.9 - 0.95";
         public const string numEpoch = "Number of passes to make through the experience buffer when performing gradient descent optimization.\nTypical range: 3 - 10";
+        public const string sharedCritic = "Whether or not the policy and value function networks share a backbone.\nAvailable from ML-Agents Release 21";
 
         //Hyperparameters - SAC-specific Configurations
         public const string bufferInitSteps = "Number of experiences to collect into the buffer before updating the policy model.\nTypical range: 1000 - 10000";
@@ -108,6 +110,7 @@ namespace Xardas.MLAgents.Configuration.Fileformat
         public const string envArgs = "Arguments passed to the Unity executable.";
         public const string basePort = "The starting port for environment communication.";
         public const string numEnvs = "The number of concurrent Unity environment instances to collect experiences from when training.";
+        public const string timeoutWait = "The period of time to wait on a Unity environment to startup for training.\nAvailable from ML-Agents Release 21";
         public const string seed = "A number to use as a seed for the random number generator used by the training code.";
         public const string maxLifetimeRestarts = "The max number of times a single Unity executable can crash over its lifetime before ml-agents exits.";
         public const string restartsRateLimitN = "The maximum number of times a single Unity executable can crash over a period of time.";
