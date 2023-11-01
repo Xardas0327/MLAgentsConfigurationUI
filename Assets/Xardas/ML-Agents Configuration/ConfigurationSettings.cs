@@ -11,7 +11,7 @@ namespace Xardas.MLAgents
     {
         None,
         BasicPython,
-        Conda
+        Anaconda
     }
 
     class ConfigurationSettings : ScriptableObject
@@ -29,11 +29,11 @@ namespace Xardas.MLAgents
         [SerializeField]
         [Tooltip("You can modify this in Project Settings!")]
         [ReadOnly]
-        private string condaVirtualEnvPath;
+        private string anacondaVirtualEnvPath;
         [SerializeField]
         [Tooltip("You can modify this in Project Settings!")]
         [ReadOnly]
-        private string condaVirtualEnvName;
+        private string anacondaVirtualEnvName;
         [SerializeField]
         [Tooltip("You can modify this in Project Settings on Windows!")]
         [ReadOnly]
@@ -87,28 +87,28 @@ namespace Xardas.MLAgents
             }
         }
 
-        public string CondaVirtualEnvPath
+        public string AnacondaVirtualEnvPath
         {
-            get { return condaVirtualEnvPath; }
+            get { return anacondaVirtualEnvPath; }
             set
             {
-                if (condaVirtualEnvPath == value)
+                if (anacondaVirtualEnvPath == value)
                     return;
 
-                Instance.condaVirtualEnvPath = value;
+                Instance.anacondaVirtualEnvPath = value;
                 EditorUtility.SetDirty(Instance);
             }
         }
 
-        public string CondaVirtualEnvName
+        public string AnacondaVirtualEnvName
         {
-            get { return condaVirtualEnvName; }
+            get { return anacondaVirtualEnvName; }
             set
             {
-                if (condaVirtualEnvName == value)
+                if (anacondaVirtualEnvName == value)
                     return;
 
-                Instance.condaVirtualEnvName = value;
+                Instance.anacondaVirtualEnvName = value;
                 EditorUtility.SetDirty(Instance);
             }
         }
@@ -209,8 +209,8 @@ namespace Xardas.MLAgents
                     instance = ScriptableObject.CreateInstance<ConfigurationSettings>();
                     instance.virtualEnvType = PythonVirtualEnvironmentType.None;
                     instance.basicPythonVirtualEnvPath = "";
-                    instance.condaVirtualEnvPath = "";
-                    instance.condaVirtualEnvName = "";
+                    instance.anacondaVirtualEnvPath = "";
+                    instance.anacondaVirtualEnvName = "";
                     instance.windowsCLI = CliExtensions.defaultWindowsCLI;
                     instance.windowsArguments = CliExtensions.defaultWindowsArguments;
                     instance.macCLI = CliExtensions.defaultMacCLI;
