@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -20,18 +21,54 @@ namespace Xardas.MLAgents
                 {
                     GUILayout.Space(10);
 
-                    GUILayout.BeginHorizontal();
-                    EditorGUI.BeginDisabledGroup(true);
-                    EditorGUILayout.TextField(
-                        new GUIContent("Python Virtual Env", "Please add the activate file from your python virtual environment"), 
-                        ConfigurationSettings.Instance.PythonVirtualEnvironment
-                    );
-                    EditorGUI.EndDisabledGroup();
+                    ConfigurationSettings.Instance.VirtualEnvType = 
+                        (PythonVirtualEnvironmentType)EditorGUILayout.EnumPopup("Virtual Environment Type:", ConfigurationSettings.Instance.VirtualEnvType);
 
-                    if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
-                        OpenFileBrower();
-                    GUILayout.EndHorizontal();
+                    switch(ConfigurationSettings.Instance.VirtualEnvType)
+                    {
+                        case PythonVirtualEnvironmentType.BasicPython:
+                            GUILayout.BeginHorizontal();
+                            EditorGUI.BeginDisabledGroup(true);
+                            EditorGUILayout.TextField(
+                                new GUIContent("Basic Python Virtual Env", "Please add the activate file from your python virtual environment"),
+                                ConfigurationSettings.Instance.BasicPythonVirtualEnvPath
+                            );
+                            EditorGUI.EndDisabledGroup();
 
+                            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
+                                OpenFileBrower("Select Basic Python Virtual Environment", (string newPath) =>
+                                {
+                                    if (newPath != ConfigurationSettings.Instance.BasicPythonVirtualEnvPath && !string.IsNullOrEmpty(newPath))
+                                        ConfigurationSettings.Instance.BasicPythonVirtualEnvPath = newPath;
+                                });
+                            GUILayout.EndHorizontal();
+
+                            break;
+                        case PythonVirtualEnvironmentType.Conda:
+                            GUILayout.BeginHorizontal();
+                            EditorGUI.BeginDisabledGroup(true);
+                            EditorGUILayout.TextField(
+                                new GUIContent("Conda Virtual Env", "Please add the activate file from your conda virtual environment"),
+                                ConfigurationSettings.Instance.CondaVirtualEnvPath
+                            );
+                            EditorGUI.EndDisabledGroup();
+
+                            if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
+                                OpenFileBrower("Select Conda Virtual Environment", (string newPath) =>
+                                {
+                                    if (newPath != ConfigurationSettings.Instance.CondaVirtualEnvPath && !string.IsNullOrEmpty(newPath))
+                                        ConfigurationSettings.Instance.CondaVirtualEnvPath = newPath;
+                                });
+                            GUILayout.EndHorizontal();
+
+                            ConfigurationSettings.Instance.CondaVirtualEnvName = EditorGUILayout.TextField(
+                                new GUIContent("Conda Virtual Env Name", "Please add name of the conda virtual environment."),
+                                ConfigurationSettings.Instance.CondaVirtualEnvName
+                            );
+                            break;
+                    }
+
+                    GUILayout.Space(10);
 #if UNITY_EDITOR_WIN
                     ConfigurationSettings.Instance.WindowsCLI = EditorGUILayout.TextField(
                         new GUIContent("Windows CMD", "Please add path of the CMD"),
@@ -74,12 +111,11 @@ namespace Xardas.MLAgents
             return provider;
         }
 
-        private static void OpenFileBrower()
+        private static void OpenFileBrower(string title, Action<string> Update)
         {
-            string newPath = EditorUtility.OpenFilePanel("Select Python Virtual Environment", Application.dataPath, "");
+            string newPath = EditorUtility.OpenFilePanel(title, Application.dataPath, "");
 
-            if (newPath != ConfigurationSettings.Instance.PythonVirtualEnvironment && !string.IsNullOrEmpty(newPath))
-                ConfigurationSettings.Instance.PythonVirtualEnvironment = newPath;
+            Update(newPath);
         }
     }
 }

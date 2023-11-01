@@ -7,6 +7,13 @@ using Xardas.MLAgents.Property;
 
 namespace Xardas.MLAgents
 {
+    enum PythonVirtualEnvironmentType
+    {
+        None,
+        BasicPython,
+        Conda
+    }
+
     class ConfigurationSettings : ScriptableObject
     {
         private const string settingsFileName = "ML-Agents Configuration.asset";
@@ -14,7 +21,19 @@ namespace Xardas.MLAgents
         [SerializeField]
         [Tooltip("You can modify this in Project Settings!")]
         [ReadOnly]
-        private string pythonVirtualEnvironment;
+        private PythonVirtualEnvironmentType virtualEnvType;
+        [SerializeField]
+        [Tooltip("You can modify this in Project Settings!")]
+        [ReadOnly]
+        private string basicPythonVirtualEnvPath;
+        [SerializeField]
+        [Tooltip("You can modify this in Project Settings!")]
+        [ReadOnly]
+        private string condaVirtualEnvPath;
+        [SerializeField]
+        [Tooltip("You can modify this in Project Settings!")]
+        [ReadOnly]
+        private string condaVirtualEnvName;
         [SerializeField]
         [Tooltip("You can modify this in Project Settings on Windows!")]
         [ReadOnly]
@@ -42,15 +61,54 @@ namespace Xardas.MLAgents
 
         private static string filePath => Path.Combine(Paths.SettingsPath, settingsFileName);
 
-        public string PythonVirtualEnvironment
+        public PythonVirtualEnvironmentType VirtualEnvType
         {
-            get { return pythonVirtualEnvironment; }
+            get { return virtualEnvType; }
             set
             {
-                if (pythonVirtualEnvironment == value)
+                if (virtualEnvType == value)
                     return;
 
-                Instance.pythonVirtualEnvironment = value;
+                Instance.virtualEnvType = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
+        public string BasicPythonVirtualEnvPath
+        {
+            get { return basicPythonVirtualEnvPath; }
+            set
+            {
+                if (basicPythonVirtualEnvPath == value)
+                    return;
+
+                Instance.basicPythonVirtualEnvPath = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
+        public string CondaVirtualEnvPath
+        {
+            get { return condaVirtualEnvPath; }
+            set
+            {
+                if (condaVirtualEnvPath == value)
+                    return;
+
+                Instance.condaVirtualEnvPath = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
+
+        public string CondaVirtualEnvName
+        {
+            get { return condaVirtualEnvName; }
+            set
+            {
+                if (condaVirtualEnvName == value)
+                    return;
+
+                Instance.condaVirtualEnvName = value;
                 EditorUtility.SetDirty(Instance);
             }
         }
@@ -149,7 +207,10 @@ namespace Xardas.MLAgents
                 if (instance == null)
                 {
                     instance = ScriptableObject.CreateInstance<ConfigurationSettings>();
-                    instance.pythonVirtualEnvironment = "";
+                    instance.virtualEnvType = PythonVirtualEnvironmentType.None;
+                    instance.basicPythonVirtualEnvPath = "";
+                    instance.condaVirtualEnvPath = "";
+                    instance.condaVirtualEnvName = "";
                     instance.windowsCLI = CliExtensions.defaultWindowsCLI;
                     instance.windowsArguments = CliExtensions.defaultWindowsArguments;
                     instance.macCLI = CliExtensions.defaultMacCLI;
