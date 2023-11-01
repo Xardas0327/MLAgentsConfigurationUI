@@ -43,10 +43,7 @@ namespace Xardas.MLAgents.Cli
                 Clear();
 
             GUILayout.Label("The CLI will start in the current unity project main folder.");
-            var pythoEnvtext = !string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment)
-                ? "A Python Virtual Environment has set in Project Settings."
-                : "A Python Virtual Environment has not set in Project Settings.";
-            GUILayout.Label(pythoEnvtext);
+            GUILayout.Label("Virtual Environment: " + ConfigurationSettings.Instance.VirtualEnvType.ToString());
             GUILayout.Space(25);
 
             DrawYamlFileDialog();
@@ -111,8 +108,15 @@ namespace Xardas.MLAgents.Cli
         private string GetWindowsCmdCommand()
         {
             var arguments = new StringBuilder();
-            if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
-                arguments.Append($"\"{ConfigurationSettings.Instance.PythonVirtualEnvironment}\" && ");
+            switch(ConfigurationSettings.Instance.VirtualEnvType)
+            {
+                case PythonVirtualEnvironmentType.BasicPython:
+                    arguments.Append($"\"{ConfigurationSettings.Instance.BasicPythonVirtualEnvPath}\" && ");
+                    break;
+                case PythonVirtualEnvironmentType.Conda:
+                    arguments.Append($"\"{ConfigurationSettings.Instance.CondaVirtualEnvPath}\" {ConfigurationSettings.Instance.CondaVirtualEnvName} && ");
+                    break;
+            }
 
             arguments.Append($"mlagents-learn \"{yamlFilePath}\" ");
 
@@ -159,8 +163,15 @@ namespace Xardas.MLAgents.Cli
                     file.WriteLine(firstLine);
 
                 file.WriteLine($"cd {Application.dataPath}/../");
-                if (!string.IsNullOrEmpty(ConfigurationSettings.Instance.PythonVirtualEnvironment))
-                    file.WriteLine("source " + ConfigurationSettings.Instance.PythonVirtualEnvironment);
+                switch (ConfigurationSettings.Instance.VirtualEnvType)
+                {
+                    case PythonVirtualEnvironmentType.BasicPython:
+                        file.WriteLine("source " + ConfigurationSettings.Instance.BasicPythonVirtualEnvPath);
+                        break;
+                    case PythonVirtualEnvironmentType.Conda:
+                        file.WriteLine("source " + ConfigurationSettings.Instance.CondaVirtualEnvPath + " " + ConfigurationSettings.Instance.CondaVirtualEnvName);
+                        break;
+                }
 
                 file.WriteLine($"mlagents-learn \"{yamlFilePath}\" " + GetMLagentsLearnArguments());
             }

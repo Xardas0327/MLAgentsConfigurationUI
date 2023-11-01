@@ -15,10 +15,10 @@
 !/[Aa]ssets/**/*.meta
 
 # Basic ML-Agents Configuration
-/[Aa]ssets/ML-Agents Configuration/Files
-/[Aa]ssets/ML-Agents Configuration/Files.meta
-/[Aa]ssets/ML-Agents Configuration/ML-Agents Configuration.asset
-/[Aa]ssets/ML-Agents Configuration/ML-Agents Configuration.asset.meta
+/[Aa]ssets/Xardas/ML-Agents Configuration/Files
+/[Aa]ssets/Xardas/ML-Agents Configuration/Files.meta
+/[Aa]ssets/Xardas/ML-Agents Configuration/ML-Agents Configuration.asset
+/[Aa]ssets/Xardas/ML-Agents Configuration/ML-Agents Configuration.asset.meta
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
