@@ -113,8 +113,8 @@ namespace Xardas.MLAgents.Cli
                 case PythonVirtualEnvironmentType.BasicPython:
                     arguments.Append($"\"{ConfigurationSettings.Instance.BasicPythonVirtualEnvPath}\" && ");
                     break;
-                case PythonVirtualEnvironmentType.Conda:
-                    arguments.Append($"\"{ConfigurationSettings.Instance.CondaVirtualEnvPath}\" {ConfigurationSettings.Instance.CondaVirtualEnvName} && ");
+                case PythonVirtualEnvironmentType.Anaconda:
+                    arguments.Append($"\"{ConfigurationSettings.Instance.AnacondaVirtualEnvPath}\" {ConfigurationSettings.Instance.AnacondaVirtualEnvName} && ");
                     break;
             }
 
@@ -168,8 +168,8 @@ namespace Xardas.MLAgents.Cli
                     case PythonVirtualEnvironmentType.BasicPython:
                         file.WriteLine("source " + ConfigurationSettings.Instance.BasicPythonVirtualEnvPath);
                         break;
-                    case PythonVirtualEnvironmentType.Conda:
-                        file.WriteLine("source " + ConfigurationSettings.Instance.CondaVirtualEnvPath + " " + ConfigurationSettings.Instance.CondaVirtualEnvName);
+                    case PythonVirtualEnvironmentType.Anaconda:
+                        file.WriteLine("source " + ConfigurationSettings.Instance.AnacondaVirtualEnvPath + " " + ConfigurationSettings.Instance.AnacondaVirtualEnvName);
                         break;
                 }
 

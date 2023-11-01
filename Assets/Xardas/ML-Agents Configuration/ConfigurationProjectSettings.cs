@@ -44,26 +44,26 @@ namespace Xardas.MLAgents
                             GUILayout.EndHorizontal();
 
                             break;
-                        case PythonVirtualEnvironmentType.Conda:
+                        case PythonVirtualEnvironmentType.Anaconda:
                             GUILayout.BeginHorizontal();
                             EditorGUI.BeginDisabledGroup(true);
                             EditorGUILayout.TextField(
-                                new GUIContent("Conda Virtual Env", "Please add the activate file from your conda virtual environment"),
-                                ConfigurationSettings.Instance.CondaVirtualEnvPath
+                                new GUIContent("Anaconda Virtual Env", "Please add the activate file from your Anaconda virtual environment"),
+                                ConfigurationSettings.Instance.AnacondaVirtualEnvPath
                             );
                             EditorGUI.EndDisabledGroup();
 
                             if (GUILayout.Button("Browse", GUILayout.MaxWidth(100)))
-                                OpenFileBrower("Select Conda Virtual Environment", (string newPath) =>
+                                OpenFileBrower("Select Anaconda Virtual Environment", (string newPath) =>
                                 {
-                                    if (newPath != ConfigurationSettings.Instance.CondaVirtualEnvPath && !string.IsNullOrEmpty(newPath))
-                                        ConfigurationSettings.Instance.CondaVirtualEnvPath = newPath;
+                                    if (newPath != ConfigurationSettings.Instance.AnacondaVirtualEnvPath && !string.IsNullOrEmpty(newPath))
+                                        ConfigurationSettings.Instance.AnacondaVirtualEnvPath = newPath;
                                 });
                             GUILayout.EndHorizontal();
 
-                            ConfigurationSettings.Instance.CondaVirtualEnvName = EditorGUILayout.TextField(
-                                new GUIContent("Conda Virtual Env Name", "Please add name of the conda virtual environment."),
-                                ConfigurationSettings.Instance.CondaVirtualEnvName
+                            ConfigurationSettings.Instance.AnacondaVirtualEnvName = EditorGUILayout.TextField(
+                                new GUIContent("Anaconda Virtual Env Name", "Please add name of the Anaconda virtual environment."),
+                                ConfigurationSettings.Instance.AnacondaVirtualEnvName
                             );
                             break;
                     }
