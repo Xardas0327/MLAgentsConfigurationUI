@@ -53,7 +53,7 @@ Firstly, it has to be configureated. It is in `Project Settings/ML-Agents Config
 The users can use `Python Virtual Environment`, if they want.
 <br />
 There are 3 options:
-- None: The user don't use Virtual Environment,
+- None: The user don't use Virtual Environment.
 - Basic Python: The Virtual Environment, which the Python can create by default. The users have to add the `activate` file.
 - Anaconda: If the users use the Anaconda package management, they have to add the `activate` file and the name of Virtual Environment.
 
