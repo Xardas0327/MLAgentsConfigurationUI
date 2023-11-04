@@ -6,16 +6,13 @@ It helps the users, that they can create/modify a yaml file inside Unity Editor.
 Moreover, the users can run the `mlagents-learn` command without command line.  
 Please check the <a href="/Assets/Xardas/ML-Agents Configuration/LICENSE" target="_blank">LICENSE<a/> in `Assets/Xardas/ML-Agents Configuration` or in the main folder before you use it.
 
-## Test Environment
-It was tested with Unity ML-Agents Release 20 only.
+## Requirements
+- Unity ML-Agents Release 20 and 21.
 - OS
-	- Windows 11
-	- Ubuntu 20.04
-	- MacOS Ventura 13.4.1
-- Unity
-	- 2021.3.29f1
-	- 2022.3.7f1
-	- 2023.1.9f1
+	- Windows (Tested: Windows 11)
+	- Ubuntu (Tested: Ubuntu 20.04)
+	- MacOS (Tested: MacOS 13, 14)
+- Unity 2021.3.30f1 or later
 
 ## Source Code
 There are two main folder in the Assets folder.
@@ -53,7 +50,12 @@ The users can export ML-Agents Config ScriptableObjects into a yaml file.
 
 ### Run Command Line
 Firstly, it has to be configureated. It is in `Project Settings/ML-Agents Configuration`.
- If the users use `Python Virtual Environment`, they have to add the `activate` file.
+The users can use `Python Virtual Environment`, if they want.
+<br />
+There are 3 options:
+- None: The user don't use Virtual Environment.
+- Basic Python: The Virtual Environment, which the Python can create by default. The users have to add the `activate` file.
+- Anaconda: If the users use the Anaconda package management, they have to add the `activate` file and the name of Virtual Environment.
 
 <img src="/Images/projectSettings.png" alt="Project Settings Image" width="600">
 
