@@ -11,7 +11,7 @@ Please check the <a href="/Assets/Xardas/ML-Agents Configuration/LICENSE" target
 - OS
 	- Windows (Tested: Windows 11)
 	- Ubuntu (Tested: Ubuntu 20.04)
-	- MacOS (Tested: MacOS 13.*, 14.*)
+	- MacOS (Tested: MacOS 13, 14)
 - Unity 2021.3.30f1 or later
 
 ## Source Code
@@ -51,6 +51,7 @@ The users can export ML-Agents Config ScriptableObjects into a yaml file.
 ### Run Command Line
 Firstly, it has to be configureated. It is in `Project Settings/ML-Agents Configuration`.
 The users can use `Python Virtual Environment`, if they want.
+<br />
 There are 3 options:
 - None: The user don't use Virtual Environment,
 - Basic Python: The Virtual Environment, which the Python can create by default. The users have to add the `activate` file.
