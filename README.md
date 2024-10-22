@@ -7,18 +7,22 @@ Moreover, the users can run the `mlagents-learn` command without command line.
 Please check the <a href="/Assets/Xardas/ML-Agents Configuration/LICENSE" target="_blank">LICENSE<a/> in `Assets/Xardas/ML-Agents Configuration` or in the main folder before you use it.
 
 ## Requirements
-- Unity ML-Agents Release 20 and 21.
+- Unity ML-Agents Release 20, 21 and 22.
 - OS
 	- Windows (Tested: Windows 11)
 	- Ubuntu (Tested: Ubuntu 20.04)
-	- MacOS (Tested: MacOS 13, 14)
-- Unity 2021.3.30f1 or later
+	- MacOS (Tested: MacOS 13, 14, 15)
+- Unity 2021.3.30f1 or later (It is depend on ML-Agents Release)
 
 ## Source Code
 There are two main folder in the Assets folder.
 1.	The `Assets/ML-Agents` is not part of the Source Code. It is just help to develop/test this UI project.
 	The folder contains the examples of [Unity ML-Agents Release 20](https://github.com/Unity-Technologies/ml-agents/tree/release_20_docs/Project/Assets/ML-Agents). 
 2.	`Assets/Xardas/ML-Agents Configuration` is the Source Code of the UI.
+
+## Download
+- MLAgentsConfiguration.unitypackage from [Github/Releases](https://github.com/Xardas0327/MLAgentsConfigurationUI/releases)
+- [Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/ml-agents-configuration-ui-266776)
 
 ## Features
 <img src="/Images/actionbar.png" alt="Actionbar Image" width="600">
