@@ -7,12 +7,14 @@ Moreover, the users can run the `mlagents-learn` command without command line.
 Please check the <a href="/Assets/Xardas/ML-Agents Configuration/LICENSE" target="_blank">LICENSE<a/> in `Assets/Xardas/ML-Agents Configuration` or in the main folder before you use it.
 
 ## Requirements
-- Unity ML-Agents Release 20, 21 and 22.
+- Unity ML-Agents 2.3 or above / Release 20 or above.  
+The last tested version is 4.0.0 / Release 23.
 - OS
 	- Windows (Tested: Windows 11)
 	- Ubuntu (Tested: Ubuntu 20.04)
-	- MacOS (Tested: MacOS 13, 14, 15)
-- Unity 2021.3.30f1 or later (It is depend on ML-Agents Release)
+	- MacOS (Tested: MacOS 13, 14, 15, 26)
+- Unity 2021.3.30f1 or later (It is depend on ML-Agents Release)  
+The last tested version Unity 6.2.
 
 ## Source Code
 There are two main folder in the Assets folder.
